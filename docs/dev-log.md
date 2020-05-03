@@ -18,13 +18,18 @@ Template for daily journal:
 ### What did I get done today?
 
 * Added a new `Types.h` to fix things I don't like about C/C++
+* Added a a texture we can render into and filled it with white pixels
+* Added a basic `LogStream` so I can start getting debug info printed to console
 
 ### Any questions for Andreas?
+
+* Best way to create a good dbg() logging utility? Mine is heavily inspired from SerenityOS
+* Things to worry about security wise when using `printf` for my log stream
 
 **Date: 5/2/2020**
 ### What did I learn today?
 
-Today I learned how to get SDL2 linking with CMake. I ended up doing it in a
+I learned how to get SDL2 linking with CMake. I ended up doing it in a
 somewhat hacky way which hard coded some paths. When I get my new Linux
 machine I will look into using a `FindSDL2` type abstraction to maintain
 the cross-platform capabilities of CMake.
