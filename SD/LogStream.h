@@ -17,12 +17,9 @@ public:
 
     ~LogStream();
 
+    // TODO(scd): Create a 'Write' interface so I could pass in-mem write for tests
     void write(const char *characters, int length) const {
-        // TODO(scd): Is this a security concern? What is the safe way to write logger in C++?
-        char buffer[MAX_BUFFER_SIZE];
-        // Add 1 for \0 character - this feels like a weird place to do that?
-        auto string = snprintf(buffer, ++length, "%s", characters);
-        printf("%s", buffer);
+        fwrite(characters, length, 1, stdout);
     }
 };
 
