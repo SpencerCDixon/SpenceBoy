@@ -8,8 +8,8 @@ the `C` standard library.
 
 ## General 
 
-- [ ] Set up a separate library to store standard lib functionality
-- [ ] Set up a basic CMake test 
+- [x] Set up a separate library to store standard lib functionality
+- [x] Set up a basic CMake test 
 
 ## Standard Lib
 
@@ -19,7 +19,9 @@ the `C` standard library.
 - [ ] Vector
 - [ ] Hash Map
 - [ ] File I/O
-- [ ] Basic Logging
+- [x] Assertions
+- [x] Basic Logging
+- [x] Color
 
 ## Emulator
 
@@ -31,3 +33,6 @@ the `C` standard library.
 - [ ] Figure out how the GameBoy ROM file format works, and load a ROM into your emulator's memory at startup
 - [ ] Build a simple PPU renderer that looks at all the PPU state in the emulator and renders the "screen" into an SDL window
 
+## Chores
+
+- [ ] Get CMake script for SDL working on Linux/Windows
