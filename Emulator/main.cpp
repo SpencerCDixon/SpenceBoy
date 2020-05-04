@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <SD/Types.h>
 #include <SD/LogStream.h>
+#include <SD/Color.h>
 #include <iostream>
 
 const u16 WIN_HEIGHT = 640;
@@ -38,8 +39,9 @@ int main() {
     auto texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, WIN_HEIGHT,
                                      WIN_WIDTH);
     u32 myPixels[WIN_WIDTH * WIN_HEIGHT];
+    u32 color = SD::Color { 100, 100, 100, 255 }.to_argb();
     for (int i = 0; i < WIN_HEIGHT * WIN_WIDTH; i++) {
-        myPixels[i] = 0xffffffff;
+        myPixels[i] = color;
     }
 
     SDL_UpdateTexture(texture, NULL, myPixels, WIN_WIDTH * sizeof(u32));

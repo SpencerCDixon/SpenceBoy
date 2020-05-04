@@ -13,5 +13,13 @@ namespace SD {
         u8 g;
         u8 b;
         u8 a;
+
+        u32 to_argb() {
+            return this->a << 24 | this->r << 16 | this->g << 8 | this->b;
+        }
     };
+
+    static Color BLUE = { 0, 0, 255, 255 };
+    static Color RED = { 255, 0, 0, 255 };
+    static Color GREEN = { 0, 255, 0, 255 };
 }
