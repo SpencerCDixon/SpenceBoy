@@ -25,3 +25,4 @@ build
 
 # Local deps that may be needed to set up dev environment
 third_party
+Asm/SameBoy.app

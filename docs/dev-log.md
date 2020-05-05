@@ -12,6 +12,19 @@ Template for daily journal:
 
 ---
 
+**Date: 5/4/2020**
+### What did I learn today?
+
+* You can use `fwrite` to write 'n' number of objects of size T to a file descriptor.
+
+### What did I get done today?
+
+* Fixed logging utility based on Andreas feedback
+
+### Any questions for Andreas?
+
+---
+
 **Date: 5/3/2020**
 ### What did I learn today?
 
