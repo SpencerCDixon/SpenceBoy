@@ -16,12 +16,18 @@ Template for daily journal:
 ### What did I learn today?
 
 * You can use `fwrite` to write 'n' number of objects of size T to a file descriptor.
+* HBlank is the time between writing rows of pixels
+* VBlank is the time between finishing writing a framebuffer and starting back at the top left
+* A lot of assembly programming will set flags which can then be checked against in jumps
+* A ton of assembly commands for the GBz80! (See research.md)
 
 ### What did I get done today?
 
 * Fixed logging utility based on Andreas feedback
 
 ### Any questions for Andreas?
+
+* None today! Time to write more GBC assembly :)
 
 ---
 
