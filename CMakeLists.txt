@@ -4,7 +4,7 @@ project(gameboy)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(gameboy Emulator/main.cpp SD/LogStream.cpp SD/LogStream.h)
+add_executable(gameboy Emulator/main.cpp SD/LogStream.cpp SD/LogStream.h Emulator/CPU.cpp Emulator/CPU.h)
 target_include_directories(gameboy PUBLIC ".")
 
 #-------------
