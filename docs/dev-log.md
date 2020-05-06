@@ -12,6 +12,22 @@ Template for daily journal:
 
 ---
 
+**Date: 5/5/2020**
+### What did I learn today?
+
+* Ubuntu/Linux are hard to set up and not bork :-(
+
+### What did I get done today?
+
+* Created a 'loop' in assembly that then halts
+
+### Any questions for Andreas?
+
+* How do I best verify my loop works properly? I'd like to step through my
+    assembly one clock cycle at a time
+
+---
+
 **Date: 5/4/2020**
 ### What did I learn today?
 
