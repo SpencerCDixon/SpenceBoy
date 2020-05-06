@@ -7,6 +7,9 @@
 * [Awesome GB Dev](https://github.com/gbdev/awesome-gbdev)
 * [Building a GB Game](https://teamlampoil.se/book/gbasmdev.pdf)
 * [Acceptance tests](https://github.com/Gekkio/mooneye-gb)
+* [Useful walk-through of looping in GB ASM](https://medium.com/@ulrikdamm/writing-your-first-gameboy-game-4ea62c76db29)
+* [ROM tests](https://gbdev.gg8.se/files/roms/blargg-gb-tests/)
+* [Ultimate GameBoy talk](https://www.youtube.com/watch?v=HyzD8pNlpwI)
 
 ## GBC - Game Boy Color (GBz80)
 
@@ -122,6 +125,19 @@ ld b, $CA
 Accessing memory:
 
 > While $C000 represents the number $C000, [$C000] represents the byte at address $C000.
+
+> You can use the 0b-prefix to specify binary numbers, which is often easier to handle than hex codes for bit fields
+
+```asm
+ld [hl], 0b1110_0100
+```
+
+> A quick way to stop execution of a CPU:
+
+```asm
+; Stop execution
+end: jp end
+```
 
 ## The F Register
 
