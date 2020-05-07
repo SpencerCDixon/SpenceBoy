@@ -12,6 +12,26 @@ Template for daily journal:
 
 ---
 
+**Date: 5/6/2020**
+### What did I learn today?
+
+* Opening files in C and iterating over byte stream 
+* Only certain registers can be combined in the GBz80 to be turned into a 16 bit address
+* I can use `hexdump -C my-rom.gb` to see the hex that the assembler generates
+
+### What did I get done today?
+
+* Created the CPU abstraction to start parsing Op Codes
+* Set up a new test with a debug ROM to start parsing
+* Installed new plugin to CLion to make it easier to view Hex/binary dumps
+* Set up CLion to use ClangFormat properly
+
+### Any questions for Andreas?
+
+* NA
+
+---
+
 **Date: 5/5/2020**
 ### What did I learn today?
 
