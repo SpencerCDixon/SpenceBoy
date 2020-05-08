@@ -12,6 +12,18 @@ Template for daily journal:
 
 ---
 
+**Date: 5/8/2020**
+### What did I learn today?
+
+* How to use stat to check the size of a file
+
+### What did I get done today?
+
+* Refactored CPU abstractions a bit to properly store ROM data and registers
+* Can step through the execution of my basic loop ASM!
+
+---
+
 **Date: 5/7/2020**
 ### What did I learn today?
 
@@ -65,10 +77,6 @@ using AK::CircularQueue; // Why??
 * Set up a new test with a debug ROM to start parsing
 * Installed new plugin to CLion to make it easier to view Hex/binary dumps
 * Set up CLion to use ClangFormat properly
-
-### Any questions for Andreas?
-
-* NA
 
 ---
 
