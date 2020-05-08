@@ -12,16 +12,10 @@ enum class OpCode {
     Dec_A,
     Jump_NZ,
     Halt,
+    Unknown,
 };
 
-// FIXME: I really want some sort of Option<u16> for the operands
-struct Instruction {
-    OpCode op_code;
-    u16 left_operand;
-    u16 right_operand;
-    // FIXME: wouldn't be necessary with Option<>
-    u8 operand_count; // 0 - just op code, 1 - left operand, 2 - right operand
-};
+OpCode from_byte(const u8& byte);
 
 struct Registers {
     u8 a { 0 };
@@ -37,58 +31,30 @@ struct Registers {
 };
 
 void print_registers(const Registers& reg);
+void print_opcode(const OpCode* code);
 
 class CPU {
 
 public:
-    CPU(const char* rom_path)
-        : m_rom_path(rom_path)
+    CPU()
+        : m_registers({ 0 })
     {
-        m_instructions = new Instruction[100];
     }
 
     ~CPU()
     {
-        delete[] m_instructions;
+        if (m_rom)
+            delete m_rom;
     }
 
-    void parse_rom();
-
-    void print_op_codes()
-    {
-        for (int i = 0; i < m_instruction_count + 1; ++i) {
-            print_op_code(m_instructions[i].op_code);
-        }
-    }
-
-    void print_op_code(const OpCode& code)
-    {
-        switch (code) {
-        case OpCode::Load_A_D8:
-            dbg() << "Load_A_D8";
-            break;
-        case OpCode::Halt:
-            dbg() << "Halt";
-            break;
-        case OpCode::Dec_A:
-            dbg() << "Dec_A";
-            break;
-        case OpCode::Jump_NZ:
-            dbg() << "Jump_NZ";
-            break;
-        }
-    }
+    void load_rom(const char* rom_path);
+    void step();
 
 private:
-    void add_instruction(const OpCode& opcode);
-
-    // TODO:
-//    void add_instruction(const Instruction& instruction);
+    // next_byte reads the next byte from ROM and increments the program counter
+    u8 fetch_and_inc();
 
 private:
-    const char* m_rom_path;
-    Instruction* m_instructions;
-    u16 m_instruction_count { 0 }; // FIXME: Is this needed?
-
-    // TODO: Add registers!
+    Registers m_registers;
+    char* m_rom { nullptr };
 };

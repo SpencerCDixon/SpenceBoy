@@ -17,9 +17,18 @@ int main(int argc, char *argv[]) {
         printf("Current working dir: %s\n", cwd);
         char *path = "./../../Tests/loop.gb";
 
-        CPU cpu(path);
-        cpu.parse_rom();
-        cpu.print_op_codes();
+        CPU cpu;
+        cpu.load_rom(path);
+        cpu.step();
+        cpu.step();
+        cpu.step();
+        cpu.step();
+        cpu.step();
+        cpu.step();
+        cpu.step();
+        cpu.step();
+        cpu.step();
+        // TODO: Step until program is over
     } else {
         perror("getcwd() error");
         return 1;
