@@ -16,3 +16,6 @@ The main downside of putting code in headers is compile time. Since headers are 
 
 As with everything, I recommend messing with it and trying out different things to see how you like to organize your own code. And I don't mean to hand-wave about "performance reasons" btw. When you get things up and running I can show you some ways (on both macOS and Linux) to systematically work out which parts are running slow and how to fix them.
 
+## Tips
+
+Use the `-Wimplicit-fallthrough` compiler flag to prevent missing `break`'s in switch statements which can cause a lot of pain and suffering.
