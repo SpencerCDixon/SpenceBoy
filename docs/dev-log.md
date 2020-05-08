@@ -12,6 +12,46 @@ Template for daily journal:
 
 ---
 
+**Date: 5/7/2020**
+### What did I learn today?
+
+* Some weird difference in C++ between referencing a hex number as 0xC2 and '\xc2'.
+
+### What did I get done today?
+
+* Added the last of the opcodes I needed to parse for my first sample ASM program
+* Added a struct for tracking register values
+* Started thinking about the abstraction I'll use for 'Instructions' which are a combo of op codes and operands
+
+### Any questions for Andreas?
+
+* Why does he create a namespace for AK and then immediately use 'using AK:XXX'. For example:
+
+```c++
+namespace AK {
+
+template<typename T, size_t Capacity>
+class CircularQueue {
+public:
+    CircularQueue() {}
+    ~CircularQueue() {
+        clear();
+    }
+}
+using AK::CircularQueue; // Why??
+```
+
+* I noticed you use m_*** for member names. What other conventions do you use? Do you use the m_*** name for structs as well?
+
+* What is up with these special attributes:
+
+```c++
+#    define CONSUMABLE(initial_state) __attribute__((consumable(initial_state)))
+#    define CALLABLE_WHEN(...) __attribute__((callable_when(__VA_ARGS__)))
+```
+
+---
+
 **Date: 5/6/2020**
 ### What did I learn today?
 
