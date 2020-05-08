@@ -30,10 +30,10 @@ loop:
 void print_registers(const Registers& reg)
 {
     dbg() << "a:  " << reg.a << "  f:  " << reg.f << "\n"
-        << "b:  " << reg.b << "  c:  " << reg.c << "\n"
-        << "d:  " << reg.d << "  e:  " << reg.e << "\n"
-        << "h:  " << reg.h << "  l:  " << reg.l << "\n"
-        << "sp: " << reg.stack_ptr << "  pc: " << reg.program_counter;
+          << "b:  " << reg.b << "  c:  " << reg.c << "\n"
+          << "d:  " << reg.d << "  e:  " << reg.e << "\n"
+          << "h:  " << reg.h << "  l:  " << reg.l << "\n"
+          << "sp: " << reg.stack_ptr << "  pc: " << reg.program_counter;
 }
 
 void print_opcode(const OpCode& code)
@@ -50,13 +50,15 @@ void print_opcode(const OpCode& code)
         break;
     case OpCode::Jump_NZ:
         dbg() << "Jump_NZ";
+        break;
     case OpCode::Unknown:
         dbg() << "Unknown OpCode";
         break;
     }
 }
 
-OpCode from_byte(const u8& byte) {
+OpCode from_byte(u8 byte)
+{
     switch (byte) {
     case 0x3e:
         return OpCode::Load_A_D8;
@@ -113,21 +115,20 @@ void CPU::step()
         m_registers.a--;
         if (m_registers.a == 0)
             m_registers.f |= FLAG_ZERO;
-
         break;
     case OpCode::Jump_NZ:
-        u16 address_to_jump;
-        u8 lsb, msb;
-        msb = 0;
-        lsb = 0;
-
-        lsb = fetch_and_inc();
-        msb = fetch_and_inc();
-        address_to_jump = msb << 8 | lsb;
-
         if (m_registers.f & FLAG_ZERO) {
-            m_registers.program_counter--;
+            m_registers.program_counter++;
+            m_registers.program_counter++;
         } else {
+            u16 address_to_jump;
+            u8 lsb, msb;
+            msb = 0;
+            lsb = 0;
+
+            lsb = fetch_and_inc();
+            msb = fetch_and_inc();
+            address_to_jump = msb << 8 | lsb;
             m_registers.program_counter = address_to_jump;
         }
         break;

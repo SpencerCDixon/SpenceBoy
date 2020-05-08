@@ -15,7 +15,7 @@ enum class OpCode {
     Unknown,
 };
 
-OpCode from_byte(const u8& byte);
+OpCode from_byte(u8 byte);
 
 struct Registers {
     u8 a { 0 };
