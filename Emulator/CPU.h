@@ -15,7 +15,8 @@ enum class OpCode {
     Load_B_D8,
     Load_H_D8,
     Load_L_D8,
-    Load_HL_Addr_B, // TODO: Think of better name for this? What is [hl] exactly anyways...? 16-bit address using 2 regs
+    Load_HL_Addr_B,
+    Load_A_HL_Addr,
     Dec_A,
     Jump_NZ,
     Halt,
@@ -64,7 +65,6 @@ public:
     void write(u16 address, u8 data);
 
 private:
-    // next_byte reads the next byte from ROM and increments the program counter
     u8 fetch_and_inc();
 
 private:

@@ -22,7 +22,14 @@ loop:
 	dec a
 	jp nz, loop
 
+	; Save 52 to some place in RAM
 	ld b, 52
 	ld h, $c0
 	ld l, $02
 	ld [hl], b
+
+subtract_by_12:
+	ld a, [hl]
+	; sub 12
+	; ld [hl], a
+	; ret

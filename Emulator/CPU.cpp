@@ -68,6 +68,9 @@ void print_opcode(const OpCode& code)
     case OpCode::Load_HL_Addr_B:
         dbg() << "Load_HL_Addr_B";
         break;
+    case OpCode::Load_A_HL_Addr:
+        dbg() << "Load_A_HL_Addr";
+        break;
     case OpCode::Halt:
         dbg() << "Halt";
         break;
@@ -98,6 +101,8 @@ OpCode decode(u8 byte)
         return OpCode::Load_L_D8;
     case 0x70:
         return OpCode::Load_HL_Addr_B;
+    case 0x7e:
+        return OpCode::Load_A_HL_Addr;
     case 0x76:
         return OpCode::Halt;
     case 0x3d:
@@ -140,8 +145,10 @@ void CPU::step()
     u8 next_byte = fetch_and_inc();
     OpCode op_code = decode(next_byte);
 
-    // TODO: Convert from switch statement to calling handlers to avoid annoying switch scoping issues.
+    dbg() << "-----------------";
     print_opcode(op_code);
+
+    // TODO: Convert from switch statement to calling handlers to avoid annoying switch scoping issues.
     switch (op_code) {
     case OpCode::NoOp:
         break; // Noop, do nothing!
@@ -156,6 +163,11 @@ void CPU::step()
         break;
     case OpCode::Load_L_D8:
         m_registers.l = fetch_and_inc();
+        break;
+    case OpCode::Load_A_HL_Addr:
+        u16 address_to_read;
+        address_to_read = to_le_16_bit(m_registers.l, m_registers.h);
+        m_registers.a = read(address_to_read);
         break;
     case OpCode::Load_HL_Addr_B:
         u16 address_to_write;
@@ -183,10 +195,10 @@ void CPU::step()
         break;
     }
 
-    dbg() << "\n-----------------";
+    dbg() << "-----------------";
     dbg() << "Registers:";
     print_registers(m_registers);
-    dbg() << "-----------------";
+    dbg() << "-----------------\n";
 }
 
 u8 CPU::fetch_and_inc()
@@ -200,7 +212,7 @@ u8 CPU::read(u16 address)
 {
 
     if (address >= WRAM_START && address < WRAM_END) {
-        u16 idx = WRAM_START - address;
+        u16 idx = address - WRAM_START;
         ASSERT(idx >= 0);
         return m_ram[idx];
     }
