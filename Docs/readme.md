@@ -1,4 +1,4 @@
-# GameBoy Emulator
+# SpenceBoy - A GameBoy Color Emulator
 
 This project is a GameBoy Color emulator. The primary objective is for
 educational purposes. No external dependencies are allowed other than `SDL2` and
@@ -10,6 +10,7 @@ the `C` standard library.
 
 - [x] Set up a separate library to store standard lib functionality
 - [x] Set up a basic CMake test 
+- [ ] Add ROM conformation tests to ensure I'm compliant as possible
 
 ## Standard Lib
 
@@ -36,6 +37,7 @@ the `C` standard library.
 - [ ] Stack push/pop
 - [ ] Interrupts
 - [ ] Finish rest of the op codes
+- [ ] Call/return from ASM 'functions'
 
 ## Chores
 
