@@ -30,6 +30,7 @@ loop:
 
 subtract_by_12:
 	ld a, [hl]
-	; sub 12
-	; ld [hl], a
+	sub 12
+	ld [hl], a
+	halt
 	; ret

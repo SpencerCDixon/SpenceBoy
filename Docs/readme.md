@@ -30,8 +30,12 @@ the `C` standard library.
 - [x] Build a simple CPU instruction interpreter that can read instructions from a stream of bytes and call an appropriate handler for each instruction (no need to implement all instructions yet!)
 - [x] Get your program from (1) to run in the interpreter from (2), printing out the state of the CPU at every step of execution
 - [x] Add RAM (really just a byte buffer) to your CPU and implement instructions for moving memory in/out of RAM
-- [ ] Figure out how the GameBoy ROM file format works, and parse_rom a ROM into your emulator's memory at startup
+- [x] Figure out how the GameBoy ROM file format works, and parse_rom a ROM into your emulator's memory at startup
 - [ ] Build a simple PPU renderer that looks at all the PPU state in the emulator and renders the "screen" into an SDL window
+
+- [ ] Stack push/pop
+- [ ] Interrupts
+- [ ] Finish rest of the op codes
 
 ## Chores
 

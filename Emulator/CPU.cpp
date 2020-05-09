@@ -80,6 +80,12 @@ void print_opcode(const OpCode& code)
     case OpCode::Jump_NZ:
         dbg() << "Jump_NZ";
         break;
+    case OpCode::Sub_D8:
+        dbg() << "Sub_D8";
+        break;
+    case OpCode::Load_HL_Addr_A:
+        dbg() << "Load_HL_Addr_A";
+        break;
     case OpCode::Unknown:
         dbg() << "Unknown OpCode";
         break;
@@ -101,6 +107,8 @@ OpCode decode(u8 byte)
         return OpCode::Load_L_D8;
     case 0x70:
         return OpCode::Load_HL_Addr_B;
+    case 0x77:
+        return OpCode::Load_HL_Addr_A;
     case 0x7e:
         return OpCode::Load_A_HL_Addr;
     case 0x76:
@@ -109,6 +117,8 @@ OpCode decode(u8 byte)
         return OpCode::Dec_A;
     case 0xc2:
         return OpCode::Jump_NZ;
+    case 0xd6:
+        return OpCode::Sub_D8;
     }
 
     return OpCode::Unknown;
@@ -141,7 +151,7 @@ void CPU::load_rom(const char* rom_path)
 
 void CPU::step()
 {
-    // TODO: handle interrupts
+    // TODO: handle interrupts?
     u8 next_byte = fetch_and_inc();
     OpCode op_code = decode(next_byte);
 
@@ -170,9 +180,14 @@ void CPU::step()
         m_registers.a = read(address_to_read);
         break;
     case OpCode::Load_HL_Addr_B:
-        u16 address_to_write;
-        address_to_write = to_le_16_bit(m_registers.l, m_registers.h);
-        write(address_to_write, m_registers.b);
+        u16 address_to_write_b;
+        address_to_write_b = to_le_16_bit(m_registers.l, m_registers.h);
+        write(address_to_write_b, m_registers.b);
+        break;
+    case OpCode::Load_HL_Addr_A:
+        u16 address_to_write_a;
+        address_to_write_a = to_le_16_bit(m_registers.l, m_registers.h);
+        write(address_to_write_a, m_registers.a);
         break;
     case OpCode::Halt:
         ASSERT(false);
@@ -189,6 +204,9 @@ void CPU::step()
             u16 address_to_jump = to_le_16_bit(fetch_and_inc(), fetch_and_inc());
             m_registers.program_counter = address_to_jump;
         }
+        break;
+    case OpCode::Sub_D8:
+        m_registers.a -= fetch_and_inc();
         break;
     case OpCode::Unknown:
         printf("Unknown op_code that needs to be handled %x ", next_byte);
