@@ -9,9 +9,13 @@
 
 #include <stdlib.h>
 
-
 enum class OpCode {
+    NoOp,
     Load_A_D8,
+    Load_B_D8,
+    Load_H_D8,
+    Load_L_D8,
+    Load_HL_Addr_B, // TODO: Think of better name for this? What is [hl] exactly anyways...? 16-bit address using 2 regs
     Dec_A,
     Jump_NZ,
     Halt,
@@ -48,9 +52,9 @@ public:
     ~CPU()
     {
         if (m_rom)
-            delete m_rom;
+            free(m_rom);
 
-        delete m_ram;
+        free(m_ram);
     }
 
     void load_rom(const char* rom_path);
@@ -60,7 +64,6 @@ public:
     void write(u16 address, u8 data);
 
 private:
-
     // next_byte reads the next byte from ROM and increments the program counter
     u8 fetch_and_inc();
 
