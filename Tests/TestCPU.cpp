@@ -41,6 +41,10 @@ void test_ram()
     cpu.step();
     cpu.step();
     cpu.step();
+    cpu.step();
+    cpu.step();
+    cpu.step();
+    cpu.step();
 }
 
 int main(int argc, char* argv[])
