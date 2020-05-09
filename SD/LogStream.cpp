@@ -28,7 +28,7 @@ const LogStream &operator<<(const LogStream &stream, u16 value) {
 
 const LogStream &operator<<(const LogStream &stream, u32 value) {
     char buffer[32];
-    sprintf(buffer, "%llu", value);
+    sprintf(buffer, "%u", value);
     return stream << buffer;
 }
 

@@ -7,6 +7,9 @@
 #include <SD/LogStream.h>
 #include <SD/Types.h>
 
+#include <stdlib.h>
+
+
 enum class OpCode {
     Load_A_D8,
     Dec_A,
@@ -15,7 +18,7 @@ enum class OpCode {
     Unknown,
 };
 
-OpCode from_byte(u8 byte);
+OpCode decode(u8 byte);
 
 struct Registers {
     u8 a { 0 };
@@ -39,22 +42,30 @@ public:
     CPU()
         : m_registers({ 0 })
     {
+        m_ram = (char*)calloc(KB * 32, sizeof(u8));
     }
 
     ~CPU()
     {
         if (m_rom)
             delete m_rom;
+
+        delete m_ram;
     }
 
     void load_rom(const char* rom_path);
     void step();
 
+    u8 read(u16 address);
+    void write(u16 address, u8 data);
+
 private:
+
     // next_byte reads the next byte from ROM and increments the program counter
     u8 fetch_and_inc();
 
 private:
     Registers m_registers;
     char* m_rom { nullptr };
+    char* m_ram { nullptr };
 };

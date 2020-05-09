@@ -6,12 +6,22 @@
 #include <SD/Assertions.h>
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <sys/stat.h>
 #include <utility>
 
-#define MAX_ROM_SIZE 32768
-#define FLAG_ZERO 0b10000000
+// Andreas: Should I use constexpr or DEFINE's for these sorts of things?
+constexpr u16 MAX_ROM_SIZE = KB * 32;
+
+// Flags
+constexpr u8 FLAG_ZERO = 0b10000000;
+
+// Memory Locations
+constexpr u16 WRAM_START = 0xC000;
+constexpr u16 WRAM_END = 0xCFFF;
+// VRAM: 8000 - 9FFF
+// ERAM: A000 - BFFF
+// OAM:  FE00 - FE9F
+
 
 /*
 
@@ -57,7 +67,8 @@ void print_opcode(const OpCode& code)
     }
 }
 
-OpCode from_byte(u8 byte)
+// Andreas: Would you have DEFINE's for each op code?
+OpCode decode(u8 byte)
 {
     switch (byte) {
     case 0x3e:
@@ -102,7 +113,7 @@ void CPU::step()
 {
     // TODO: handle interrupts
     u8 next_byte = fetch_and_inc();
-    OpCode op_code = from_byte(next_byte);
+    OpCode op_code = decode(next_byte);
 
     print_opcode(op_code);
     switch (op_code) {
@@ -148,4 +159,28 @@ u8 CPU::fetch_and_inc()
     u8 next = m_rom[m_registers.program_counter];
     m_registers.program_counter++;
     return next;
+}
+
+// TODO: Abstract the address checking into a method which tells me two things:
+// 1. which memory bank to access memory from
+// 2. a normalized address into that bank
+u8 CPU::read(u16 address)
+{
+
+    if (address >= WRAM_START && address < WRAM_END) {
+        u16 idx = WRAM_START - address;
+        ASSERT(idx >= 0);
+        return m_ram[idx];
+    }
+
+    return 0;
+}
+
+void CPU::write(u16 address, u8 data)
+{
+    if (address >= WRAM_START && address < WRAM_END) {
+        u16 idx = WRAM_START - address;
+        ASSERT(idx >= 0);
+        m_ram[idx] = data;
+    }
 }

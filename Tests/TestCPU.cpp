@@ -15,10 +15,14 @@ int main(int argc, char *argv[]) {
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
         // TODO(scd): do proper relative path utilities?
         printf("Current working dir: %s\n", cwd);
-        char *path = "./../../Tests/loop.gb";
+        const char *path = "./../../Tests/loop.gb";
 
         CPU cpu;
         cpu.load_rom(path);
+        cpu.write(0xc002, 42);
+        u8 data;
+        data = cpu.read(0xc002);
+
         cpu.step();
         cpu.step();
         cpu.step();
