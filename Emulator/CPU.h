@@ -49,7 +49,8 @@ public:
     CPU()
         : m_registers({ 0 })
     {
-        m_ram = (char*)calloc(KB * 32, sizeof(u8));
+        m_wram = (char*)calloc(KB * 32, sizeof(u8));
+        m_vram = (char*)calloc(KB * 16, sizeof(u8));
     }
 
     ~CPU()
@@ -57,7 +58,8 @@ public:
         if (m_rom)
             free(m_rom);
 
-        free(m_ram);
+        free(m_wram);
+        free(m_vram);
     }
 
     void load_rom(const char* rom_path);
@@ -66,11 +68,14 @@ public:
     u8 read(u16 address);
     void write(u16 address, u8 data);
 
+    char* v_ram() { return m_vram; }
+
 private:
     u8 fetch_and_inc();
 
 private:
     Registers m_registers;
     char* m_rom { nullptr };
-    char* m_ram { nullptr };
+    char* m_wram { nullptr };
+    char* m_vram { nullptr };
 };

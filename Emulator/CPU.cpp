@@ -19,7 +19,8 @@ constexpr u8 FLAG_ZERO = 0b10000000;
 // Memory Locations
 constexpr u16 WRAM_START = 0xC000;
 constexpr u16 WRAM_END = 0xCFFF;
-// VRAM: 8000 - 9FFF
+constexpr u16 VRAM_START = 0x8000;
+constexpr u16 VRAM_END = 0xA000; // Isn't GBC supposed to have 16k VRAM? Look into this...
 // ERAM: A000 - BFFF
 // OAM:  FE00 - FE9F
 
@@ -228,11 +229,14 @@ u8 CPU::fetch_and_inc()
 
 u8 CPU::read(u16 address)
 {
-
     if (address >= WRAM_START && address < WRAM_END) {
         u16 idx = address - WRAM_START;
         ASSERT(idx >= 0);
-        return m_ram[idx];
+        return m_wram[idx];
+    } else if (address >= VRAM_START && address < VRAM_END) {
+        u16 idx = address - VRAM_START;
+        ASSERT(idx >= 0);
+        return m_vram[idx];
     }
 
     return 0;
@@ -243,7 +247,12 @@ void CPU::write(u16 address, u8 data)
     if (address >= WRAM_START && address < WRAM_END) {
         u16 idx = address - WRAM_START;
         ASSERT(idx >= 0);
-        m_ram[idx] = data;
+        m_wram[idx] = data;
+        return;
+    } else if (address >= VRAM_START && address < VRAM_END) {
+        u16 idx = address - VRAM_START;
+        ASSERT(idx >= 0);
+        m_vram[idx] = data;
         return;
     }
 
