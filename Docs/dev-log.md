@@ -12,6 +12,27 @@ Template for daily journal:
 
 ---
 
+**Date: 5/9/2020**
+### What did I learn today?
+
+* How to use `calloc` to init zeroed out memory
+* `constexpr` is guaranteed to have a value at compile time where `static const` could
+have a value at runtime or compile time.
+
+### What did I get done today?
+
+* Added a 32K bank of RAM memory for the CPU to use
+* `read`/`write` methods for accessing the RAM
+* New OpCodes for loading and NoOp
+* Ability to write to RAM from assembly
+
+### Any questions for Andreas?
+
+* When to use constexpr vs. DEFINE. Seems constexpr is the right move for compile time
+constants if using C++11> but want to confirm.
+
+---
+
 **Date: 5/8/2020**
 ### What did I learn today?
 
