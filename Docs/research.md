@@ -78,11 +78,10 @@ Huzzah!
 ## Jumping!
 
 **Jump Mneumonic**
-|---------|----|----------|
-| Non-zero|nz|Zero reset|
-| Zero | z | Zero set|
-| No carry | nc | Carry reset|
-| Carry | c | Carry set|
+* Non-zero - nz - Zero reset
+* Zero - z - Zero set
+* No carry - nc - Carry reset
+* Carry - c - Carry set
 
 Example:
 

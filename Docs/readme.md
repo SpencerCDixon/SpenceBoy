@@ -23,6 +23,7 @@ the `C` standard library.
 - [x] Assertions
 - [x] Basic Logging
 - [x] Color
+- [ ] Pair/Tuple (useful for converting u16 into two u8's etc.)
 
 ## Emulator
 

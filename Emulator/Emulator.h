@@ -37,6 +37,8 @@ public:
         m_frame_buffer.pitch = WIN_WIDTH * BITS_PER_PIXEL;
     }
 
+    // Andreas: Is this a good way to be doing memory management? It sort of seems like at this point in the program cleaning up
+    // memory is kind of redundant. A leak is probably OK since when the process dies it will just be cleaned up
     ~Emulator() {
         if (m_frame_buffer.memory)
             free(m_frame_buffer.memory);

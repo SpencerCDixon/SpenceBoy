@@ -18,6 +18,10 @@ Template for daily journal:
 ### What did I get done today?
 
 * Fix flags being set in a few op code handlers
+* A number of op codes which will be required to render pixels on the screen
+* Refactor of main.c into an Emulator class which owns the window object
+* Added an 'OffscreenFrameBuffer' which the PPU can use to render into
+* Remove compilation errors detected in SDL2
 
 ### Any questions for Andreas?
 
