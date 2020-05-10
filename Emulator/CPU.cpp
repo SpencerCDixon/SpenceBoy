@@ -10,7 +10,6 @@
 #include <sys/stat.h>
 #include <utility>
 
-// Andreas: Should I use constexpr or DEFINE's for these sorts of things?
 constexpr u16 MAX_ROM_SIZE = KB * 32;
 
 // Flags
@@ -51,6 +50,8 @@ void print_registers(const Registers& reg)
           << "sp:  " << reg.stack_ptr << "  pc: " << reg.program_counter;
 }
 
+// Andreas: This is super annoying. What kind of C++ magic can I do which can use the enums
+// opcode name to do the print. I.E. OpCode::NoOp gets printed as OpCode::NoOp and not 0/1/2, etc.?
 void print_opcode(const OpCode& code)
 {
     switch (code) {
