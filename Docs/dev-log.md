@@ -12,6 +12,20 @@ Template for daily journal:
 
 ---
 
+**Date: 5/10/2020**
+### What did I learn today?
+
+### What did I get done today?
+
+* Fix flags being set in a few op code handlers
+
+### Any questions for Andreas?
+
+* How to properly set half carry and carry flag. Confused how to best detect
+    that a bit will change given some operation.
+
+---
+
 **Date: 5/9/2020**
 ### What did I learn today?
 

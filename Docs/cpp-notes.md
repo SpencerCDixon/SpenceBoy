@@ -3,6 +3,7 @@
 ## CMake
 
 * [Modern CMake](https://cliutils.gitlab.io/modern-cmake/chapters/testing.html)
+* [Preventing Library Warnings](https://foonathan.net/2018/10/cmake-warnings/)
 
 ## Andreas Questions
 
