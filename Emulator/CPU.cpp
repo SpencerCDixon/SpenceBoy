@@ -19,26 +19,17 @@ constexpr u8 FLAG_HALF_CARRY = 0b00100000;
 constexpr u8 FLAG_CARRY = 0b00010000;
 
 // Memory Locations
+constexpr u16 ROM_START = 0x0000;
+constexpr u16 ROM_END = 0x3FFF;
 constexpr u16 WRAM_START = 0xC000;
 constexpr u16 WRAM_END = 0xCFFF;
 constexpr u16 VRAM_START = 0x8000;
 constexpr u16 VRAM_END = 0xA000; // Isn't GBC supposed to have 16k VRAM? Look into this...
+constexpr u16 IO_START = 0xFF00;
+constexpr u16 IO_END = 0xFF7F;
 // ERAM: A000 - BFFF
 // OAM:  FE00 - FE9F
-
-/*
-
- ; Sample Assembly we're parsing to begin with:
-
-Start:
-	ld a, 3
-
-loop:
-	dec a
-	jp nz, loop
-	halt ;
-
- */
+// HRAM: TBD
 
 // TODO: Use the logging interface for these
 void print_registers(const Registers& reg)
@@ -76,11 +67,17 @@ void print_opcode(const OpCode& code)
     case OpCode::Load_A_HL_Addr:
         dbg() << "Load_A_HL_Addr";
         break;
+    case OpCode::Load_A_DE_Addr:
+        dbg() << "Load_A_DE_Addr";
+        break;
     case OpCode::Halt:
         dbg() << "Halt";
         break;
     case OpCode::Dec_A:
         dbg() << "Dec_A";
+        break;
+    case OpCode::Dec_B:
+        dbg() << "Dec_B";
         break;
     case OpCode::Jump_NZ:
         dbg() << "Jump_NZ";
@@ -90,6 +87,21 @@ void print_opcode(const OpCode& code)
         break;
     case OpCode::Load_HL_Addr_A:
         dbg() << "Load_HL_Addr_A";
+        break;
+    case OpCode::Load_HL_Addr_D8:
+        dbg() << "Load_HL_Addr_D8";
+        break;
+    case OpCode::Load_HL_D16:
+        dbg() << "Load_HL_D16";
+        break;
+    case OpCode::Load_DE_D16:
+        dbg() << "Load_DE_D16";
+        break;
+    case OpCode::Inc_DE:
+        dbg() << "Inc_DE";
+        break;
+    case OpCode::Load_Inc_HL_Addr_A:
+        dbg() << "Load_Inc_HL_Addr_A";
         break;
     case OpCode::Unknown:
         dbg() << "Unknown OpCode";
@@ -114,18 +126,35 @@ OpCode decode(u8 byte)
         return OpCode::Load_HL_Addr_B;
     case 0x77:
         return OpCode::Load_HL_Addr_A;
+    case 0x36:
+        return OpCode::Load_HL_Addr_D8;
     case 0x7e:
         return OpCode::Load_A_HL_Addr;
+    case 0x1a:
+        return OpCode::Load_A_DE_Addr;
+    case 0x21:
+        return OpCode::Load_HL_D16;
+    case 0x11:
+        return OpCode::Load_DE_D16;
     case 0x76:
         return OpCode::Halt;
     case 0x3d:
         return OpCode::Dec_A;
+    case 0x05:
+        return OpCode::Dec_B;
     case 0xc2:
         return OpCode::Jump_NZ;
     case 0xd6:
         return OpCode::Sub_D8;
+    case 0x13:
+        return OpCode::Inc_DE;
+    case 0x22:
+        return OpCode::Load_Inc_HL_Addr_A;
     }
 
+    // Useful in development. Fail on missing op codes and then implement
+    printf("missing op code: %x", byte);
+    ASSERT_NOT_REACHED();
     return OpCode::Unknown;
 }
 
@@ -163,7 +192,7 @@ void CPU::step()
     dbg() << "-----------------";
     print_opcode(op_code);
 
-    // TODO: Convert from switch statement to calling handlers to avoid annoying switch scoping issues.
+    // TODO: Convert from switch statement to calling handlers to avoid annoying switch scoping issues :-(...
     switch (op_code) {
     case OpCode::NoOp:
         break; // Noop, do nothing!
@@ -179,10 +208,15 @@ void CPU::step()
     case OpCode::Load_L_D8:
         m_registers.l = fetch_and_inc();
         break;
-    case OpCode::Load_A_HL_Addr:
-        u16 address_to_read;
-        address_to_read = to_le_16_bit(m_registers.l, m_registers.h);
-        m_registers.a = read(address_to_read);
+    case OpCode::Load_A_HL_Addr: // 8 cycles
+        u16 address_to_read_hl;
+        address_to_read_hl = to_le_16_bit(m_registers.l, m_registers.h);
+        m_registers.a = read(address_to_read_hl);
+        break;
+    case OpCode::Load_A_DE_Addr: // 8 cycles
+        u16 address_to_read_de;
+        address_to_read_de = to_le_16_bit(m_registers.e, m_registers.d);
+        m_registers.a = read(address_to_read_de);
         break;
     case OpCode::Load_HL_Addr_B:
         u16 address_to_write_b;
@@ -194,9 +228,14 @@ void CPU::step()
         address_to_write_a = to_le_16_bit(m_registers.l, m_registers.h);
         write(address_to_write_a, m_registers.a);
         break;
+    case OpCode::Load_HL_Addr_D8: // 12 cycles. Flags: - - - -
+        u16 address_to_write_d8;
+        address_to_write_d8 = to_le_16_bit(m_registers.l, m_registers.h);
+        write(address_to_write_d8, fetch_and_inc());
+        break;
     case OpCode::Halt:
         ASSERT(false);
-    case OpCode::Dec_A:
+    case OpCode::Dec_A: // 4 cycles. Flags: Z 1 H -
         // Andreas: How can I determine if bit 3 to 4 changed properly? Having a hard time wrapping my head around this one
         // TODO: Half-carry flag. See: https://stackoverflow.com/questions/57958631/game-boy-half-carry-flag-and-16-bit-instructions-especially-opcode-0xe8
         // Pretty sure this is totally wrong :-(
@@ -210,6 +249,16 @@ void CPU::step()
         if (m_registers.a == 0)
             m_registers.f |= FLAG_ZERO;
         break;
+    case OpCode::Dec_B: // 4 cycles. Flags: Z 1 H -
+        if (will_half_carry_sub(m_registers.b, 1))
+            m_registers.f |= FLAG_HALF_CARRY;
+
+        m_registers.f |= FLAG_SUBTRACT;
+        m_registers.b--;
+
+        if (m_registers.b == 0)
+            m_registers.f |= FLAG_ZERO;
+        break;
     case OpCode::Jump_NZ:
         if (m_registers.f & FLAG_ZERO) {
             m_registers.program_counter++;
@@ -221,6 +270,29 @@ void CPU::step()
         break;
     case OpCode::Sub_D8:
         m_registers.a -= fetch_and_inc();
+        break;
+    case OpCode::Load_HL_D16: // 12 cycles. Flags - - - -
+        m_registers.l = fetch_and_inc();
+        m_registers.h = fetch_and_inc();
+        break;
+    case OpCode::Load_DE_D16: // 12 cycles. Flags - - - -
+        m_registers.e = fetch_and_inc();
+        m_registers.d = fetch_and_inc();
+        break;
+    case OpCode::Inc_DE: // 8 cycles. Flags: - - - -
+        u16 inc_de;
+        inc_de = to_le_16_bit(m_registers.d, m_registers.e);
+        inc_de++;
+        m_registers.e = (inc_de >> 8);
+        m_registers.d = inc_de;
+        break;
+    case OpCode::Load_Inc_HL_Addr_A: // 8 cycles. Flags: - - - -
+        u16 inc_hl;
+        inc_hl = to_le_16_bit(m_registers.h, m_registers.l);
+        m_registers.a = read(inc_hl);
+        inc_hl++;
+        m_registers.l = (inc_hl >> 8);
+        m_registers.h = inc_hl;
         break;
     case OpCode::Unknown:
         printf("Unknown op_code that needs to be handled %x ", next_byte);
@@ -250,8 +322,11 @@ u8 CPU::read(u16 address)
         u16 idx = address - VRAM_START;
         ASSERT(idx >= 0);
         return m_vram[idx];
+    } else if (address >= ROM_START && address < ROM_END) {
+        return m_rom[address];
     }
 
+    ASSERT_NOT_REACHED();
     return 0;
 }
 
@@ -267,6 +342,11 @@ void CPU::write(u16 address, u8 data)
         ASSERT(idx >= 0);
         m_vram[idx] = data;
         return;
+    } else if (address >= ROM_START && address < ROM_END) {
+        m_rom[address] = data;
+        return;
+    } else {
+        dbg() << "bad address: " << address;
     }
 
     // If we've reached here it means we're trying to write to memory that is not set up yet.
