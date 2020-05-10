@@ -15,6 +15,9 @@ constexpr u16 MAX_ROM_SIZE = KB * 32;
 
 // Flags
 constexpr u8 FLAG_ZERO = 0b10000000;
+constexpr u8 FLAG_SUBTRACT = 0b01000000;
+constexpr u8 FLAG_HALF_CARRY = 0b00100000;
+constexpr u8 FLAG_CARRY = 0b00010000;
 
 // Memory Locations
 constexpr u16 WRAM_START = 0xC000;
@@ -193,7 +196,16 @@ void CPU::step()
     case OpCode::Halt:
         ASSERT(false);
     case OpCode::Dec_A:
+        // Andreas: How can I determine if bit 3 to 4 changed properly? Having a hard time wrapping my head around this one
+        // TODO: Half-carry flag. See: https://stackoverflow.com/questions/57958631/game-boy-half-carry-flag-and-16-bit-instructions-especially-opcode-0xe8
+        // Pretty sure this is totally wrong :-(
+        if (will_half_carry_sub(m_registers.a, 1))
+            m_registers.f |= FLAG_HALF_CARRY;
+
+        m_registers.f |= FLAG_SUBTRACT;
+
         m_registers.a--;
+
         if (m_registers.a == 0)
             m_registers.f |= FLAG_ZERO;
         break;
