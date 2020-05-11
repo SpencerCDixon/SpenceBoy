@@ -43,137 +43,39 @@ void print_registers(const Registers& reg)
           << "sp:  " << reg.stack_ptr << "  pc: " << reg.program_counter;
 }
 
-//#define ENUMERATE_OPCODES \
-//    __ENUMERATE(NoOp) \
-//    __ENUMERATE(Load_A_D8)
-//
-//#define __ENUMERATE(x) \
-//    case OpCode::x: \
-//        dbg() << #x;
-//ENUMERATE_OPCODES
-//#undef __ENUMERATE
-//
-//enum OpCode {
-//#define __ENUMERATE(x) \
-//    x,
-//        ENUMERATE_OPCODES
-//};
+#define ENUMERATE_OPCODES           \
+    __ENUMERATE(NoOp)               \
+    __ENUMERATE(Halt)               \
+    __ENUMERATE(Load_A_D8)          \
+    __ENUMERATE(Load_B_D8)          \
+    __ENUMERATE(Load_H_D8)          \
+    __ENUMERATE(Load_L_D8)          \
+    __ENUMERATE(Load_HL_Addr_B)     \
+    __ENUMERATE(Load_HL_Addr_A)     \
+    __ENUMERATE(Load_HL_Addr_D8)    \
+    __ENUMERATE(Load_A_HL_Addr)     \
+    __ENUMERATE(Load_A_DE_Addr)     \
+    __ENUMERATE(Load_HL_D16)        \
+    __ENUMERATE(Load_DE_D16)        \
+    __ENUMERATE(Load_Inc_HL_Addr_A) \
+    __ENUMERATE(Sub_D8)             \
+    __ENUMERATE(Dec_A)              \
+    __ENUMERATE(Dec_B)              \
+    __ENUMERATE(Inc_DE)             \
+    __ENUMERATE(Jump_NZ)            \
+    __ENUMERATE(Debugger)           \
+    __ENUMERATE(TestComplete)
 
-// Andreas: This is super annoying. What kind of C++ magic can I do which can use the enums
-// opcode name to do the print. I.E. OpCode::NoOp gets printed as OpCode::NoOp and not 0/1/2, etc.?
 void print_opcode(const OpCode& code)
 {
     switch (code) {
-    case OpCode::NoOp:
-        dbg() << "NoOp";
+#define __ENUMERATE(x) \
+    case OpCode::x:    \
+        dbg() << #x;   \
         break;
-    case OpCode::Load_A_D8:
-        dbg() << "Load_A_D8";
-        break;
-    case OpCode::Load_B_D8:
-        dbg() << "Load_B_D8";
-        break;
-    case OpCode::Load_H_D8:
-        dbg() << "Load_H_D8";
-        break;
-    case OpCode::Load_L_D8:
-        dbg() << "Load_L_D8";
-        break;
-    case OpCode::Load_HL_Addr_B:
-        dbg() << "Load_HL_Addr_B";
-        break;
-    case OpCode::Load_A_HL_Addr:
-        dbg() << "Load_A_HL_Addr";
-        break;
-    case OpCode::Load_A_DE_Addr:
-        dbg() << "Load_A_DE_Addr";
-        break;
-    case OpCode::Halt:
-        dbg() << "Halt";
-        break;
-    case OpCode::Dec_A:
-        dbg() << "Dec_A";
-        break;
-    case OpCode::Dec_B:
-        dbg() << "Dec_B";
-        break;
-    case OpCode::Jump_NZ:
-        dbg() << "Jump_NZ";
-        break;
-    case OpCode::Sub_D8:
-        dbg() << "Sub_D8";
-        break;
-    case OpCode::Load_HL_Addr_A:
-        dbg() << "Load_HL_Addr_A";
-        break;
-    case OpCode::Load_HL_Addr_D8:
-        dbg() << "Load_HL_Addr_D8";
-        break;
-    case OpCode::Load_HL_D16:
-        dbg() << "Load_HL_D16";
-        break;
-    case OpCode::Load_DE_D16:
-        dbg() << "Load_DE_D16";
-        break;
-    case OpCode::Inc_DE:
-        dbg() << "Inc_DE";
-        break;
-    case OpCode::Load_Inc_HL_Addr_A:
-        dbg() << "Load_Inc_HL_Addr_A";
-        break;
-    case OpCode::Unknown:
-        dbg() << "Unknown OpCode";
-        break;
+        ENUMERATE_OPCODES
+#undef __ENUMERATE
     }
-}
-
-OpCode decode(u8 byte)
-{
-    switch (byte) {
-    case 0x00:
-        return OpCode::NoOp;
-    case 0x06:
-        return OpCode::Load_B_D8;
-    case 0x3e:
-        return OpCode::Load_A_D8;
-    case 0x26:
-        return OpCode::Load_H_D8;
-    case 0x2e:
-        return OpCode::Load_L_D8;
-    case 0x70:
-        return OpCode::Load_HL_Addr_B;
-    case 0x77:
-        return OpCode::Load_HL_Addr_A;
-    case 0x36:
-        return OpCode::Load_HL_Addr_D8;
-    case 0x7e:
-        return OpCode::Load_A_HL_Addr;
-    case 0x1a:
-        return OpCode::Load_A_DE_Addr;
-    case 0x21:
-        return OpCode::Load_HL_D16;
-    case 0x11:
-        return OpCode::Load_DE_D16;
-    case 0x76:
-        return OpCode::Halt;
-    case 0x3d:
-        return OpCode::Dec_A;
-    case 0x05:
-        return OpCode::Dec_B;
-    case 0xc2:
-        return OpCode::Jump_NZ;
-    case 0xd6:
-        return OpCode::Sub_D8;
-    case 0x13:
-        return OpCode::Inc_DE;
-    case 0x22:
-        return OpCode::Load_Inc_HL_Addr_A;
-    }
-
-    // Useful in development. Fail on missing op codes and then implement
-    printf("missing op code: %x", byte);
-    ASSERT_NOT_REACHED();
-    return OpCode::Unknown;
 }
 
 void CPU::load_rom(const char* rom_path)
@@ -204,8 +106,7 @@ void CPU::load_rom(const char* rom_path)
 void CPU::step()
 {
     // TODO: handle interrupts?
-    u8 next_byte = fetch_and_inc();
-    OpCode op_code = decode(next_byte);
+    OpCode op_code = static_cast<OpCode>(fetch_and_inc());
 
     dbg() << "-----------------";
     print_opcode(op_code);
@@ -256,8 +157,8 @@ void CPU::step()
         write(address_to_write_d8, fetch_and_inc());
         break;
     case OpCode::Halt:
-//        hexDump("WRAM", (const char*)m_wram, (const int)KB * 32);
-        hexDump("VRAM", (const char*)m_vram, (const int)KB * 16);
+        //        hexDump("WRAM", (const char*)m_wram, (const int)KB * 32);
+        //        hexDump("VRAM", (const char*)m_vram, (const int)KB * 16);
         ASSERT(false);
     case OpCode::Dec_A: // 4 cycles. Flags: Z 1 H -
         // Andreas: How can I determine if bit 3 to 4 changed properly? Having a hard time wrapping my head around this one
@@ -313,7 +214,7 @@ void CPU::step()
         // 3. store DE
 
         // Example:
-//        u16 get_de() { return to_le_16_bit(m_registers.d, m_register.e); }
+        //        u16 get_de() { return to_le_16_bit(m_registers.d, m_register.e); }
         // void set_de(u16 value);
 
         u16 inc_de;
@@ -330,8 +231,9 @@ void CPU::step()
         m_registers.l = (inc_hl >> 8);
         m_registers.h = inc_hl;
         break;
-    case OpCode::Unknown:
-        printf("Unknown op_code that needs to be handled %x ", next_byte);
+    default:
+        printf("missing op code: %x", (u8)op_code);
+        ASSERT_NOT_REACHED();
         break;
     }
 
