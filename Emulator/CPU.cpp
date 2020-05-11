@@ -126,31 +126,16 @@ void CPU::step()
         //        hexDump("VRAM", (const char*)m_vram, (const int)KB * 16);
         ASSERT(false);
     case OpCode::Dec_A: // 4 cycles. Flags: Z 1 H -
-        // Andreas: How can I determine if bit 3 to 4 changed properly? Having a hard time wrapping my head around this one
-        // TODO: Half-carry flag. See: https://stackoverflow.com/questions/57958631/game-boy-half-carry-flag-and-16-bit-instructions-especially-opcode-0xe8
-        // Pretty sure this is totally wrong :-(
-        if (will_half_carry(m_registers.a, 1))
-            m_registers.f |= FLAG_HALF_CARRY;
-
-        m_registers.f |= FLAG_SUBTRACT;
-
+        set_subtract_flag(true);
+        set_half_carry_flag(will_half_carry(m_registers.a, 1));
         m_registers.a--;
-
-        if (m_registers.a == 0)
-            m_registers.f |= FLAG_ZERO;
-
-        // TODO(scd): Make sure to unset flag if conditions are not true
-        // TODO(scd): Make helper functions to set/unset flags
+        set_zero_flag(m_registers.a == 0);
         break;
     case OpCode::Dec_B: // 4 cycles. Flags: Z 1 H -
-        if (will_half_carry(m_registers.b, 1))
-            m_registers.f |= FLAG_HALF_CARRY;
-
-        m_registers.f |= FLAG_SUBTRACT;
+        set_subtract_flag(true);
+        set_half_carry_flag(will_half_carry(m_registers.b, 1));
         m_registers.b--;
-
-        if (m_registers.b == 0)
-            m_registers.f |= FLAG_ZERO;
+        set_zero_flag(m_registers.b == 0);
         break;
     case OpCode::Jump_NZ:
         if (m_registers.f & FLAG_ZERO) {
@@ -261,6 +246,42 @@ void CPU::write(u16 address, u8 data)
 
     // If we've reached here it means we're trying to write to memory that is not set up yet.
     ASSERT_NOT_REACHED();
+}
+
+//
+// Flag Setting
+//
+void CPU::set_zero_flag(bool should_set)
+{
+    if (should_set) {
+        m_registers.f |= FLAG_ZERO;
+    } else {
+        m_registers.f ^= FLAG_ZERO;
+    }
+}
+void CPU::set_carry_flag(bool should_set)
+{
+    if (should_set) {
+        m_registers.f |= FLAG_CARRY;
+    } else {
+        m_registers.f ^= FLAG_CARRY;
+    }
+}
+void CPU::set_half_carry_flag(bool should_set)
+{
+    if (should_set) {
+        m_registers.f |= FLAG_HALF_CARRY;
+    } else {
+        m_registers.f ^= FLAG_HALF_CARRY;
+    }
+}
+void CPU::set_subtract_flag(bool should_set)
+{
+    if (should_set) {
+        m_registers.f |= FLAG_SUBTRACT;
+    } else {
+        m_registers.f ^= FLAG_SUBTRACT;
+    }
 }
 
 // TODO: Abstract the address checking into a method which tells me two things:
