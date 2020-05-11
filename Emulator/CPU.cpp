@@ -11,6 +11,7 @@
 #include <utility>
 
 // Andreas: Should all of these go in the header file and not cpp file?
+// -> Only put things in header file if it needs to be shared
 constexpr u16 MAX_ROM_SIZE = KB * 32;
 
 // Flags
@@ -41,6 +42,22 @@ void print_registers(const Registers& reg)
           << "h:   " << reg.h << "  l:  " << reg.l << "\n"
           << "sp:  " << reg.stack_ptr << "  pc: " << reg.program_counter;
 }
+
+//#define ENUMERATE_OPCODES \
+//    __ENUMERATE(NoOp) \
+//    __ENUMERATE(Load_A_D8)
+//
+//#define __ENUMERATE(x) \
+//    case OpCode::x: \
+//        dbg() << #x;
+//ENUMERATE_OPCODES
+//#undef __ENUMERATE
+//
+//enum OpCode {
+//#define __ENUMERATE(x) \
+//    x,
+//        ENUMERATE_OPCODES
+//};
 
 // Andreas: This is super annoying. What kind of C++ magic can I do which can use the enums
 // opcode name to do the print. I.E. OpCode::NoOp gets printed as OpCode::NoOp and not 0/1/2, etc.?
@@ -180,7 +197,7 @@ void CPU::load_rom(const char* rom_path)
     // For now, ROM sizes should always be a specific size. If not, fail hard and fix the ROM!
     ASSERT(st.st_size == MAX_ROM_SIZE);
 
-    m_rom = (char*)malloc((size_t)st.st_size);
+    m_rom = (u8*)malloc((size_t)st.st_size);
     fread(m_rom, st.st_size, 1, fp);
 }
 
@@ -210,10 +227,14 @@ void CPU::step()
         m_registers.l = fetch_and_inc();
         break;
     case OpCode::Load_A_HL_Addr: // 8 cycles
+    {
         u16 address_to_read_hl;
+
         address_to_read_hl = to_le_16_bit(m_registers.l, m_registers.h);
         m_registers.a = read(address_to_read_hl);
+
         break;
+    }
     case OpCode::Load_A_DE_Addr: // 8 cycles
         u16 address_to_read_de;
         address_to_read_de = to_le_16_bit(m_registers.e, m_registers.d);
@@ -235,12 +256,14 @@ void CPU::step()
         write(address_to_write_d8, fetch_and_inc());
         break;
     case OpCode::Halt:
+//        hexDump("WRAM", (const char*)m_wram, (const int)KB * 32);
+        hexDump("VRAM", (const char*)m_vram, (const int)KB * 16);
         ASSERT(false);
     case OpCode::Dec_A: // 4 cycles. Flags: Z 1 H -
         // Andreas: How can I determine if bit 3 to 4 changed properly? Having a hard time wrapping my head around this one
         // TODO: Half-carry flag. See: https://stackoverflow.com/questions/57958631/game-boy-half-carry-flag-and-16-bit-instructions-especially-opcode-0xe8
         // Pretty sure this is totally wrong :-(
-        if (will_half_carry_sub(m_registers.a, 1))
+        if (will_half_carry(m_registers.a, 1))
             m_registers.f |= FLAG_HALF_CARRY;
 
         m_registers.f |= FLAG_SUBTRACT;
@@ -249,9 +272,12 @@ void CPU::step()
 
         if (m_registers.a == 0)
             m_registers.f |= FLAG_ZERO;
+
+        // TODO(scd): Make sure to unset flag if conditions are not true
+        // TODO(scd): Make helper functions to set/unset flags
         break;
     case OpCode::Dec_B: // 4 cycles. Flags: Z 1 H -
-        if (will_half_carry_sub(m_registers.b, 1))
+        if (will_half_carry(m_registers.b, 1))
             m_registers.f |= FLAG_HALF_CARRY;
 
         m_registers.f |= FLAG_SUBTRACT;
@@ -281,6 +307,15 @@ void CPU::step()
         m_registers.d = fetch_and_inc();
         break;
     case OpCode::Inc_DE: // 8 cycles. Flags: - - - -
+        // TODO(scd): Extract this out to:
+        // 1. fetch DE
+        // 2. inc DE
+        // 3. store DE
+
+        // Example:
+//        u16 get_de() { return to_le_16_bit(m_registers.d, m_register.e); }
+        // void set_de(u16 value);
+
         u16 inc_de;
         inc_de = to_le_16_bit(m_registers.d, m_registers.e);
         inc_de++;
@@ -362,6 +397,8 @@ void CPU::write(u16 address, u8 data)
 }
 
 // TODO: Abstract the address checking into a method which tells me two things:
+// Hide all of this logic inside the MMU class which will simplify the CPU
+
 // 1. which memory bank to access memory from
 // 2. a normalized address into that bank
 //

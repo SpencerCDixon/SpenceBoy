@@ -11,6 +11,7 @@ the `C` standard library.
 - [x] Set up a separate library to store standard lib functionality
 - [x] Set up a basic CMake test 
 - [ ] Add ROM conformation tests to ensure I'm compliant as possible
+- [ ] Remove CMake Tests for my own harness which does difs on traces of different .gb files (checksums intermediate and dump at end??)
 
 ## Standard Lib
 
@@ -18,6 +19,7 @@ the `C` standard library.
 - [ ] Unique Pointer
 - [ ] Shared Pointer
 - [ ] Vector
+- [ ] Option
 - [ ] Hash Map
 - [ ] File I/O
 - [x] Assertions
@@ -39,6 +41,11 @@ the `C` standard library.
 - [ ] Interrupts
 - [ ] Finish rest of the op codes
 - [ ] Call/return from ASM 'functions'
+
+## Game Targets
+
+– [ ] Get super mario land to render on screen
+- [ ] Tetris 
 
 ## Chores
 

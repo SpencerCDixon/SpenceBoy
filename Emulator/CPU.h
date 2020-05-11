@@ -9,11 +9,11 @@
 
 #include <stdlib.h>
 
-enum class OpCode {
-    NoOp,
-    Load_A_D8,
-    Load_B_D8,
-    Load_H_D8,
+enum class OpCode: u8 {
+    NoOp = 0x00,
+    Load_A_D8 = 0x06,
+    Load_B_D8 = 0x3e,
+    Load_H_D8 = 0x26,
     Load_L_D8,
     Load_HL_Addr_B,
     Load_HL_Addr_A,
@@ -56,9 +56,9 @@ public:
     CPU()
         : m_registers({ 0 })
     {
-        m_wram = (char*)calloc(KB * 32, sizeof(u8));
-        m_vram = (char*)calloc(KB * 16, sizeof(u8));
-        m_io_registers = (char*)calloc(112, sizeof(u8));
+        m_wram = (u8*)calloc(KB * 32, sizeof(u8));
+        m_vram = (u8*)calloc(KB * 16, sizeof(u8));
+        m_io_registers = (u8*)calloc(112, sizeof(u8));
     }
 
     ~CPU()
@@ -76,15 +76,24 @@ public:
     u8 read(u16 address);
     void write(u16 address, u8 data);
 
-    char* v_ram() { return m_vram; }
+    u8* v_ram() { return m_vram; }
 
 private:
     u8 fetch_and_inc();
 
+    // TODO(scd): change m_register.f based on should_set
+    void set_zero_flag(bool should_set);
+    void set_carry_flag(bool should_set);
+    void set_half_carry_flag(bool should_set);
+    void set_subtract_flag(bool should_set);
+
 private:
     Registers m_registers;
-    char* m_rom { nullptr };
-    char* m_wram { nullptr };
-    char* m_vram { nullptr };
-    char* m_io_registers { nullptr };
+
+    // TODO(scd): MMU / Bus which resolves pointers to the correct address bank.
+    // Memory is very different from CPU and should belong in different places.
+    u8* m_rom { nullptr };
+    u8* m_wram { nullptr };
+    u8* m_vram { nullptr };
+    u8* m_io_registers { nullptr };
 };

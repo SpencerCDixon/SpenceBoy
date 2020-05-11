@@ -7,6 +7,11 @@
 #include <SD/Color.h>
 #include <unistd.h>
 
+// background - always on bottom
+//  open a window with all my tiles so I can see if they're correct
+// sprites
+// window - always on top
+
 void render_gradient_test(OffscreenFrameBuffer* buffer, int blue_offset, int green_offset)
 {
     u8* row = (u8*)buffer->memory;

@@ -55,6 +55,7 @@ void test_smiley()
     const char* path = "./../../Tests/data/smiley.gb";
 
     // Yeah okay this is getting crazy. Will come up with something better soon ;)
+    // Test finished instruction or use halt to drive the step loop.
     CPU cpu;
     cpu.load_rom(path);
     cpu.step();
