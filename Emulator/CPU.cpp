@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <utility>
 
+// Andreas: Should all of these go in the header file and not cpp file?
 constexpr u16 MAX_ROM_SIZE = KB * 32;
 
 // Flags
@@ -324,6 +325,9 @@ u8 CPU::read(u16 address)
         return m_vram[idx];
     } else if (address >= ROM_START && address < ROM_END) {
         return m_rom[address];
+    } else if (address >= IO_START && address < IO_END) {
+        u16 idx = address - IO_START;
+        return m_rom[address];
     }
 
     ASSERT_NOT_REACHED();
@@ -344,6 +348,10 @@ void CPU::write(u16 address, u8 data)
         return;
     } else if (address >= ROM_START && address < ROM_END) {
         m_rom[address] = data;
+        return;
+    } else if (address >= IO_START && address < IO_END) {
+        u16 idx = address - IO_START;
+        m_io_registers[address] = data;
         return;
     } else {
         dbg() << "bad address: " << address;

@@ -26,8 +26,8 @@ struct OffscreenFrameBuffer {
 class Emulator {
 public:
     Emulator()
-        : m_cpu(CPU())
-        , m_ppu(PPU())
+        : m_cpu({})
+        , m_ppu({})
     {
         m_frame_buffer = OffscreenFrameBuffer { 0 };
 

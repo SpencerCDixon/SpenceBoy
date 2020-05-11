@@ -58,6 +58,7 @@ public:
     {
         m_wram = (char*)calloc(KB * 32, sizeof(u8));
         m_vram = (char*)calloc(KB * 16, sizeof(u8));
+        m_io_registers = (char*)calloc(112, sizeof(u8));
     }
 
     ~CPU()
@@ -85,4 +86,5 @@ private:
     char* m_rom { nullptr };
     char* m_wram { nullptr };
     char* m_vram { nullptr };
+    char* m_io_registers { nullptr };
 };

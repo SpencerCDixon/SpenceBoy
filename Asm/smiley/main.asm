@@ -37,6 +37,7 @@ copy_loop:
 	ld [hl], $81
 
 ; Stop
+	nop
 	halt
 
 smiley_sprite: 
