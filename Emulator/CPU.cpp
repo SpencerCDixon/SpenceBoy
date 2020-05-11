@@ -43,41 +43,6 @@ void print_registers(const Registers& reg)
           << "sp:  " << reg.stack_ptr << "  pc: " << reg.program_counter;
 }
 
-#define ENUMERATE_OPCODES           \
-    __ENUMERATE(NoOp)               \
-    __ENUMERATE(Halt)               \
-    __ENUMERATE(Load_A_D8)          \
-    __ENUMERATE(Load_B_D8)          \
-    __ENUMERATE(Load_H_D8)          \
-    __ENUMERATE(Load_L_D8)          \
-    __ENUMERATE(Load_HL_Addr_B)     \
-    __ENUMERATE(Load_HL_Addr_A)     \
-    __ENUMERATE(Load_HL_Addr_D8)    \
-    __ENUMERATE(Load_A_HL_Addr)     \
-    __ENUMERATE(Load_A_DE_Addr)     \
-    __ENUMERATE(Load_HL_D16)        \
-    __ENUMERATE(Load_DE_D16)        \
-    __ENUMERATE(Load_Inc_HL_Addr_A) \
-    __ENUMERATE(Sub_D8)             \
-    __ENUMERATE(Dec_A)              \
-    __ENUMERATE(Dec_B)              \
-    __ENUMERATE(Inc_DE)             \
-    __ENUMERATE(Jump_NZ)            \
-    __ENUMERATE(Debugger)           \
-    __ENUMERATE(TestComplete)
-
-void print_opcode(const OpCode& code)
-{
-    switch (code) {
-#define __ENUMERATE(x) \
-    case OpCode::x:    \
-        dbg() << #x;   \
-        break;
-        ENUMERATE_OPCODES
-#undef __ENUMERATE
-    }
-}
-
 void CPU::load_rom(const char* rom_path)
 {
     dbg() << "CPU::load_rom() loading rom into memory from path: " << rom_path;
