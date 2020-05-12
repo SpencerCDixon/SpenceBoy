@@ -12,6 +12,22 @@ Template for daily journal:
 
 ---
 
+**Date: 5/12/2020**
+### What did I learn today?
+
+* I learned about the LCDC bit flags and how they affect the PPU and which layer to render (i.e you can just render background layer).
+* The built in Calculator.app has a programmer mode which is SUPER useful for hex stuff.
+
+### What did I get done today?
+
+* Add additional data to op code macros
+* Improve hex dump utility
+* Validated my smiley ASM is putting data in correct locations
+* Came up with a game plan for getting first pixels rendered by the PPU
+* Added more compiler flags to increase code quality 
+
+---
+
 **Date: 5/11/2020**
 ### What did I learn today?
 

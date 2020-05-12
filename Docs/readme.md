@@ -10,8 +10,8 @@ the `C` standard library.
 
 - [x] Set up a separate library to store standard lib functionality
 - [x] Set up a basic CMake test 
-- [ ] Add ROM conformation tests to ensure I'm compliant as possible
-- [ ] Remove CMake Tests for my own harness which does difs on traces of different .gb files (checksums intermediate and dump at end??)
+- [ ] Add ROM conformation tests to ensure I'm as compliant as possible
+- [ ] Remove CMake Tests for my own harness which does diffs on traces of different .gb files (checksums intermediate and dump at end)
 
 ## Standard Lib
 
