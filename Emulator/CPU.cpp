@@ -121,8 +121,8 @@ void CPU::step()
         write(address_to_write_d8, fetch_and_inc());
         break;
     case OpCode::Halt:
-        //        hexDump("WRAM", (const char*)m_wram, (const int)KB * 32);
-        hexDump("VRAM", (const char*)m_vram, (const int)KB * 16);
+        //        hex_dump("WRAM", (const char*)m_wram, (const int)KB * 32);
+        hex_dump("VRAM", (const char*)m_vram, (const int)KB * 16);
         ASSERT(false);
     case OpCode::Dec_A: // 4 cycles. Flags: Z 1 H -
         set_subtract_flag(true);
