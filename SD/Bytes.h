@@ -42,7 +42,7 @@ inline bool will_carry(u8 byte1, u8 byte2)
 
 // Taken from: https://stackoverflow.com/questions/7775991/how-to-get-hexdump-of-a-structure-data
 // Some adjustments were added by me to bring color
-inline void hexDump(const char* desc, const void* addr, const int len)
+inline void hex_dump(const char* desc, const void* addr, const int len, const int offset)
 {
     int i;
     unsigned char buff[17];
@@ -76,7 +76,7 @@ inline void hexDump(const char* desc, const void* addr, const int len)
 
             // Output the offset.
 
-            printf("  %04x ", i);
+            printf("  %04x ", i + offset);
         }
 
         // Now the hex code for the specific character.

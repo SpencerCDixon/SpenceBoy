@@ -10,7 +10,7 @@
 * [Useful walk-through of looping in GB ASM](https://medium.com/@ulrikdamm/writing-your-first-gameboy-game-4ea62c76db29)
 * [ROM tests](https://gbdev.gg8.se/files/roms/blargg-gb-tests/)
 * [Ultimate GameBoy talk](https://www.youtube.com/watch?v=HyzD8pNlpwI)
-* [Lots of ROMs](http://nesninja.com/public/GoodGBx%203.14/)
+
 
 ## GBC - Game Boy Color (GBz80)
 
