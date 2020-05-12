@@ -215,7 +215,7 @@ u8 CPU::read(u16 address)
         return value;
     } else if (address >= IO_START && address < IO_END) {
         u16 idx = address - IO_START;
-        return m_rom[address];
+        return m_rom[idx];
     }
 
     ASSERT_NOT_REACHED();
@@ -239,7 +239,7 @@ void CPU::write(u16 address, u8 data)
         return;
     } else if (address >= IO_START && address < IO_END) {
         u16 idx = address - IO_START;
-        m_io_registers[address] = data;
+        m_io_registers[idx] = data;
         return;
     } else {
         dbg() << "bad address: " << address;

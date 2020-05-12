@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 project(gameboy)
 
 set(CMAKE_CXX_STANDARD 17)
-add_compile_options(-Wimplicit-fallthrough)
+add_compile_options(-Wimplicit-fallthrough -Wall -Werror)
 
 add_executable(gameboy
         Emulator/main.cpp
