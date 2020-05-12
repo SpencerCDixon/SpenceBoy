@@ -12,6 +12,23 @@ Template for daily journal:
 
 ---
 
+**Date: 5/11/2020**
+### What did I learn today?
+
+* I learned that "placement new" exists which allows you to 'new' memory into a specific location
+* I learned how to create an Option class using templates
+* I learned how `&=` combined with `~` can be used to unset a specific bit
+
+### What did I get done today?
+
+* Added I/O Register memory
+* Call with Andreas, created an Option class
+* Moved OpCodes into a separate header with a useful macro for adding op code related functionality
+* Added utilities for setting flags
+* Fix bugs with flag setting and Load_Inc_HL_Addr_A/Inc_DE preventing me from writing to VRAM
+
+---
+
 **Date: 5/10/2020**
 ### What did I learn today?
 

@@ -32,6 +32,3 @@ private:
     u8 m_storage[sizeof(T)];
     bool m_none { true };
 };
-
-Option<String> my_str;
-Option<u8> my_option;
