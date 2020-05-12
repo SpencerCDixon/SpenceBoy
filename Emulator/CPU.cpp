@@ -10,8 +10,6 @@
 #include <sys/stat.h>
 #include <utility>
 
-// Andreas: Should all of these go in the header file and not cpp file?
-// -> Only put things in header file if it needs to be shared
 constexpr u16 MAX_ROM_SIZE = KB * 32;
 
 // Flags
@@ -34,6 +32,7 @@ constexpr u16 IO_END = 0xFF7F;
 // HRAM: TBD
 
 // TODO: Use the logging interface for these
+// TODO: Use hex and decimal for faster debugging
 void print_registers(const Registers& reg)
 {
     dbg() << "a:   " << reg.a << "  f:  " << reg.f << "\n"
@@ -123,7 +122,7 @@ void CPU::step()
         break;
     case OpCode::Halt:
         //        hexDump("WRAM", (const char*)m_wram, (const int)KB * 32);
-        //        hexDump("VRAM", (const char*)m_vram, (const int)KB * 16);
+        hexDump("VRAM", (const char*)m_vram, (const int)KB * 16);
         ASSERT(false);
     case OpCode::Dec_A: // 4 cycles. Flags: Z 1 H -
         set_subtract_flag(true);
@@ -168,18 +167,18 @@ void CPU::step()
         // void set_de(u16 value);
 
         u16 inc_de;
-        inc_de = to_le_16_bit(m_registers.d, m_registers.e);
+        inc_de = to_le_16_bit(m_registers.e, m_registers.d);
         inc_de++;
-        m_registers.e = (inc_de >> 8);
-        m_registers.d = inc_de;
+        m_registers.e = inc_de;
+        m_registers.d = (inc_de >> 8);
         break;
     case OpCode::Load_Inc_HL_Addr_A: // 8 cycles. Flags: - - - -
         u16 inc_hl;
-        inc_hl = to_le_16_bit(m_registers.h, m_registers.l);
-        m_registers.a = read(inc_hl);
+        inc_hl = to_le_16_bit(m_registers.l, m_registers.h);
+        write(inc_hl, m_registers.a);
         inc_hl++;
-        m_registers.l = (inc_hl >> 8);
-        m_registers.h = inc_hl;
+        m_registers.l = inc_hl;
+        m_registers.h = (inc_hl >> 8);
         break;
     default:
         printf("missing op code: %x", (u8)op_code);
@@ -211,7 +210,9 @@ u8 CPU::read(u16 address)
         ASSERT(idx >= 0);
         return m_vram[idx];
     } else if (address >= ROM_START && address < ROM_END) {
-        return m_rom[address];
+        u8 value = m_rom[address];
+        dbg() << "VALUE: " << value;
+        return value;
     } else if (address >= IO_START && address < IO_END) {
         u16 idx = address - IO_START;
         return m_rom[address];
@@ -256,7 +257,7 @@ void CPU::set_zero_flag(bool should_set)
     if (should_set) {
         m_registers.f |= FLAG_ZERO;
     } else {
-        m_registers.f ^= FLAG_ZERO;
+        m_registers.f &= ~FLAG_ZERO;
     }
 }
 void CPU::set_carry_flag(bool should_set)
@@ -264,7 +265,7 @@ void CPU::set_carry_flag(bool should_set)
     if (should_set) {
         m_registers.f |= FLAG_CARRY;
     } else {
-        m_registers.f ^= FLAG_CARRY;
+        m_registers.f &= ~FLAG_CARRY;
     }
 }
 void CPU::set_half_carry_flag(bool should_set)
@@ -272,7 +273,7 @@ void CPU::set_half_carry_flag(bool should_set)
     if (should_set) {
         m_registers.f |= FLAG_HALF_CARRY;
     } else {
-        m_registers.f ^= FLAG_HALF_CARRY;
+        m_registers.f &= ~FLAG_HALF_CARRY;
     }
 }
 void CPU::set_subtract_flag(bool should_set)
@@ -280,7 +281,7 @@ void CPU::set_subtract_flag(bool should_set)
     if (should_set) {
         m_registers.f |= FLAG_SUBTRACT;
     } else {
-        m_registers.f ^= FLAG_SUBTRACT;
+        m_registers.f &= ~FLAG_SUBTRACT;
     }
 }
 

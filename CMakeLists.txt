@@ -5,7 +5,7 @@ project(gameboy)
 set(CMAKE_CXX_STANDARD 17)
 add_compile_options(-Wimplicit-fallthrough)
 
-add_executable(gameboy 
+add_executable(gameboy
         Emulator/main.cpp
         SD/LogStream.cpp
         SD/LogStream.h

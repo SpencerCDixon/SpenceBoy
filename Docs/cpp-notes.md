@@ -20,3 +20,6 @@ As with everything, I recommend messing with it and trying out different things 
 ## Tips
 
 Use the `-Wimplicit-fallthrough` compiler flag to prevent missing `break`'s in switch statements which can cause a lot of pain and suffering.
+
+In general, only put things in header files that need to be exposed to other classes/files. Encapsulate
+as much as possible into .cpp files.
