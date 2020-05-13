@@ -27,7 +27,7 @@ class Emulator {
 public:
     Emulator()
         : m_cpu({})
-        , m_ppu({})
+//        , m_ppu({})
     {
         m_frame_buffer = OffscreenFrameBuffer { 0 };
 
@@ -53,7 +53,7 @@ private:
 
 private:
     CPU m_cpu;
-    PPU m_ppu;
+//    PPU m_ppu;
 
     SDL_Window* m_window { nullptr };
     SDL_Renderer* m_renderer { nullptr };

@@ -40,5 +40,6 @@ target_link_libraries(gameboy ${SDL2_LIBRARY})
 # Testing
 #---------
 
-enable_testing()
-add_subdirectory(Tests)
+add_executable(cpu_test ./Tests/TestCPU.cpp ./Emulator/CPU.cpp ./SD/LogStream.cpp)
+target_include_directories(cpu_test PUBLIC ".")
+

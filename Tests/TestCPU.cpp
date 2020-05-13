@@ -6,7 +6,7 @@
 
 void test_loop()
 {
-    const char* path = "./../../Tests/data/loop.gb";
+    const char* path = "./../Tests/data/loop.gb";
 
     CPU cpu;
     cpu.load_rom(path);
@@ -15,7 +15,7 @@ void test_loop()
 
 void test_ram()
 {
-    const char* path = "./../../Tests/data/ram.gb";
+    const char* path = "./../Tests/data/ram.gb";
 
     CPU cpu;
     cpu.load_rom(path);
@@ -24,7 +24,7 @@ void test_ram()
 
 void test_smiley()
 {
-    const char* path = "./../../Tests/data/smiley.gb";
+    const char* path = "./../Tests/data/smiley.gb";
 
     CPU cpu;
     cpu.load_rom(path);
