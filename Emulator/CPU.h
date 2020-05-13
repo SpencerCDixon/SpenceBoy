@@ -4,10 +4,10 @@
 
 #pragma once
 
+#include "OpCode.h"
+#include <SD/Bytes.h>
 #include <SD/LogStream.h>
 #include <SD/Types.h>
-#include <SD/Bytes.h>
-#include "OpCode.h"
 
 #include <stdlib.h>
 
@@ -39,8 +39,9 @@ struct CPUTestState {
 class CPU {
 
 public:
-    CPU()
-        : m_registers({ 0 })
+    CPU(bool verbose_logging = false)
+        : m_verbose_logging(verbose_logging)
+        , m_registers({ 0 })
     {
         m_wram = (u8*)calloc(WRAM_SIZE, sizeof(u8));
         m_vram = (u8*)calloc(VRAM_SIZE, sizeof(u8));
@@ -64,7 +65,8 @@ public:
 
     u8* v_ram() { return m_vram; }
 
-    CPUTestState test_state() {
+    CPUTestState test_state()
+    {
         CPUTestState result;
         result.registers = m_registers;
         result.wram_checksum = checksum((const unsigned char*)m_wram, WRAM_SIZE);
@@ -83,6 +85,7 @@ private:
     void set_subtract_flag(bool should_set);
 
 private:
+    bool m_verbose_logging;
     Registers m_registers;
 
     // TODO(scd): MMU / Bus which resolves pointers to the correct address bank.

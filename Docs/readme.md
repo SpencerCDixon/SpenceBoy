@@ -50,3 +50,4 @@ the `C` standard library.
 ## Chores
 
 - [ ] Get CMake script for SDL working on Linux/Windows
+- [ ] Get Clang Tidy set up 

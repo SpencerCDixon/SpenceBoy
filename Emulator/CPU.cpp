@@ -43,21 +43,18 @@ void print_registers(const Registers& reg)
 
 void CPU::load_rom(const char* rom_path)
 {
-    dbg() << "CPU::load_rom() loading rom into memory from path: " << rom_path;
+    if (m_verbose_logging)
+        dbg() << "CPU::load_rom() loading rom into memory from path: " << rom_path;
 
     FILE* fp;
     fp = fopen(rom_path, "rb");
-    if (fp == NULL) {
-        perror("CPU::load_rom() Error: ");
-        return;
-    }
+    perror_exit_if(fp == nullptr, "CPU::load_rom() Error: ");
 
     struct stat st;
-    if (stat(rom_path, &st)) {
-        perror("stat() ");
-        return;
-    }
-    dbg() << "size of ROM file is: " << st.st_size;
+    perror_exit_if(stat(rom_path, &st), "stat()");
+
+    if (m_verbose_logging)
+        dbg() << "size of ROM file is: " << st.st_size;
 
     // For now, ROM sizes should always be a specific size. If not, fail hard and fix the ROM!
     ASSERT(st.st_size == MAX_ROM_SIZE);
@@ -71,8 +68,10 @@ bool CPU::step()
     // TODO: handle interrupts?
     OpCode op_code = static_cast<OpCode>(fetch_and_inc());
 
-    dbg() << "-----------------";
-    print_opcode(op_code);
+    if (m_verbose_logging) {
+        dbg() << "-----------------";
+        print_opcode(op_code);
+    }
 
     // TODO: Convert from switch statement to calling handlers to avoid annoying switch scoping issues :-(...
     switch (op_code) {
@@ -182,10 +181,12 @@ bool CPU::step()
         break;
     }
 
-    dbg() << "-----------------";
-    dbg() << "Registers:";
-    print_registers(m_registers);
-    dbg() << "-----------------\n";
+    if (m_verbose_logging) {
+        dbg() << "-----------------";
+        dbg() << "Registers:";
+        print_registers(m_registers);
+        dbg() << "-----------------\n";
+    }
 
     return true;
 }
@@ -208,9 +209,7 @@ u8 CPU::read(u16 address)
         ASSERT(idx >= 0);
         return m_vram[idx];
     } else if (address >= ROM_START && address < ROM_END) {
-        u8 value = m_rom[address];
-        dbg() << "VALUE: " << value;
-        return value;
+        return m_rom[address];
     } else if (address >= IO_START && address < IO_END) {
         u16 idx = address - IO_START;
         return m_rom[idx];
