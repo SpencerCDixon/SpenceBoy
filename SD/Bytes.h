@@ -2,6 +2,8 @@
 // Created by Spencer Dixon on 5/9/20.
 //
 
+#include <SD/Types.h>
+
 #pragma once
 
 // clang-format off

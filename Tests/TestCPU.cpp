@@ -3,12 +3,13 @@
 //
 
 #include <SD/Assertions.h>
-#include <SD/LogStream.h>
 #include <SD/Bytes.h>
+#include <SD/LogStream.h>
 
 #include <Emulator/CPU.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /*
@@ -31,41 +32,111 @@
 // TODO: Maybe a verbose flag which let's us see each step
 class CPUSnapshotTest {
 public:
-    CPUSnapshotTest(const char* rom_path, bool should_update_snapshot)
-        : m_rom_path(rom_path)
+    CPUSnapshotTest(const char* test_name, const char* rom_path, bool should_update_snapshot, bool verbose_logging)
+        : m_name(test_name)
+        , m_rom_path(rom_path)
         , m_should_update_snapshot(should_update_snapshot)
-        , m_cpu({})
+        , m_cpu(CPU(verbose_logging))
+        , m_verbose_logging(verbose_logging)
     {
         m_cpu.load_rom(rom_path);
     }
 
     void run()
     {
-        dbg() << "Running test: " << m_rom_path;
-        while (m_cpu.step())
-            ;
+        if (m_verbose_logging)
+            dbg() << "--> Running test: " << m_name;
 
-        if (m_should_update_snapshot)
+        while (m_cpu.step()) { };
+
+        if (m_should_update_snapshot) {
             update_snapshot();
+            dbg() << "[" << YELLOW "UPDATED" RESET << "] " << m_name;
+        } else {
+            compare_snapshot();
+        }
+    }
+
+private:
+    void compare_snapshot()
+    {
+        char* current_snapshot = generate_snapshot();
+        char* existing_snapshot = read_existing_snapshot();
+
+        size_t current_len = strlen(current_snapshot);
+        size_t existing_len = strlen(existing_snapshot);
+
+        bool failed = false;
+        failed = current_len != existing_len;
+
+        if (!failed) {
+            for (size_t i = 0; i < current_len; ++i) {
+                if (current_snapshot[i] != existing_snapshot[i]) {
+                    failed = true;
+                    break;
+                }
+            }
+        }
+
+        if (failed) {
+            dbg() << "[" << RED "FAIL" RESET << "] " << m_name;
+            dbg() << YELLOW "EXPECTED: \n" RESET;
+            dbg() << existing_snapshot;
+            dbg() << RED "GOT: \n" RESET;
+            dbg() << current_snapshot;
+        } else {
+            dbg() << "[" << GREEN "OK" RESET << "] " << m_name;
+        }
+
+        free(current_snapshot);
+        free(existing_snapshot);
     }
 
     void update_snapshot()
     {
-        dbg() << "Updating snapshot for: " << m_rom_path;
+        if (m_verbose_logging)
+            dbg() << "--> Updating snapshot for: " << m_rom_path;
 
         char snapshot_path[128];
         strcpy(snapshot_path, m_rom_path);
         strcat(snapshot_path, ".snapshot");
 
-        dbg() << "Writing snapshot to:   " << snapshot_path;
+        if (m_verbose_logging)
+            dbg() << "--> Writing snapshot to:   " << snapshot_path;
 
         FILE* fp;
         fp = fopen(snapshot_path, "wb");
-        perror_exit_if(fp == NULL, "update_snapshot()");
+        perror_exit_if(fp == nullptr, "update_snapshot()");
 
-        // TODO: extract this into reusable register related function?
+        char* snapshot_buffer = generate_snapshot();
+        fwrite(snapshot_buffer, sizeof(char), strlen(snapshot_buffer), fp);
+        fclose(fp);
+
+        free(snapshot_buffer);
+    }
+
+    // Caller is responsible for freeing when done.
+    char* read_existing_snapshot()
+    {
+        char snapshot_path[128];
+        strcpy(snapshot_path, m_rom_path);
+        strcat(snapshot_path, ".snapshot");
+
+        FILE* fp;
+        fp = fopen(snapshot_path, "rb");
+        perror_exit_if(fp == nullptr, "compare_snapshot()");
+
+        char* existing_snapshot = (char*)calloc(512, sizeof(char));
+        fread(existing_snapshot, 512, 1, fp);
+
+        return existing_snapshot;
+    }
+
+    // Caller is responsible for freeing when done.
+    char* generate_snapshot()
+    {
         auto state = m_cpu.test_state();
-        char snapshot_buffer[512];
+        char* snapshot_buffer = (char*)calloc(512, sizeof(char));
         sprintf(
             snapshot_buffer,
             "Registers:\n"
@@ -102,27 +173,41 @@ public:
             state.registers.program_counter,
             state.wram_checksum,
             state.vram_checksum,
-            state.io_checksum
-            );
+            state.io_checksum);
 
-        fwrite(snapshot_buffer, sizeof(char), strlen(snapshot_buffer), fp);
-        fclose(fp);
+        return snapshot_buffer;
     }
 
 private:
+    const char* m_name;
     const char* m_rom_path;
     bool m_should_update_snapshot;
     CPU m_cpu;
+    bool m_verbose_logging;
 };
 
-//const char* path = "./data/loop.gb";
-//const char* path = "./data/ram.gb";
-//const char* path = "./data/smiley.gb";
+#define TESTCASE_TYPE_NAME(x) TestCase_##x
+#define TEST_CASE(name, path)                                                                 \
+    CPUSnapshotTest TESTCASE_TYPE_NAME(name)(#name, #path, should_update_snapshots, verbose); \
+    TESTCASE_TYPE_NAME(name).run();
 
-// TODO:  --updateSnapshot to update all failing snapshots
 int main(int argc, char* argv[])
 {
-    CPUSnapshotTest test("./data/smiley.gb", true);
-    test.run();
+    bool should_update_snapshots = false;
+    bool verbose = false;
+
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--update-snapshots") == 0)
+            should_update_snapshots = true;
+        if (strcmp(argv[i], "--verbose") == 0)
+            verbose = true;
+    }
+
+    // clang-format off
+    TEST_CASE(loop, data/loop.gb)
+    TEST_CASE(ram_access, data/ram.gb)
+    TEST_CASE(smily_rendering, data/smiley.gb)
+    // clang-format on
+
     return 0;
 }
