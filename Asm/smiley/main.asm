@@ -50,7 +50,7 @@ copy_loop:
 
 ; Stop
 	nop
-	halt
+	db $db
 
 smiley_sprite: 
 	db $00, $00, $00, $00, $24, $24, $00, $00, $81, $81, $7e, $7e, $00, $00, $00, $00

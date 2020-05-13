@@ -4,7 +4,6 @@
 
 #include "CPU.h"
 #include <SD/Assertions.h>
-#include <SD/Bytes.h>
 
 #include <stdio.h>
 #include <sys/stat.h>
@@ -35,11 +34,11 @@ constexpr u16 IO_END = 0xFF7F;
 // TODO: Use hex and decimal for faster debugging
 void print_registers(const Registers& reg)
 {
-    dbg() << "a:   " << reg.a << "  f:  " << reg.f << "\n"
-          << "b:   " << reg.b << "  c:  " << reg.c << "\n"
-          << "d:   " << reg.d << "  e:  " << reg.e << "\n"
+    dbg() << "a:   " << reg.a << "    f:  " << reg.f << "\n"
+          << "b:   " << reg.b << "    c:  " << reg.c << "\n"
+          << "d:   " << reg.d << "    e:  " << reg.e << "\n"
           << "h:   " << reg.h << "  l:  " << reg.l << "\n"
-          << "sp:  " << reg.stack_ptr << "  pc: " << reg.program_counter;
+          << "sp:  " << reg.stack_ptr << "    pc: " << reg.program_counter;
 }
 
 void CPU::load_rom(const char* rom_path)
@@ -121,16 +120,15 @@ bool CPU::step()
         write(address_to_write_d8, fetch_and_inc());
         break;
     case OpCode::Halt: {
-
-        //        hex_dump("WRAM", (const char*)m_wram, (const int)KB * 32);
-//        hex_dump("VRAM", (const char*)m_vram, (const int)KB * 16, VRAM_START);
-//        hex_dump("IORAM", (const char*)m_io_registers, (const int)112, IO_START);
-
-        u64 v_sum = checksum((const unsigned char*)m_vram, (size_t)KB * 16);
-        u64 io_sum = checksum((const unsigned char*)m_io_registers, (size_t)112);
-
-        dbg() << "VRAM Checksum: " << v_sum;
-        dbg() << "IO   Checksum: " << io_sum;
+        auto result = test_state();
+        dbg() << "VRAM Checksum: " << result.vram_checksum;
+        dbg() << "IO   Checksum: " << result.io_checksum;
+        return false;
+    }
+    case OpCode::TestComplete: {
+        auto result = test_state();
+        dbg() << "VRAM Checksum: " << result.vram_checksum;
+        dbg() << "IO   Checksum: " << result.io_checksum;
         return false;
     }
     case OpCode::Dec_A: // 4 cycles. Flags: Z 1 H -

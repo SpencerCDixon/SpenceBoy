@@ -40,7 +40,7 @@ inline bool will_carry(u8 byte1, u8 byte2)
     return (result & carry_flag) == carry_flag;
 }
 
-u64 checksum(const unsigned char* buff, size_t len)
+inline u64 checksum(const unsigned char* buff, size_t len)
 {
     u64 sum;
     for (sum = 0; len != 0; len--)

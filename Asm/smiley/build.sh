@@ -8,4 +8,4 @@ rgblink -o smiley.gb main.o
 # -p 0 will pad the rom with zeros.
 rgbfix -v -p 0 smiley.gb
 
-open ../SameBoy.app ./smiley.gb
+# open ../SameBoy.app ./smiley.gb

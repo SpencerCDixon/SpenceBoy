@@ -6,9 +6,14 @@
 
 #include <SD/LogStream.h>
 #include <SD/Types.h>
+#include <SD/Bytes.h>
 #include "OpCode.h"
 
 #include <stdlib.h>
+
+constexpr size_t WRAM_SIZE = KB * 32;
+constexpr size_t VRAM_SIZE = KB * 16;
+constexpr size_t IO_SIZE = 112;
 
 struct Registers {
     u8 a { 0 };
@@ -22,8 +27,14 @@ struct Registers {
     u16 stack_ptr { 0 };
     u16 program_counter { 0 };
 };
-
 void print_registers(const Registers& reg);
+
+struct CPUTestState {
+    Registers registers;
+    u64 wram_checksum;
+    u64 vram_checksum;
+    u64 io_checksum;
+};
 
 class CPU {
 
@@ -31,9 +42,9 @@ public:
     CPU()
         : m_registers({ 0 })
     {
-        m_wram = (u8*)calloc(KB * 32, sizeof(u8));
-        m_vram = (u8*)calloc(KB * 16, sizeof(u8));
-        m_io_registers = (u8*)calloc(112, sizeof(u8));
+        m_wram = (u8*)calloc(WRAM_SIZE, sizeof(u8));
+        m_vram = (u8*)calloc(VRAM_SIZE, sizeof(u8));
+        m_io_registers = (u8*)calloc(IO_SIZE, sizeof(u8));
     }
 
     ~CPU()
@@ -52,6 +63,15 @@ public:
     void write(u16 address, u8 data);
 
     u8* v_ram() { return m_vram; }
+
+    CPUTestState test_state() {
+        CPUTestState result;
+        result.registers = m_registers;
+        result.wram_checksum = checksum((const unsigned char*)m_wram, WRAM_SIZE);
+        result.vram_checksum = checksum((const unsigned char*)m_vram, VRAM_SIZE);
+        result.io_checksum = checksum((const unsigned char*)m_io_registers, IO_SIZE);
+        return result;
+    }
 
 private:
     u8 fetch_and_inc();
