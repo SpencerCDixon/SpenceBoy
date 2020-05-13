@@ -1,4 +1,4 @@
-INCLUDE "hardware.inc"
+INCLUDE "../common/hardware.inc"
 
 SECTION "Header", ROM0[$100]
 

@@ -1,4 +1,4 @@
-INCLUDE "hardware.inc"
+INCLUDE "../common/hardware.inc"
 
 ; The gameboy will load our code at address $100
 SECTION "Header", ROM0[$100]
