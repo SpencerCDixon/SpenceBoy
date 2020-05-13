@@ -5,6 +5,10 @@ mkdir -p build
 
 pushd build
 cmake ..
-make test
+make
+popd
+
+pushd Tests
+../build/cpu_test
 popd
 
