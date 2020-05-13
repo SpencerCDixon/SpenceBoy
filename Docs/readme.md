@@ -11,7 +11,7 @@ the `C` standard library.
 - [x] Set up a separate library to store standard lib functionality
 - [x] Set up a basic CMake test 
 - [ ] Add ROM conformation tests to ensure I'm as compliant as possible
-- [ ] Remove CMake Tests for my own harness which does diffs on traces of different .gb files (checksums intermediate and dump at end)
+- [x] Remove CMake Tests for my own harness which does diffs on traces of different .gb files 
 
 ## Standard Lib
 
@@ -41,6 +41,10 @@ the `C` standard library.
 - [ ] Interrupts
 - [ ] Finish rest of the op codes
 - [ ] Call/return from ASM 'functions'
+
+## Testing Infra
+
+- [ ] Add flags at end of execution to snapshots
 
 ## Game Targets
 

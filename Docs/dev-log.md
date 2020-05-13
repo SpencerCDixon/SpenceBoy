@@ -12,6 +12,22 @@ Template for daily journal:
 
 ---
 
+**Date: 5/13/2020**
+### What did I learn today?
+
+* How to use macros inside of macros for building my new test harness
+
+### What did I get done today?
+
+* Added snapshot testing infrastructure to assert programs run correctly on the CPU
+* Added verbose logging level to CPU so I can adjust how noisy execution is
+* Update test scripts to work with the new testing infrastructure
+
+### Any questions for Andreas?
+
+* I had trouble getting `memcmp` working properly in my test diffs. Instead, I compared raw bytes
+myself. Is that bad?
+
 **Date: 5/12/2020**
 ### What did I learn today?
 
