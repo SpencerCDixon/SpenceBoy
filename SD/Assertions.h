@@ -17,3 +17,10 @@ inline void error(const char* fmt, ...)
     va_end(args);
     exit(1);
 }
+
+inline void perror_exit_if(bool is_true, const char* fmt) {
+    if (is_true) {
+        perror(fmt);
+        exit(1);
+    }
+}

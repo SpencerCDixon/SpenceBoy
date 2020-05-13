@@ -92,11 +92,8 @@ bool CPU::step()
         break;
     case OpCode::Load_A_HL_Addr: // 8 cycles
     {
-        u16 address_to_read_hl;
-
-        address_to_read_hl = to_le_16_bit(m_registers.l, m_registers.h);
-        m_registers.a = read(address_to_read_hl);
-
+        u16 address_to_read = to_le_16_bit(m_registers.l, m_registers.h);
+        m_registers.a = read(address_to_read);
         break;
     }
     case OpCode::Load_A_DE_Addr: // 8 cycles
@@ -119,18 +116,6 @@ bool CPU::step()
         address_to_write_d8 = to_le_16_bit(m_registers.l, m_registers.h);
         write(address_to_write_d8, fetch_and_inc());
         break;
-    case OpCode::Halt: {
-        auto result = test_state();
-        dbg() << "VRAM Checksum: " << result.vram_checksum;
-        dbg() << "IO   Checksum: " << result.io_checksum;
-        return false;
-    }
-    case OpCode::TestComplete: {
-        auto result = test_state();
-        dbg() << "VRAM Checksum: " << result.vram_checksum;
-        dbg() << "IO   Checksum: " << result.io_checksum;
-        return false;
-    }
     case OpCode::Dec_A: // 4 cycles. Flags: Z 1 H -
         set_subtract_flag(true);
         set_half_carry_flag(will_half_carry(m_registers.a, 1));
@@ -187,6 +172,10 @@ bool CPU::step()
         m_registers.l = inc_hl;
         m_registers.h = (inc_hl >> 8);
         break;
+    case OpCode::Halt:
+        return false;
+    case OpCode::TestComplete:
+        return false;
     default:
         printf("missing op code: %x", (u8)op_code);
         ASSERT_NOT_REACHED();
