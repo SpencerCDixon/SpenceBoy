@@ -2,11 +2,6 @@
 // Created by Spencer Dixon on 5/6/20.
 //
 
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
 #include <Emulator/CPU.h>
 
 void test_loop()
@@ -15,15 +10,7 @@ void test_loop()
 
     CPU cpu;
     cpu.load_rom(path);
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
+    while (cpu.step());
 }
 
 void test_ram()
@@ -32,166 +19,21 @@ void test_ram()
 
     CPU cpu;
     cpu.load_rom(path);
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
+    while (cpu.step());
 }
 
 void test_smiley()
 {
     const char* path = "./../../Tests/data/smiley.gb";
 
-    // Yeah okay this is getting crazy. Will come up with something better soon ;)
-    // Test finished instruction or use halt to drive the step loop.
     CPU cpu;
     cpu.load_rom(path);
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
-    cpu.step();
+    while (cpu.step());
+
 }
 
 int main(int argc, char* argv[])
 {
-//    test_loop();
-//    test_ram();
     test_smiley();
     return 0;
 }

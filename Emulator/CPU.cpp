@@ -67,7 +67,7 @@ void CPU::load_rom(const char* rom_path)
     fread(m_rom, st.st_size, 1, fp);
 }
 
-void CPU::step()
+bool CPU::step()
 {
     // TODO: handle interrupts?
     OpCode op_code = static_cast<OpCode>(fetch_and_inc());
@@ -120,11 +120,19 @@ void CPU::step()
         address_to_write_d8 = to_le_16_bit(m_registers.l, m_registers.h);
         write(address_to_write_d8, fetch_and_inc());
         break;
-    case OpCode::Halt:
+    case OpCode::Halt: {
+
         //        hex_dump("WRAM", (const char*)m_wram, (const int)KB * 32);
-        hex_dump("VRAM", (const char*)m_vram, (const int)KB * 16, VRAM_START);
-        hex_dump("IORAM", (const char*)m_io_registers, (const int)112, IO_START);
-        ASSERT(false);
+//        hex_dump("VRAM", (const char*)m_vram, (const int)KB * 16, VRAM_START);
+//        hex_dump("IORAM", (const char*)m_io_registers, (const int)112, IO_START);
+
+        u64 v_sum = checksum((const unsigned char*)m_vram, (size_t)KB * 16);
+        u64 io_sum = checksum((const unsigned char*)m_io_registers, (size_t)112);
+
+        dbg() << "VRAM Checksum: " << v_sum;
+        dbg() << "IO   Checksum: " << io_sum;
+        return false;
+    }
     case OpCode::Dec_A: // 4 cycles. Flags: Z 1 H -
         set_subtract_flag(true);
         set_half_carry_flag(will_half_carry(m_registers.a, 1));
@@ -191,6 +199,8 @@ void CPU::step()
     dbg() << "Registers:";
     print_registers(m_registers);
     dbg() << "-----------------\n";
+
+    return true;
 }
 
 u8 CPU::fetch_and_inc()

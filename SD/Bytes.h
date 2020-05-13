@@ -40,6 +40,14 @@ inline bool will_carry(u8 byte1, u8 byte2)
     return (result & carry_flag) == carry_flag;
 }
 
+u64 checksum(const unsigned char* buff, size_t len)
+{
+    u64 sum;
+    for (sum = 0; len != 0; len--)
+        sum += *(buff++);
+    return sum;
+}
+
 // Taken from: https://stackoverflow.com/questions/7775991/how-to-get-hexdump-of-a-structure-data
 // Some adjustments were added by me to bring color
 inline void hex_dump(const char* desc, const void* addr, const int len, const int offset)
