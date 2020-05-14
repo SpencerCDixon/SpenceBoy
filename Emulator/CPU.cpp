@@ -90,30 +90,19 @@ bool CPU::step()
         m_registers.l = fetch_and_inc();
         break;
     case OpCode::Load_A_HL_Addr: // 8 cycles
-    {
-        u16 address_to_read = to_le_16_bit(m_registers.l, m_registers.h);
-        m_registers.a = read(address_to_read);
+        m_registers.a = read(get_hl());
         break;
-    }
     case OpCode::Load_A_DE_Addr: // 8 cycles
-        u16 address_to_read_de;
-        address_to_read_de = to_le_16_bit(m_registers.e, m_registers.d);
-        m_registers.a = read(address_to_read_de);
+        m_registers.a = read(get_de());
         break;
     case OpCode::Load_HL_Addr_B:
-        u16 address_to_write_b;
-        address_to_write_b = to_le_16_bit(m_registers.l, m_registers.h);
-        write(address_to_write_b, m_registers.b);
+        write(get_hl(), m_registers.b);
         break;
     case OpCode::Load_HL_Addr_A:
-        u16 address_to_write_a;
-        address_to_write_a = to_le_16_bit(m_registers.l, m_registers.h);
-        write(address_to_write_a, m_registers.a);
+        write(get_hl(), m_registers.a);
         break;
     case OpCode::Load_HL_Addr_D8: // 12 cycles. Flags: - - - -
-        u16 address_to_write_d8;
-        address_to_write_d8 = to_le_16_bit(m_registers.l, m_registers.h);
-        write(address_to_write_d8, fetch_and_inc());
+        write(get_hl(), fetch_and_inc());
         break;
     case OpCode::Dec_A: // 4 cycles. Flags: Z 1 H -
         set_subtract_flag(true);
@@ -148,33 +137,16 @@ bool CPU::step()
         m_registers.d = fetch_and_inc();
         break;
     case OpCode::Inc_DE: // 8 cycles. Flags: - - - -
-        // TODO(scd): Extract this out to:
-        // 1. fetch DE
-        // 2. inc DE
-        // 3. store DE
-
-        // Example:
-        //        u16 get_de() { return to_le_16_bit(m_registers.d, m_register.e); }
-        // void set_de(u16 value);
-
-        u16 inc_de;
-        inc_de = to_le_16_bit(m_registers.e, m_registers.d);
-        inc_de++;
-        m_registers.e = inc_de;
-        m_registers.d = (inc_de >> 8);
+        inc_de();
         break;
     case OpCode::Load_Inc_HL_Addr_A: // 8 cycles. Flags: - - - -
-        u16 inc_hl;
-        inc_hl = to_le_16_bit(m_registers.l, m_registers.h);
-        write(inc_hl, m_registers.a);
-        inc_hl++;
-        m_registers.l = inc_hl;
-        m_registers.h = (inc_hl >> 8);
+        write(get_hl(), m_registers.a);
+        inc_hl();
         break;
     case OpCode::Halt:
         return false;
     case OpCode::TestComplete:
-//        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
+        //        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
         return false;
     default:
         printf("missing op code: %x", (u8)op_code);

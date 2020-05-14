@@ -39,6 +39,7 @@ void PPU::render()
 
     u8* row = (u8*)m_buffer->memory;
     u8* color_row = smiley;
+    u8 bytes_per_pixel = 2;
 
     for (int y = 0; y < 8; ++y) {
         u32* pixel = (u32*)row;
@@ -53,7 +54,7 @@ void PPU::render()
             *pixel++ = is_black ? BLACK.to_argb() : WHITE.to_argb();
         }
 
-        color_row += 2;
+        color_row += bytes_per_pixel;
         row += m_buffer->pitch;
     }
 }

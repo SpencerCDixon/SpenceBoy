@@ -63,8 +63,36 @@ public:
     u8 read(u16 address);
     void write(u16 address, u8 data);
 
+    // Register related utilities
+    // TODO(scd): consider maybe moving into Register class
+    u16 get_de() { return to_le_16_bit(m_registers.e, m_registers.d); }
+    u16 get_hl() { return to_le_16_bit(m_registers.l, m_registers.h); }
+    u16 get_bc() { return to_le_16_bit(m_registers.c, m_registers.b); }
+    void set_de(u16 value) {
+        m_registers.e = value;
+        m_registers.d = (value >> 8);
+    }
+    void set_hl(u16 value) {
+        m_registers.l = value;
+        m_registers.h = (value >> 8);
+    }
+    void set_bc(u16 value) {
+        m_registers.c = value;
+        m_registers.b = (value >> 8);
+    }
+    void inc_hl() {
+        u16 hl = get_hl();
+        set_hl(++hl);
+    }
+    void inc_de() {
+        u16 de = get_de();
+        set_de(++de);
+    }
+
+    // Memory accessors
     u8* v_ram() { return m_vram; }
 
+    // Andreas: Should this be protected somehow and use a Friend class or something?
     CPUTestState test_state()
     {
         CPUTestState result;
