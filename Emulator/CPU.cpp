@@ -174,6 +174,7 @@ bool CPU::step()
     case OpCode::Halt:
         return false;
     case OpCode::TestComplete:
+//        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
         return false;
     default:
         printf("missing op code: %x", (u8)op_code);

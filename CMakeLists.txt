@@ -18,7 +18,7 @@ add_executable(gameboy
         Emulator/Emulator.h
         SD/Option.h
         Emulator/OpCode.h
-        )
+        Emulator/Buffer.h)
 target_include_directories(gameboy PUBLIC ".")
 
 #-------------

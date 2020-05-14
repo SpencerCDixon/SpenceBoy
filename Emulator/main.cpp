@@ -5,8 +5,7 @@ int main()
     Emulator emulator;
 
     emulator.init();
-    // TODO: load an actual rom to emulate
-    //    emulator.load_rom();
+    emulator.load_rom("../Tests/data/smiley.gb");
     emulator.run();
 
     return 0;

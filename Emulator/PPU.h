@@ -4,6 +4,28 @@
 
 #pragma once
 
+#include <SD/LogStream.h>
+#include <SD/Types.h>
+#include <SD/Color.h>
+
+#include "Buffer.h"
+
 class PPU {
 public:
+    PPU(const u8* vram, OffscreenFrameBuffer* buffer)
+        : m_vram(vram)
+        , m_buffer(buffer)
+    {
+
+        dbg() << "using vram address of: " << &m_vram;
+        dbg() << "using buffer address of: " << &m_buffer;
+
+    }
+
+    void clear(Color color);
+    void render();
+
+private:
+    const u8* m_vram;
+    OffscreenFrameBuffer* m_buffer;
 };

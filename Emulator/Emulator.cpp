@@ -48,16 +48,12 @@ void Emulator::init()
         SDL_TEXTUREACCESS_STREAMING,
         WIN_WIDTH,
         WIN_HEIGHT);
-
-    render_gradient_test(&m_frame_buffer, 0, 0);
-    swap();
 }
 
 // TODO(scd): Decide if I want to be able to load a new rom once the emulator is running. For now,
 // lets keep it simple and force a load before run().
 void Emulator::load_rom(const char* path)
 {
-    // TODO(scd): Error checking if unable to load ROM?
     m_cpu.load_rom(path);
 }
 
@@ -65,19 +61,22 @@ void Emulator::run()
 {
     SDL_Event e;
     bool quit = false;
-    int green_offset = 0;
-    int blue_offset = 0;
+
+
+    // Temporary, for now just run through the rom to get VRAM set up properly
+    while (m_cpu.step()) {};
+
+
 
     while (!quit) {
         while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT || e.type == SDL_KEYDOWN || e.type == SDL_MOUSEBUTTONDOWN) {
+            if (e.type == SDL_QUIT ) {
                 quit = true;
             }
         }
 
-        green_offset++;
-        blue_offset++;
-        render_gradient_test(&m_frame_buffer, green_offset, blue_offset);
+        m_ppu.clear({255, 255, 255, 255});
+        m_ppu.render();
         swap();
 
         SDL_RenderClear(m_renderer);
