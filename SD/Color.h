@@ -17,3 +17,7 @@ struct Color {
         return this->a << 24 | this->r << 16 | this->g << 8 | this->b;
     }
 };
+
+static Color BLACK = Color{0, 0, 0, 255};
+static Color WHITE = Color{255, 255, 255, 255};
+

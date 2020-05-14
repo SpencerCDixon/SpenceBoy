@@ -4,8 +4,6 @@
 
 #include "PPU.h"
 
-// TODO:
-
 void PPU::clear(Color color)
 {
     u8* row = (u8*)m_buffer->memory;
@@ -20,6 +18,10 @@ void PPU::clear(Color color)
     }
 }
 
+// TODO:
+// * pallete matching
+// * layered rendering (background, sprites, window)
+// * remove hard coded smiley tile and make it general purpose
 void PPU::render()
 {
     size_t smiley_start = 0x9010 - 0x8000;
@@ -30,22 +32,13 @@ void PPU::render()
         smiley[i] = m_vram[smiley_start + i];
     }
 
-    dbg() << "render() " << smiley;
-
-    // row * width + column
-    // y * 8 + x
-
     // Rendering a tile:
     // * 16 bytes: 8 pixels x 8 pixels x 2 bits per pixel
-    // * It’s stored in lines, so the first byte is the first bit of the first line; the second byte is the second bit of the first line; the third byte is the first bit of the second line,
-
-    auto black = Color{0, 0, 0, 255};
-    auto white = Color{255, 255, 255, 255};
-
+    // * It’s stored in lines, so the first byte is the first bit of the first line;
+    // the second byte is the second bit of the first line; the third byte is the first bit of the second line, etc.
 
     u8* row = (u8*)m_buffer->memory;
     u8* color_row = smiley;
-
 
     for (int y = 0; y < 8; ++y) {
         u32* pixel = (u32*)row;
@@ -54,14 +47,13 @@ void PPU::render()
             u8 first_byte = color_row[0];
             u8 second_byte = color_row[1];
 
+            // 00 01 10 = white AND 11 = black
             bool is_black = (first_byte & (1 << x)) && (second_byte & (1 << x));
 
-            *pixel++ = is_black ? black.to_argb() : white.to_argb();
+            *pixel++ = is_black ? BLACK.to_argb() : WHITE.to_argb();
         }
 
         color_row += 2;
         row += m_buffer->pitch;
     }
-
-
 }
