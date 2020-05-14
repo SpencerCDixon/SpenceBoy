@@ -62,11 +62,8 @@ void Emulator::run()
     SDL_Event e;
     bool quit = false;
 
-
     // Temporary, for now just run through the rom to get VRAM set up properly
     while (m_cpu.step()) {};
-
-
 
     while (!quit) {
         while (SDL_PollEvent(&e)) {

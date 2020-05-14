@@ -19,7 +19,7 @@ void PPU::clear(Color color)
 }
 
 // TODO:
-// * pallete matching
+// * palette matching
 // * layered rendering (background, sprites, window)
 // * remove hard coded smiley tile and make it general purpose
 void PPU::render()
@@ -51,7 +51,7 @@ void PPU::render()
             // 00 01 10 = white AND 11 = black
             bool is_black = (first_byte & (1 << x)) && (second_byte & (1 << x));
 
-            *pixel++ = is_black ? BLACK.to_argb() : WHITE.to_argb();
+            *pixel++ = is_black ? Colors::BLACK_ARGB : Colors::WHITE_ARGB;
         }
 
         color_row += bytes_per_pixel;
