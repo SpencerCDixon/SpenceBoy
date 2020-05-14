@@ -148,9 +148,9 @@ private:
             "s: %03u [$%02x]   p: %03u [$%02x]\n\n"
             "Checksums:\n"
             "–---------\n\n"
-            "WRAM Checksum: %llu\n"
-            "VRAM Checksum: %llu\n"
-            "IO   Checksum: %llu\n",
+            "WRAM Checksum: %lu\n"
+            "VRAM Checksum: %lu\n"
+            "IO   Checksum: %lu\n",
             state.registers.a,
             state.registers.a,
             state.registers.f,

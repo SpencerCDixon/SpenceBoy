@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define ASSERT assert
 #define ASSERT_NOT_REACHED() assert(false)
