@@ -19,13 +19,13 @@ the `C` standard library.
 - [ ] Unique Pointer
 - [ ] Shared Pointer
 - [ ] Vector
-- [ ] Option
 - [ ] Hash Map
 - [ ] File I/O
+- [ ] Pair/Tuple (useful for converting u16 into two u8's etc.)
+- [x] Option
 - [x] Assertions
 - [x] Basic Logging
 - [x] Color
-- [ ] Pair/Tuple (useful for converting u16 into two u8's etc.)
 
 ## Emulator
 
@@ -35,8 +35,7 @@ the `C` standard library.
 - [x] Get your program from (1) to run in the interpreter from (2), printing out the state of the CPU at every step of execution
 - [x] Add RAM (really just a byte buffer) to your CPU and implement instructions for moving memory in/out of RAM
 - [x] Figure out how the GameBoy ROM file format works, and parse_rom a ROM into your emulator's memory at startup
-- [ ] Build a simple PPU renderer that looks at all the PPU state in the emulator and renders the "screen" into an SDL window
-
+- [x] Build a simple PPU renderer that looks at all the PPU state in the emulator and renders the "screen" into an SDL window
 - [ ] Stack push/pop
 - [ ] Interrupts
 - [ ] Finish rest of the op codes
@@ -53,5 +52,6 @@ the `C` standard library.
 
 ## Chores
 
-- [ ] Get CMake script for SDL working on Linux/Windows
+- [x] Get CMake script for SDL working on Linux
+- [ ] Get CMake script for SDL working on Windows
 - [ ] Get Clang Tidy set up 

@@ -12,6 +12,24 @@ Template for daily journal:
 
 ---
 
+**Date: 5/14/2020**
+### What did I learn today?
+
+* You can explore memory in LLDB with: `x &variable_address` and it will print out a 32 bytes of memory around that
+address to view.
+
+### What did I get done today?
+
+* Improve test case macros
+* Got first sprite (smiley) rendering to the screen!
+* Refactored op code handlers to use new register utilities
+
+### Any questions for Andreas?
+
+* Should I use friend class and protected state for my test harness state in the CPU
+
+---
+
 **Date: 5/13/2020**
 ### What did I learn today?
 
