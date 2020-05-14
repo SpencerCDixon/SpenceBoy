@@ -34,7 +34,7 @@ const LogStream &operator<<(const LogStream &stream, u32 value) {
 
 const LogStream &operator<<(const LogStream &stream, u64 value) {
     char buffer[32];
-    sprintf(buffer, "%lu", value);
+    sprintf(buffer, "%llu", value);
     return stream << buffer;
 }
 
@@ -58,7 +58,7 @@ const LogStream &operator<<(const LogStream &stream, s32 value) {
 
 const LogStream &operator<<(const LogStream &stream, s64 value) {
     char buffer[32];
-    sprintf(buffer, "%ld", value);
+    sprintf(buffer, "%lld", value);
     return stream << buffer;
 }
 
@@ -79,3 +79,10 @@ const LogStream &operator<<(const LogStream &stream, f64 value) {
     sprintf(buffer, "%.5f", value);
     return stream << buffer;
 }
+
+const LogStream &operator<<(const LogStream &stream, bool value) {
+    char buffer[32];
+    sprintf(buffer, "%s", value ? "true" : "false");
+    return stream << buffer;
+}
+

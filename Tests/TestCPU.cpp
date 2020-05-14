@@ -148,9 +148,9 @@ private:
             "s: %03u [$%02x]   p: %03u [$%02x]\n\n"
             "Checksums:\n"
             "–---------\n\n"
-            "WRAM Checksum: %lu\n"
-            "VRAM Checksum: %lu\n"
-            "IO   Checksum: %lu\n",
+            "WRAM Checksum: %llu\n"
+            "VRAM Checksum: %llu\n"
+            "IO   Checksum: %llu\n",
             state.registers.a,
             state.registers.a,
             state.registers.f,
@@ -187,8 +187,8 @@ private:
 };
 
 #define TESTCASE_TYPE_NAME(x) TestCase_##x
-#define TEST_CASE(name, path)                                                                 \
-    CPUSnapshotTest TESTCASE_TYPE_NAME(name)(#name, #path, should_update_snapshots, verbose); \
+#define TEST_CASE(name, path)                                                                         \
+    CPUSnapshotTest TESTCASE_TYPE_NAME(name)(#name, "data/" #path, should_update_snapshots, verbose); \
     TESTCASE_TYPE_NAME(name).run();
 
 int main(int argc, char* argv[])
@@ -203,11 +203,12 @@ int main(int argc, char* argv[])
             verbose = true;
     }
 
-    // clang-format off
-    TEST_CASE(loop, data/loop.gb)
-    TEST_CASE(ram_access, data/ram.gb)
-    TEST_CASE(smily_rendering, data/smiley.gb)
-    // clang-format on
+    dbg() << "\nRunning test suite with options: \n"
+          << "  should_update_snapshots " << should_update_snapshots << "\n  verbose " << verbose << "\n";
+
+    TEST_CASE(loop, loop.gb)
+    TEST_CASE(ram_access, ram.gb)
+    TEST_CASE(smily_rendering, smiley.gb)
 
     return 0;
 }

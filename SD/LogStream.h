@@ -51,3 +51,4 @@ const LogStream& operator<<(const LogStream&, f64);
 
 // Other
 const LogStream& operator<<(const LogStream&, void*);
+const LogStream& operator<<(const LogStream&, bool);
