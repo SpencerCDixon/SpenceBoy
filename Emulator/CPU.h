@@ -60,8 +60,31 @@ public:
     void load_rom(const char* rom_path);
     bool step();
 
+
+    // Memory accessors
+    u8* v_ram() { return m_vram; }
+
+    // Andreas: Should this be protected somehow and use a Friend class or something?
+    CPUTestState test_state()
+    {
+        CPUTestState result;
+        result.registers = m_registers;
+        result.wram_checksum = checksum((const unsigned char*)m_wram, WRAM_SIZE);
+        result.vram_checksum = checksum((const unsigned char*)m_vram, VRAM_SIZE);
+        result.io_checksum = checksum((const unsigned char*)m_io_registers, IO_SIZE);
+        return result;
+    }
+
+private:
     u8 read(u16 address);
     void write(u16 address, u8 data);
+    u8 fetch_and_inc();
+
+    // TODO(scd): change m_register.f based on should_set
+    void set_zero_flag(bool should_set);
+    void set_carry_flag(bool should_set);
+    void set_half_carry_flag(bool should_set);
+    void set_subtract_flag(bool should_set);
 
     // Register related utilities
     // TODO(scd): consider maybe moving into Register class
@@ -88,29 +111,6 @@ public:
         u16 de = get_de();
         set_de(++de);
     }
-
-    // Memory accessors
-    u8* v_ram() { return m_vram; }
-
-    // Andreas: Should this be protected somehow and use a Friend class or something?
-    CPUTestState test_state()
-    {
-        CPUTestState result;
-        result.registers = m_registers;
-        result.wram_checksum = checksum((const unsigned char*)m_wram, WRAM_SIZE);
-        result.vram_checksum = checksum((const unsigned char*)m_vram, VRAM_SIZE);
-        result.io_checksum = checksum((const unsigned char*)m_io_registers, IO_SIZE);
-        return result;
-    }
-
-private:
-    u8 fetch_and_inc();
-
-    // TODO(scd): change m_register.f based on should_set
-    void set_zero_flag(bool should_set);
-    void set_carry_flag(bool should_set);
-    void set_half_carry_flag(bool should_set);
-    void set_subtract_flag(bool should_set);
 
 private:
     bool m_verbose_logging;
