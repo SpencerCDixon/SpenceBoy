@@ -29,6 +29,7 @@ void PPU::clear(Color color)
 // * palette matching
 // * layered rendering (background, sprites, window)
 // * remove hard coded smiley tile and make it general purpose
+
 void PPU::render()
 {
     size_t smiley_start = 0x9010 - 0x8000;

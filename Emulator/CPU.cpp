@@ -125,6 +125,9 @@ bool CPU::step()
             m_registers.program_counter = address_to_jump;
         }
         break;
+    case OpCode::Jump_A16:
+        m_registers.program_counter = to_le_16_bit(fetch_and_inc(), fetch_and_inc());
+        break;
     case OpCode::Sub_D8:
         m_registers.a -= fetch_and_inc();
         break;

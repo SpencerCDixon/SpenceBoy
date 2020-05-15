@@ -46,6 +46,16 @@ public:
         m_wram = (u8*)calloc(WRAM_SIZE, sizeof(u8));
         m_vram = (u8*)calloc(VRAM_SIZE, sizeof(u8));
         m_io_registers = (u8*)calloc(IO_SIZE, sizeof(u8));
+
+        // Initial Register Values:
+        // AF 1180
+        // BC 0000
+        // de ff56
+        // hl 000d
+        // sp fffe
+        // pc 0100
+        m_registers.stack_ptr = 0xfffe;
+        m_registers.program_counter = 0x100;
     }
 
     ~CPU()

@@ -7,6 +7,8 @@
 #include <SD/LogStream.h>
 #include <SD/Types.h>
 
+// TODO:(scd) add cycle count to enumeration
+
 #define ENUMERATE_OPCODES                 \
     __ENUMERATE(0x00, NoOp)               \
     __ENUMERATE(0x76, Halt)               \
@@ -27,6 +29,7 @@
     __ENUMERATE(0x05, Dec_B)              \
     __ENUMERATE(0x13, Inc_DE)             \
     __ENUMERATE(0xc2, Jump_NZ)            \
+    __ENUMERATE(0xc3, Jump_A16 /*, 3 */)  \
     __ENUMERATE(0xdd, Debugger)           \
     __ENUMERATE(0xdb, TestComplete)
 
