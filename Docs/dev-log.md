@@ -17,6 +17,8 @@ Template for daily journal:
 
 * You can explore memory in LLDB with: `x &variable_address` and it will print out a 32 bytes of memory around that
 address to view.
+* A swizzle is how you determine the first LSB that is set. MSVC has a compiler intrinsic for this and most likely clang
+does too. This is useful when working with masks.
 
 ### What did I get done today?
 

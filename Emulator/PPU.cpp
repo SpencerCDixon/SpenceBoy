@@ -4,6 +4,13 @@
 
 #include "PPU.h"
 
+// Useful Notes:
+// * A vertical refresh happens every 70224 clocks (140448 in GBC double speed mode): 59,7275 Hz
+// * A scanline normally takes 456 clocks (912 clocks in double speed mode) to complete
+// * Vertical Blank interrupt is triggered when the LCD controller enters the VBL screen mode (mode 1, LY=144).
+//   This happens once per frame, so this interrupt is triggered 59.7 times per second.
+
+
 void PPU::clear(Color color)
 {
     u8* row = (u8*)m_buffer->memory;
