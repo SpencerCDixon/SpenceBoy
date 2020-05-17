@@ -103,6 +103,7 @@ private:
     u16 get_de() { return to_le_16_bit(m_registers.e, m_registers.d); }
     u16 get_hl() { return to_le_16_bit(m_registers.l, m_registers.h); }
     u16 get_bc() { return to_le_16_bit(m_registers.c, m_registers.b); }
+    u16 get_sp() { return m_registers.stack_ptr; }
     void set_de(u16 value) {
         m_registers.e = value;
         m_registers.d = (value >> 8);
@@ -131,6 +132,18 @@ private:
         u16 de = get_de();
         set_de(--de);
     }
+    void inc_bc() {
+        u16 bc = get_bc();
+        set_bc(++bc);
+    }
+    void dec_bc() {
+        u16 bc = get_bc();
+        set_bc(--bc);
+    }
+    void inc_sp() { m_registers.stack_ptr++; }
+
+    // TODO(scd): Maybe think of new name since the 16-bit value is not always used as an address
+    // Maybe... fetch_and_inc_16bit?
     u16 fetch_and_inc_a16() {
         u8 b1 = fetch_and_inc();
         u8 b2 = fetch_and_inc();

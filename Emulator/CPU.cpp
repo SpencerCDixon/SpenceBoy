@@ -186,8 +186,20 @@ bool CPU::step()
         m_registers.e = fetch_and_inc();
         m_registers.d = fetch_and_inc();
         break;
+    case OpCode::Load_SP_D16: // 12 cycles. Flags - - - -
+        m_registers.stack_ptr = fetch_and_inc_a16();
+        break;
     case OpCode::Inc_DE: // 8 cycles. Flags: - - - -
         inc_de();
+        break;
+    case OpCode::Inc_BC: // 8 cycles. Flags: - - - -
+        inc_bc();
+        break;
+    case OpCode::Inc_HL: // 8 cycles. Flags: - - - -
+        inc_hl();
+        break;
+    case OpCode::Inc_SP: // 8 cycles. Flags: - - - -
+        inc_sp();
         break;
     case OpCode::Dec_HL: // 8 cycles. Flags: - - - -
         dec_hl();
@@ -207,7 +219,12 @@ bool CPU::step()
         //        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
         return false;
     default:
-        printf("missing op code: %x", (u8)op_code);
+        if (is_opcode(op_code)) {
+            printf("[ " RED "FATAL" RESET " ] " "Missing implementation for the following op code: ");
+            print_opcode(op_code);
+        } else {
+            printf("missing op code: %x", (u8)op_code);
+        }
         ASSERT_NOT_REACHED();
         break;
     }

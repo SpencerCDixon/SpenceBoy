@@ -211,6 +211,7 @@ int main(int argc, char* argv[])
     TEST_CASE(smily_rendering, smiley.gb)
     TEST_CASE(loading_into_registers, loading.gb)
     TEST_CASE(complement_a_reg_bits, complement.gb)
+    TEST_CASE(incrementing_registers, increments.gb)
 
     return 0;
 }

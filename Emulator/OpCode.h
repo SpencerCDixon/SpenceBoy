@@ -29,6 +29,7 @@
     __ENUMERATE(0x7e, Load_A_HL_Addr)        \
     __ENUMERATE(0x1a, Load_A_DE_Addr)        \
     __ENUMERATE(0x21, Load_HL_D16)           \
+    __ENUMERATE(0x31, Load_SP_D16)           \
     __ENUMERATE(0x11, Load_DE_D16)           \
     __ENUMERATE(0x40, Load_B_B)              \
     __ENUMERATE(0x41, Load_B_C)              \
@@ -45,7 +46,10 @@
     __ENUMERATE(0x3d, Dec_A)                 \
     __ENUMERATE(0x05, Dec_B)                 \
     __ENUMERATE(0x2b, Dec_HL)                \
-    __ENUMERATE(0x13, Inc_DE)                \
+    __ENUMERATE(0x03, Inc_BC /*, 8 */)       \
+    __ENUMERATE(0x13, Inc_DE /*, 8 */)       \
+    __ENUMERATE(0x23, Inc_HL /*, 8 */)       \
+    __ENUMERATE(0x33, Inc_SP /*, 8 */)       \
     __ENUMERATE(0xc2, Jump_NZ)               \
     __ENUMERATE(0xc3, Jump_A16 /*, 3 */)     \
     __ENUMERATE(0xdd, Debugger)              \

@@ -16,4 +16,5 @@ SECTION "Game code", ROM0
 Start:
 	ld a, %11110000;
 	cpl
+	; assert(a == 00001111) (15)
 	halt
