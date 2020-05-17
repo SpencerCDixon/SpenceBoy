@@ -47,13 +47,15 @@ public:
         m_vram = (u8*)calloc(VRAM_SIZE, sizeof(u8));
         m_io_registers = (u8*)calloc(IO_SIZE, sizeof(u8));
 
-        // Initial Register Values:
-        // AF 1180
-        // BC 0000
-        // de ff56
-        // hl 000d
-        // sp fffe
-        // pc 0100
+        // TOOD(scd): Look into how confident I am these are correct
+//        m_registers.a = 0x11;
+//        m_registers.f = 0x80;
+//        m_registers.b = 0x00;
+//        m_registers.c = 0x00;
+//        m_registers.d = 0xff;
+//        m_registers.e = 0x56;
+//        m_registers.h = 0x00;
+//        m_registers.l = 0x0d;
         m_registers.stack_ptr = 0xfffe;
         m_registers.program_counter = 0x100;
     }
@@ -120,6 +122,11 @@ private:
     void inc_de() {
         u16 de = get_de();
         set_de(++de);
+    }
+    u16 fetch_and_inc_a16() {
+        u8 b1 = fetch_and_inc();
+        u8 b2 = fetch_and_inc();
+        return to_le_16_bit(b1, b2);
     }
 
 private:
