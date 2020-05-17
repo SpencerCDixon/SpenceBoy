@@ -72,7 +72,6 @@ public:
     void load_rom(const char* rom_path);
     bool step();
 
-
     // Memory accessors
     u8* v_ram() { return m_vram; }
 
@@ -88,6 +87,7 @@ public:
     }
 
 private:
+    void handle_prefix_op_code(const PrefixOpCode& op_code);
     u8 read(u16 address);
     void write(u16 address, u8 data);
     u8 fetch_and_inc();

@@ -35,6 +35,13 @@ inline bool will_carry(u8 byte1, u8 byte2)
     return (result & carry_flag) == carry_flag;
 }
 
+inline bool will_carry_from_left_shift(u8 byte1)
+{
+    u16 result = byte1 << 1;
+    u16 carry_flag = 1 << 8;
+    return (result & carry_flag) == carry_flag;
+}
+
 inline u64 checksum(const unsigned char* buff, size_t len)
 {
     u64 sum;

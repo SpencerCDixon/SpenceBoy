@@ -212,6 +212,7 @@ int main(int argc, char* argv[])
     TEST_CASE(loading_into_registers, loading.gb)
     TEST_CASE(complement_a_reg_bits, complement.gb)
     TEST_CASE(incrementing_registers, increments.gb)
+    TEST_CASE(shifting_and_rotating_bits, shift-rotate.gb)
 
     return 0;
 }

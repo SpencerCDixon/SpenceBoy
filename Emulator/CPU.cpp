@@ -73,7 +73,6 @@ bool CPU::step()
         print_opcode(op_code);
     }
 
-    // TODO: Convert from switch statement to calling handlers to avoid annoying switch scoping issues :-(...
     switch (op_code) {
     case OpCode::NoOp:
         break; // Noop, do nothing!
@@ -218,6 +217,11 @@ bool CPU::step()
     case OpCode::TestComplete:
         //        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
         return false;
+    case OpCode::Prefix_CB: {
+        PrefixOpCode prefix_op_code = static_cast<PrefixOpCode>(fetch_and_inc());
+        handle_prefix_op_code(prefix_op_code);
+        break;
+    }
     default:
         if (is_opcode(op_code)) {
             printf("[ " RED "FATAL" RESET " ] " "Missing implementation for the following op code: ");
@@ -237,6 +241,26 @@ bool CPU::step()
     }
 
     return true;
+}
+void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
+{
+    switch (op_code) {
+    case PrefixOpCode::SLA_B:
+        set_half_carry_flag(false);
+        set_subtract_flag(false);
+        set_carry_flag(will_carry_from_left_shift(m_registers.b));
+        m_registers.b = (m_registers.b << 1);
+        set_zero_flag(m_registers.b == 0);
+        break;
+    default:
+        if (is_prefix_opcode(op_code)) {
+            printf("[ " RED "FATAL" RESET " ] " "Missing implementation for the following op code: ");
+            print_prefix_opcode(op_code);
+        } else {
+            printf("missing prefix op code: %x", (u8)op_code);
+        }
+        ASSERT_NOT_REACHED();
+    }
 }
 
 u8 CPU::fetch_and_inc()

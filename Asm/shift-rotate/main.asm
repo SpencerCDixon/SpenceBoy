@@ -14,5 +14,9 @@ ENDR
 SECTION "Game code", ROM0
 
 Start:
-	ld b, 1;
-	sra b
+	ld b, %11000011;
+	sla b
+	; assert(b == 10000110)
+	; assert(flag.carry)
+	; assert(!flag.zero)
+	halt

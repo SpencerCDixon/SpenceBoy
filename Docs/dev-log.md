@@ -24,8 +24,6 @@ hard to track down bugs.
 * Fix some scary potential UB
 * Wrote script for generating op codes that need to get implemented 
 
-### Any questions for Andreas?
-
 ---
 
 **Date: 5/15/2020**

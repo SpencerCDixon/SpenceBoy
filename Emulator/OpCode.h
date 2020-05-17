@@ -52,8 +52,12 @@
     __ENUMERATE(0x33, Inc_SP /*, 8 */)       \
     __ENUMERATE(0xc2, Jump_NZ)               \
     __ENUMERATE(0xc3, Jump_A16 /*, 3 */)     \
+    __ENUMERATE(0xcb, Prefix_CB /*, 4 */)    \
     __ENUMERATE(0xdd, Debugger)              \
     __ENUMERATE(0xdb, TestComplete)
+
+#define ENUMERATE_PREFIX_OPCODES \
+    __ENUMERATE(0x20, SLA_B /*, 8 */)
 
 //__ENUMERATE(0x8F, ADC_A_A, 4)
 //__ENUMERATE(0x88, ADC_A_B, 4)
@@ -342,5 +346,32 @@ inline bool is_opcode(const OpCode& code)
     return false;
 }
 
-// TODO(scd): is_op_code() -> bool
-// Can be used in the hex_dump to color the op code a different color
+enum class PrefixOpCode : u8 {
+#define __ENUMERATE(hex, name) name = hex,
+    ENUMERATE_PREFIX_OPCODES
+#undef __ENUMERATE
+};
+
+inline void print_prefix_opcode(const PrefixOpCode& code)
+{
+    switch (code) {
+#define __ENUMERATE(_, name) \
+    case PrefixOpCode::name: \
+        dbg() << #name;      \
+        break;
+        ENUMERATE_PREFIX_OPCODES
+#undef __ENUMERATE
+    }
+}
+
+inline bool is_prefix_opcode(const PrefixOpCode& code)
+{
+    switch (code) {
+#define __ENUMERATE(_, name) \
+    case PrefixOpCode::name: \
+        return true;
+        ENUMERATE_PREFIX_OPCODES
+#undef __ENUMERATE
+    }
+    return false;
+}
