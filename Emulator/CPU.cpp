@@ -77,6 +77,9 @@ bool CPU::step()
     switch (op_code) {
     case OpCode::NoOp:
         break; // Noop, do nothing!
+    case OpCode::Complement_A: // 4 cycles
+        m_registers.a = ~m_registers.a;
+        break;
     case OpCode::Load_A_D8:
         m_registers.a = fetch_and_inc();
         break;
@@ -198,7 +201,7 @@ bool CPU::step()
         dec_hl();
         break;
     case OpCode::Halt:
-        hex_dump("WRAM", m_wram, 32, WRAM_START);
+//        hex_dump("WRAM", m_wram, 32, WRAM_START);
         return false;
     case OpCode::TestComplete:
         //        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
