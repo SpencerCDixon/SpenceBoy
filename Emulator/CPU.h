@@ -91,6 +91,7 @@ private:
     u8 read(u16 address);
     void write(u16 address, u8 data);
     u8 fetch_and_inc();
+    void shift_left(u8* reg_ptr);
 
     // TODO(scd): change m_register.f based on should_set
     void set_zero_flag(bool should_set);

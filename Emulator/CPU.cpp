@@ -246,11 +246,7 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
 {
     switch (op_code) {
     case PrefixOpCode::SLA_B:
-        set_half_carry_flag(false);
-        set_subtract_flag(false);
-        set_carry_flag(will_carry_from_left_shift(m_registers.b));
-        m_registers.b = (m_registers.b << 1);
-        set_zero_flag(m_registers.b == 0);
+        shift_left(&m_registers.b);
         break;
     default:
         if (is_prefix_opcode(op_code)) {
@@ -316,6 +312,19 @@ void CPU::write(u16 address, u8 data)
 
     // If we've reached here it means we're trying to write to memory that is not set up yet.
     ASSERT_NOT_REACHED();
+}
+
+//
+// Bit Manipulations
+//
+
+void CPU::shift_left(u8* reg_ptr)
+{
+    set_half_carry_flag(false);
+    set_subtract_flag(false);
+    set_carry_flag(will_carry_from_left_shift(*reg_ptr));
+    *reg_ptr = (*reg_ptr << 1);
+    set_zero_flag(*reg_ptr == 0);
 }
 
 //
