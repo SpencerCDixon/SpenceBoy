@@ -57,7 +57,13 @@
     __ENUMERATE(0xdb, TestComplete)
 
 #define ENUMERATE_PREFIX_OPCODES \
-    __ENUMERATE(0x20, SLA_B /*, 8 */)
+    __ENUMERATE(0x27, SLA_A /*, 8 */) \
+    __ENUMERATE(0x20, SLA_B /*, 8 */) \
+    __ENUMERATE(0x21, SLA_C /*, 8 */) \
+    __ENUMERATE(0x22, SLA_D /*, 8 */) \
+    __ENUMERATE(0x23, SLA_E /*, 8 */) \
+    __ENUMERATE(0x24, SLA_H /*, 8 */) \
+    __ENUMERATE(0x25, SLA_L /*, 8 */)
 
 //__ENUMERATE(0x8F, ADC_A_A, 4)
 //__ENUMERATE(0x88, ADC_A_B, 4)

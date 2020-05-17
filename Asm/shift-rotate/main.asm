@@ -14,9 +14,30 @@ ENDR
 SECTION "Game code", ROM0
 
 Start:
-	ld b, %11000011;
-	sla b
+	; Assert carry in shift works properly
+	ld a, %11000011;
+	sla a
 	; assert(b == 10000110)
 	; assert(flag.carry)
-	; assert(!flag.zero)
+
+	ld b, %10000000;
+	sla b
+	; assert(b == 0)
+	; assert(flag.zero)
+
+	ld c, %00001111
+	sla c
+
+	ld d, %00000001
+	sla d
+
+	ld e, %00000001
+	sla e
+
+	ld h, %00000001
+	sla h
+
+	ld l, %00000001
+	sla l
+
 	halt

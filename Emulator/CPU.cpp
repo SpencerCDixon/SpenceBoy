@@ -245,8 +245,26 @@ bool CPU::step()
 void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
 {
     switch (op_code) {
+    case PrefixOpCode::SLA_A:
+        shift_left(&m_registers.a);
+        break;
     case PrefixOpCode::SLA_B:
         shift_left(&m_registers.b);
+        break;
+    case PrefixOpCode::SLA_C:
+        shift_left(&m_registers.c);
+        break;
+    case PrefixOpCode::SLA_D:
+        shift_left(&m_registers.d);
+        break;
+    case PrefixOpCode::SLA_E:
+        shift_left(&m_registers.e);
+        break;
+    case PrefixOpCode::SLA_H:
+        shift_left(&m_registers.h);
+        break;
+    case PrefixOpCode::SLA_L:
+        shift_left(&m_registers.l);
         break;
     default:
         if (is_prefix_opcode(op_code)) {
