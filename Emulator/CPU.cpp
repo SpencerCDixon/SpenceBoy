@@ -98,17 +98,26 @@ bool CPU::step()
     case OpCode::Load_B_C:
         m_registers.b = m_registers.c;
         break;
+    case OpCode::Load_B_D:
+        m_registers.b = m_registers.d;
+        break;
     case OpCode::Load_D_B:
         m_registers.d = m_registers.b;
         break;
     case OpCode::Load_D_C:
         m_registers.d = m_registers.c;
         break;
+    case OpCode::Load_D_D:
+        m_registers.d = m_registers.d;
+        break;
     case OpCode::Load_H_B:
         m_registers.h = m_registers.b;
         break;
     case OpCode::Load_H_C:
         m_registers.h = m_registers.c;
+        break;
+    case OpCode::Load_H_D:
+        m_registers.h = m_registers.d;
         break;
     case OpCode::Load_H_D8:
         m_registers.h = fetch_and_inc();

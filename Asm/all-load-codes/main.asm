@@ -64,9 +64,11 @@ Start:
 	; assert(ram[0] == 48)
 	; assert(ram[1] == 48)
 
-	; ld b, 52
-	; ld h, $c0
-	; ld l, $02
-	; ld [hl], b
+	ld d, 40
+	ld b, d
+	ld d, d
+	ld h, d
+	; assert(b == 40)
+	; assert(h == 40)
 
 	halt
