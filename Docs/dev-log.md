@@ -12,6 +12,37 @@ Template for daily journal:
 
 ---
 
+**Date: 5/16/2020**
+### What did I learn today?
+
+* C/C++ do not define evaluation order of arguments. This can lead to undefined behavior and extremely
+hard to track down bugs.
+* Learned about the shift and rotate op codes. Shift does 0 padding and rotate wraps the bits 
+
+### What did I get done today?
+
+* Fix some scary potential UB
+* Wrote script for generating op codes that need to get implemented 
+
+### Any questions for Andreas?
+
+---
+
+**Date: 5/15/2020**
+### What did I learn today?
+
+* The registers are supposed to have default values based on what kind of game boy is running which is why
+my emulator had different register state at the end of execution as some that I tested
+
+### What did I get done today?
+
+* Jump A16 op code
+* Default register state
+
+### Any questions for Andreas?
+
+---
+
 **Date: 5/14/2020**
 ### What did I learn today?
 
