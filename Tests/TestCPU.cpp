@@ -206,9 +206,10 @@ int main(int argc, char* argv[])
     dbg() << "\nRunning test suite with options: \n"
           << "  should_update_snapshots " << should_update_snapshots << "\n  verbose " << verbose << "\n";
 
-    TEST_CASE(loop, loop.gb)
-    TEST_CASE(ram_access, ram.gb)
-    TEST_CASE(smily_rendering, smiley.gb)
+//    TEST_CASE(loop, loop.gb)
+//    TEST_CASE(ram_access, ram.gb)
+//    TEST_CASE(smily_rendering, smiley.gb)
+    TEST_CASE(loading_into_registers, loading.gb)
 
     return 0;
 }

@@ -119,9 +119,17 @@ private:
         u16 hl = get_hl();
         set_hl(++hl);
     }
+    void dec_hl() {
+        u16 hl = get_hl();
+        set_hl(--hl);
+    }
     void inc_de() {
         u16 de = get_de();
         set_de(++de);
+    }
+    void dec_de() {
+        u16 de = get_de();
+        set_de(--de);
     }
     u16 fetch_and_inc_a16() {
         u8 b1 = fetch_and_inc();

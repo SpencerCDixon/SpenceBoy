@@ -83,6 +83,33 @@ bool CPU::step()
     case OpCode::Load_B_D8:
         m_registers.b = fetch_and_inc();
         break;
+    case OpCode::Load_C_D8:
+        m_registers.c = fetch_and_inc();
+        break;
+    case OpCode::Load_D_D8:
+        m_registers.d = fetch_and_inc();
+        break;
+    case OpCode::Load_E_D8:
+        m_registers.e = fetch_and_inc();
+        break;
+    case OpCode::Load_B_B:
+        m_registers.b = m_registers.b;
+        break;
+    case OpCode::Load_B_C:
+        m_registers.b = m_registers.c;
+        break;
+    case OpCode::Load_D_B:
+        m_registers.d = m_registers.b;
+        break;
+    case OpCode::Load_D_C:
+        m_registers.d = m_registers.c;
+        break;
+    case OpCode::Load_H_B:
+        m_registers.h = m_registers.b;
+        break;
+    case OpCode::Load_H_C:
+        m_registers.h = m_registers.c;
+        break;
     case OpCode::Load_H_D8:
         m_registers.h = fetch_and_inc();
         break;
@@ -100,6 +127,15 @@ bool CPU::step()
         break;
     case OpCode::Load_HL_Addr_A:
         write(get_hl(), m_registers.a);
+        break;
+    case OpCode::Load_BC_Addr_A:
+        write(get_bc(), m_registers.a);
+        break;
+    case OpCode::Load_DE_Addr_A:
+        write(get_de(), m_registers.a);
+        break;
+    case OpCode::Load_HL_Addr_C:
+        write(get_hl(), m_registers.c);
         break;
     case OpCode::Load_HL_Addr_D8: // 12 cycles. Flags: - - - -
         write(get_hl(), fetch_and_inc());
@@ -141,11 +177,19 @@ bool CPU::step()
     case OpCode::Inc_DE: // 8 cycles. Flags: - - - -
         inc_de();
         break;
+    case OpCode::Dec_HL: // 8 cycles. Flags: - - - -
+        dec_hl();
+        break;
     case OpCode::Load_Inc_HL_Addr_A: // 8 cycles. Flags: - - - -
         write(get_hl(), m_registers.a);
         inc_hl();
         break;
+    case OpCode::Load_Dec_HL_Addr_A: // 8 cycles. Flags: - - - -
+        write(get_hl(), m_registers.a);
+        dec_hl();
+        break;
     case OpCode::Halt:
+        hex_dump("WRAM", m_wram, 32, WRAM_START);
         return false;
     case OpCode::TestComplete:
         //        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);

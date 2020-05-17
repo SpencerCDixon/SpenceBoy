@@ -38,7 +38,8 @@ the `C` standard library.
 - [x] Build a simple PPU renderer that looks at all the PPU state in the emulator and renders the "screen" into an SDL window
 - [ ] Stack push/pop
 - [ ] Interrupts
-- [ ] Finish rest of the op codes
+- [ ] Unprefixed raw op codes
+- [ ] Prefixed `cb` opcodes 
 - [ ] Call/return from ASM 'functions'
 
 ## Testing Infra
