@@ -36,6 +36,7 @@ the `C` standard library.
 - [x] Add RAM (really just a byte buffer) to your CPU and implement instructions for moving memory in/out of RAM
 - [x] Figure out how the GameBoy ROM file format works, and parse_rom a ROM into your emulator's memory at startup
 - [x] Build a simple PPU renderer that looks at all the PPU state in the emulator and renders the "screen" into an SDL window
+- [ ] [Proper boot up sequence](http://localhost:8080/pandocs/#power-up-sequence)
 - [ ] Stack push/pop
 - [ ] Interrupts
 - [ ] Unprefixed raw op codes

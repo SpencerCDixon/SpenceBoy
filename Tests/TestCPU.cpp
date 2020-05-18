@@ -191,11 +191,14 @@ private:
     CPUSnapshotTest TESTCASE_TYPE_NAME(name)(#name, "data/" #path, should_update_snapshots, verbose); \
     TESTCASE_TYPE_NAME(name).run();
 
+//
+// Test Suite Flags
+//
+static bool should_update_snapshots = false;
+static bool verbose = false;
+
 int main(int argc, char* argv[])
 {
-    bool should_update_snapshots = false;
-    bool verbose = false;
-
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--update-snapshots") == 0)
             should_update_snapshots = true;
@@ -213,6 +216,7 @@ int main(int argc, char* argv[])
     TEST_CASE(complement_a_reg_bits, complement.gb)
     TEST_CASE(incrementing_registers, increments.gb)
     TEST_CASE(shifting_and_rotating_bits, shift-rotate.gb)
+    TEST_CASE(bit_masks, bit-masks.gb)
 
     return 0;
 }

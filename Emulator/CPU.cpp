@@ -211,6 +211,27 @@ bool CPU::step()
         write(get_hl(), m_registers.a);
         dec_hl();
         break;
+    case OpCode::XOR_A:
+        xor_reg(&m_registers.a);
+        break;
+    case OpCode::XOR_B:
+        xor_reg(&m_registers.b);
+        break;
+    case OpCode::XOR_C:
+        xor_reg(&m_registers.c);
+        break;
+    case OpCode::XOR_D:
+        xor_reg(&m_registers.d);
+        break;
+    case OpCode::XOR_E:
+        xor_reg(&m_registers.e);
+        break;
+    case OpCode::XOR_H:
+        xor_reg(&m_registers.h);
+        break;
+    case OpCode::XOR_L:
+        xor_reg(&m_registers.l);
+        break;
     case OpCode::HALT:
 //        hex_dump("WRAM", m_wram, 32, WRAM_START);
         return false;
@@ -342,6 +363,12 @@ void CPU::shift_left(u8* reg_ptr)
     set_subtract_flag(false);
     set_carry_flag(will_carry_from_left_shift(*reg_ptr));
     *reg_ptr = (*reg_ptr << 1);
+    set_zero_flag(*reg_ptr == 0);
+}
+
+void CPU::xor_reg(u8* reg_ptr)
+{
+    *reg_ptr ^= m_registers.a;
     set_zero_flag(*reg_ptr == 0);
 }
 
