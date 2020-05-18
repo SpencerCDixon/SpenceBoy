@@ -15,6 +15,19 @@ Template for daily journal:
 **Date: 5/17/2020**
 ### What did I learn today?
 
+* Pandocs has the boot up sequence for the GBC well documented which I'll need to implement exactly. It involves locations
+in memory for specific instructions and a checksum that needs to match for the ROM to run.
+
+### What did I get done today?
+
+* Updated JS script for generating all op codes with their cycle count 
+* Implemented xor for common registers
+
+---
+
+**Date: 5/17/2020**
+### What did I learn today?
+
 * There are a whole set of op codes that change based on a prefix of `cb`
 
 ### What did I get done today?
