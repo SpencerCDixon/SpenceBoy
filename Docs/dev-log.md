@@ -12,6 +12,26 @@ Template for daily journal:
 
 ---
 
+**Date: 5/17/2020**
+### What did I learn today?
+
+* There are a whole set of op codes that change based on a prefix of `cb`
+
+### What did I get done today?
+
+* 16 bit incrementing op codes
+* op codes for complementing A reg bits
+* ~20 new op codes for loading values into regs
+* Create new asm test for loading calls
+* Added support for prefixed op codes
+
+### Any questions for Andreas?
+
+* General commit strategy? He seems to have things namespaced on subsytem but maybe that's just because he has
+such a large project
+
+---
+
 **Date: 5/16/2020**
 ### What did I learn today?
 
