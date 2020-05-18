@@ -74,96 +74,96 @@ bool CPU::step()
     }
 
     switch (op_code) {
-    case OpCode::NoOp:
+    case OpCode::NOP:
         break; // Noop, do nothing!
-    case OpCode::Complement_A: // 4 cycles
+    case OpCode::CPL: // 4 cycles
         m_registers.a = ~m_registers.a;
         break;
-    case OpCode::Load_A_D8:
+    case OpCode::LD_A_d8:
         m_registers.a = fetch_and_inc();
         break;
-    case OpCode::Load_B_D8:
+    case OpCode::LD_B_d8:
         m_registers.b = fetch_and_inc();
         break;
-    case OpCode::Load_C_D8:
+    case OpCode::LD_C_d8:
         m_registers.c = fetch_and_inc();
         break;
-    case OpCode::Load_D_D8:
+    case OpCode::LD_D_d8:
         m_registers.d = fetch_and_inc();
         break;
-    case OpCode::Load_E_D8:
+    case OpCode::LD_E_d8:
         m_registers.e = fetch_and_inc();
         break;
-    case OpCode::Load_B_B:
+    case OpCode::LD_B_B:
         m_registers.b = m_registers.b;
         break;
-    case OpCode::Load_B_C:
+    case OpCode::LD_B_C:
         m_registers.b = m_registers.c;
         break;
-    case OpCode::Load_B_D:
+    case OpCode::LD_B_D:
         m_registers.b = m_registers.d;
         break;
-    case OpCode::Load_D_B:
+    case OpCode::LD_D_B:
         m_registers.d = m_registers.b;
         break;
-    case OpCode::Load_D_C:
+    case OpCode::LD_D_C:
         m_registers.d = m_registers.c;
         break;
-    case OpCode::Load_D_D:
+    case OpCode::LD_D_D:
         m_registers.d = m_registers.d;
         break;
-    case OpCode::Load_H_B:
+    case OpCode::LD_H_B:
         m_registers.h = m_registers.b;
         break;
-    case OpCode::Load_H_C:
+    case OpCode::LD_H_C:
         m_registers.h = m_registers.c;
         break;
-    case OpCode::Load_H_D:
+    case OpCode::LD_H_D:
         m_registers.h = m_registers.d;
         break;
-    case OpCode::Load_H_D8:
+    case OpCode::LD_H_d8:
         m_registers.h = fetch_and_inc();
         break;
-    case OpCode::Load_L_D8:
+    case OpCode::LD_L_d8:
         m_registers.l = fetch_and_inc();
         break;
-    case OpCode::Load_A_HL_Addr: // 8 cycles
+    case OpCode::LD_A_HL_ADDR: // 8 cycles
         m_registers.a = read(get_hl());
         break;
-    case OpCode::Load_A_DE_Addr: // 8 cycles
+    case OpCode::LD_A_DE_ADDR: // 8 cycles
         m_registers.a = read(get_de());
         break;
-    case OpCode::Load_HL_Addr_B:
+    case OpCode::LD_HL_ADDR_B:
         write(get_hl(), m_registers.b);
         break;
-    case OpCode::Load_HL_Addr_A:
+    case OpCode::LD_HL_ADDR_A:
         write(get_hl(), m_registers.a);
         break;
-    case OpCode::Load_BC_Addr_A:
+    case OpCode::LD_BC_ADDR_A:
         write(get_bc(), m_registers.a);
         break;
-    case OpCode::Load_DE_Addr_A:
+    case OpCode::LD_DE_ADDR_A:
         write(get_de(), m_registers.a);
         break;
-    case OpCode::Load_HL_Addr_C:
+    case OpCode::LD_HL_ADDR_C:
         write(get_hl(), m_registers.c);
         break;
-    case OpCode::Load_HL_Addr_D8: // 12 cycles. Flags: - - - -
+    case OpCode::LD_HL_ADDR_d8: // 12 cycles. Flags: - - - -
         write(get_hl(), fetch_and_inc());
         break;
-    case OpCode::Dec_A: // 4 cycles. Flags: Z 1 H -
+    case OpCode::DEC_A: // 4 cycles. Flags: Z 1 H -
         set_subtract_flag(true);
         set_half_carry_flag(will_half_carry(m_registers.a, 1));
         m_registers.a--;
         set_zero_flag(m_registers.a == 0);
         break;
-    case OpCode::Dec_B: // 4 cycles. Flags: Z 1 H -
+    case OpCode::DEC_B: // 4 cycles. Flags: Z 1 H -
         set_subtract_flag(true);
         set_half_carry_flag(will_half_carry(m_registers.b, 1));
         m_registers.b--;
         set_zero_flag(m_registers.b == 0);
         break;
-    case OpCode::Jump_NZ:
+    case OpCode::JP_NZ_a16:
         if (m_registers.f & FLAG_ZERO) {
             m_registers.program_counter++;
             m_registers.program_counter++;
@@ -171,53 +171,53 @@ bool CPU::step()
             m_registers.program_counter = fetch_and_inc_a16();
         }
         break;
-    case OpCode::Jump_A16:
+    case OpCode::JP_a16:
         m_registers.program_counter = fetch_and_inc_a16();
         break;
-    case OpCode::Sub_D8:
+    case OpCode::SUB_d8:
         m_registers.a -= fetch_and_inc();
         break;
-    case OpCode::Load_HL_D16: // 12 cycles. Flags - - - -
+    case OpCode::LD_HL_d16: // 12 cycles. Flags - - - -
         m_registers.l = fetch_and_inc();
         m_registers.h = fetch_and_inc();
         break;
-    case OpCode::Load_DE_D16: // 12 cycles. Flags - - - -
+    case OpCode::LD_DE_d16: // 12 cycles. Flags - - - -
         m_registers.e = fetch_and_inc();
         m_registers.d = fetch_and_inc();
         break;
-    case OpCode::Load_SP_D16: // 12 cycles. Flags - - - -
+    case OpCode::LD_SP_d16: // 12 cycles. Flags - - - -
         m_registers.stack_ptr = fetch_and_inc_a16();
         break;
-    case OpCode::Inc_DE: // 8 cycles. Flags: - - - -
+    case OpCode::INC_DE: // 8 cycles. Flags: - - - -
         inc_de();
         break;
-    case OpCode::Inc_BC: // 8 cycles. Flags: - - - -
+    case OpCode::INC_BC: // 8 cycles. Flags: - - - -
         inc_bc();
         break;
-    case OpCode::Inc_HL: // 8 cycles. Flags: - - - -
+    case OpCode::INC_HL: // 8 cycles. Flags: - - - -
         inc_hl();
         break;
-    case OpCode::Inc_SP: // 8 cycles. Flags: - - - -
+    case OpCode::INC_SP: // 8 cycles. Flags: - - - -
         inc_sp();
         break;
-    case OpCode::Dec_HL: // 8 cycles. Flags: - - - -
+    case OpCode::DEC_HL: // 8 cycles. Flags: - - - -
         dec_hl();
         break;
-    case OpCode::Load_Inc_HL_Addr_A: // 8 cycles. Flags: - - - -
+    case OpCode::LD_HL_ADDR_INC_A: // 8 cycles. Flags: - - - -
         write(get_hl(), m_registers.a);
         inc_hl();
         break;
-    case OpCode::Load_Dec_HL_Addr_A: // 8 cycles. Flags: - - - -
+    case OpCode::LD_HL_ADDR_DEC_A: // 8 cycles. Flags: - - - -
         write(get_hl(), m_registers.a);
         dec_hl();
         break;
-    case OpCode::Halt:
+    case OpCode::HALT:
 //        hex_dump("WRAM", m_wram, 32, WRAM_START);
         return false;
-    case OpCode::TestComplete:
+    case OpCode::TEST_COMPLETE:
         //        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
         return false;
-    case OpCode::Prefix_CB: {
+    case OpCode::PREFIX: {
         PrefixOpCode prefix_op_code = static_cast<PrefixOpCode>(fetch_and_inc());
         handle_prefix_op_code(prefix_op_code);
         break;

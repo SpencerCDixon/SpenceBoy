@@ -8,7 +8,21 @@ const keys = Object.keys(json);
 let codes = [];
 
 keys.forEach(key => {
-  const operands = json[key].operands.map(v => v.name);
+  const operands = json[key].operands.map(o => {
+    let name = o.name;
+
+    if (!o.immediate) {
+      name += '_ADDR';
+    }
+
+    if (o.decrement) {
+      name += '_DEC';
+    } else if (o.increment) {
+      name += '_INC';
+    }
+
+    return name;
+  });
   const name = [json[key].mnemonic, ...operands].join('_');
   const cycles = json[key].cycles.reduce((acc, val) => (acc += val), 0);
 
@@ -21,7 +35,7 @@ keys.forEach(key => {
 
 codes.sort((o1, o2) => (o1.name > o2.name ? 1 : -1));
 codes.forEach(({ op_code, name, cycles }) => {
-  const str = `__ENUMERATE(${op_code}, ${name}, ${cycles})`;
+  const str = `__ENUMERATE(${op_code}, ${name}, ${cycles}) \\`;
   console.log(str);
 
   // const str = `- [ ] ${name} (${op_code})`;
