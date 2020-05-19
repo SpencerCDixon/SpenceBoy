@@ -70,7 +70,8 @@ public:
     }
 
     void load_rom(const char* rom_path);
-    bool step();
+    bool step(); // TODO(scd): Have this return cycle count instead of bool
+    bool interrupts_enabled() { return m_interrupts_enabled; }
 
     // Memory accessors
     u8* v_ram() { return m_vram; }
@@ -88,13 +89,18 @@ public:
 
 private:
     void handle_prefix_op_code(const PrefixOpCode& op_code);
+
+    // Memory Access
     u8 read(u16 address);
     void write(u16 address, u8 data);
-    u8 fetch_and_inc();
+    void push(u8* reg_one, u8* reg_two);
+    void pop(u8* reg_one, u8* reg_two);
+
+    // Bit Masks
     void shift_left(u8* reg_ptr);
     void xor_reg(u8* reg_ptr);
 
-    // TODO(scd): change m_register.f based on should_set
+    // Flag Setting
     void set_zero_flag(bool should_set);
     void set_carry_flag(bool should_set);
     void set_half_carry_flag(bool should_set);
@@ -143,15 +149,19 @@ private:
         set_bc(--bc);
     }
     void inc_sp() { m_registers.stack_ptr++; }
+    void dec_sp() { m_registers.stack_ptr--; }
 
-    // TODO(scd): Maybe think of new name since the 16-bit value is not always used as an address
-    // Maybe... fetch_and_inc_16bit?
-    u16 fetch_and_inc_a16() {
-        u8 b1 = fetch_and_inc();
-        u8 b2 = fetch_and_inc();
+    // Fetch
+    u8 fetch_and_inc_8bit() {
+        u8 next = m_rom[m_registers.program_counter];
+        m_registers.program_counter++;
+        return next;
+    }
+    u16 fetch_and_inc_16bit() {
+        u8 b1 = fetch_and_inc_8bit();
+        u8 b2 = fetch_and_inc_8bit();
         return to_le_16_bit(b1, b2);
     }
-
 private:
     bool m_verbose_logging;
     Registers m_registers;

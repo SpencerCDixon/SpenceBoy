@@ -66,7 +66,7 @@ void CPU::load_rom(const char* rom_path)
 bool CPU::step()
 {
     // TODO: handle interrupts?
-    OpCode op_code = static_cast<OpCode>(fetch_and_inc());
+    OpCode op_code = static_cast<OpCode>(fetch_and_inc_8bit());
 
     if (m_verbose_logging) {
         dbg() << "-----------------";
@@ -80,19 +80,19 @@ bool CPU::step()
         m_registers.a = ~m_registers.a;
         break;
     case OpCode::LD_A_d8:
-        m_registers.a = fetch_and_inc();
+        m_registers.a = fetch_and_inc_8bit();
         break;
     case OpCode::LD_B_d8:
-        m_registers.b = fetch_and_inc();
+        m_registers.b = fetch_and_inc_8bit();
         break;
     case OpCode::LD_C_d8:
-        m_registers.c = fetch_and_inc();
+        m_registers.c = fetch_and_inc_8bit();
         break;
     case OpCode::LD_D_d8:
-        m_registers.d = fetch_and_inc();
+        m_registers.d = fetch_and_inc_8bit();
         break;
     case OpCode::LD_E_d8:
-        m_registers.e = fetch_and_inc();
+        m_registers.e = fetch_and_inc_8bit();
         break;
     case OpCode::LD_B_B:
         m_registers.b = m_registers.b;
@@ -122,10 +122,10 @@ bool CPU::step()
         m_registers.h = m_registers.d;
         break;
     case OpCode::LD_H_d8:
-        m_registers.h = fetch_and_inc();
+        m_registers.h = fetch_and_inc_8bit();
         break;
     case OpCode::LD_L_d8:
-        m_registers.l = fetch_and_inc();
+        m_registers.l = fetch_and_inc_8bit();
         break;
     case OpCode::LD_A_HL_ADDR: // 8 cycles
         m_registers.a = read(get_hl());
@@ -149,7 +149,7 @@ bool CPU::step()
         write(get_hl(), m_registers.c);
         break;
     case OpCode::LD_HL_ADDR_d8: // 12 cycles. Flags: - - - -
-        write(get_hl(), fetch_and_inc());
+        write(get_hl(), fetch_and_inc_8bit());
         break;
     case OpCode::DEC_A: // 4 cycles. Flags: Z 1 H -
         set_subtract_flag(true);
@@ -168,29 +168,29 @@ bool CPU::step()
             m_registers.program_counter++;
             m_registers.program_counter++;
         } else {
-            m_registers.program_counter = fetch_and_inc_a16();
+            m_registers.program_counter = fetch_and_inc_16bit();
         }
         break;
     case OpCode::JP_a16:
-        m_registers.program_counter = fetch_and_inc_a16();
+        m_registers.program_counter = fetch_and_inc_16bit();
         break;
     case OpCode::SUB_d8:
-        m_registers.a -= fetch_and_inc();
+        m_registers.a -= fetch_and_inc_8bit();
         break;
     case OpCode::LD_HL_d16: // 12 cycles. Flags - - - -
-        m_registers.l = fetch_and_inc();
-        m_registers.h = fetch_and_inc();
+        m_registers.l = fetch_and_inc_8bit();
+        m_registers.h = fetch_and_inc_8bit();
         break;
     case OpCode::LD_DE_d16: // 12 cycles. Flags - - - -
-        m_registers.e = fetch_and_inc();
-        m_registers.d = fetch_and_inc();
+        m_registers.e = fetch_and_inc_8bit();
+        m_registers.d = fetch_and_inc_8bit();
         break;
     case OpCode::LD_BC_d16: // 12 cycles. Flags - - - -
-        m_registers.b = fetch_and_inc();
-        m_registers.c = fetch_and_inc();
+        m_registers.b = fetch_and_inc_8bit();
+        m_registers.c = fetch_and_inc_8bit();
         break;
     case OpCode::LD_SP_d16: // 12 cycles. Flags - - - -
-        m_registers.stack_ptr = fetch_and_inc_a16();
+        m_registers.stack_ptr = fetch_and_inc_16bit();
         break;
     case OpCode::INC_DE: // 8 cycles. Flags: - - - -
         inc_de();
@@ -242,17 +242,29 @@ bool CPU::step()
     case OpCode::EI:
         m_interrupts_enabled = true;
         break;
+    case OpCode::PUSH_AF:
+        push(&m_registers.a, &m_registers.f);
+        break;
     case OpCode::PUSH_BC:
-        m_registers.stack_ptr -= 1;
-        write(m_registers.stack_ptr, m_registers.b);
-        m_registers.stack_ptr -= 1;
-        write(m_registers.stack_ptr, m_registers.c);
+        push(&m_registers.b, &m_registers.c);
+        break;
+    case OpCode::PUSH_DE:
+        push(&m_registers.d, &m_registers.e);
+        break;
+    case OpCode::PUSH_HL:
+        push(&m_registers.h, &m_registers.l);
+        break;
+    case OpCode::POP_AF:
+        pop(&m_registers.a, &m_registers.f);
+        break;
+    case OpCode::POP_BC:
+        pop(&m_registers.b, &m_registers.c);
         break;
     case OpCode::POP_DE:
-        m_registers.e = read(m_registers.stack_ptr);
-        m_registers.stack_ptr += 1;
-        m_registers.d = read(m_registers.stack_ptr);
-        m_registers.stack_ptr += 1;
+        pop(&m_registers.d, &m_registers.e);
+        break;
+    case OpCode::POP_HL:
+        pop(&m_registers.h, &m_registers.l);
         break;
     case OpCode::HALT:
 //        hex_dump("WRAM", m_wram, WRAM_SIZE, WRAM_START);
@@ -261,7 +273,7 @@ bool CPU::step()
         //        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
         return false;
     case OpCode::PREFIX: {
-        PrefixOpCode prefix_op_code = static_cast<PrefixOpCode>(fetch_and_inc());
+        PrefixOpCode prefix_op_code = static_cast<PrefixOpCode>(fetch_and_inc_8bit());
         handle_prefix_op_code(prefix_op_code);
         break;
     }
@@ -285,6 +297,7 @@ bool CPU::step()
 
     return true;
 }
+
 void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
 {
     switch (op_code) {
@@ -320,12 +333,9 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
     }
 }
 
-u8 CPU::fetch_and_inc()
-{
-    u8 next = m_rom[m_registers.program_counter];
-    m_registers.program_counter++;
-    return next;
-}
+//
+// Memory Access
+//
 
 u8 CPU::read(u16 address)
 {
@@ -375,6 +385,24 @@ void CPU::write(u16 address, u8 data)
 
     // If we've reached here it means we're trying to write to memory that is not set up yet.
     ASSERT_NOT_REACHED();
+}
+
+void CPU::push(u8* reg_one, u8* reg_two)
+{
+    dec_sp();
+    write(get_sp(), *reg_one);
+    dec_sp();
+    write(get_sp(), *reg_two);
+}
+
+void CPU::pop(u8* reg_one, u8* reg_two)
+{
+    // NOTE: Registers are reversed due to little endian storage.
+    // We want the API to remain easy to read. I.E. POP_DE should be called like pop(&d, &e);
+    *reg_two = read(get_sp());
+    inc_sp();
+    *reg_one = read(get_sp());
+    inc_sp();
 }
 
 //
