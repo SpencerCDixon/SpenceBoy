@@ -24,18 +24,20 @@ Start:
 	ld l, 0
 	ld sp, 0
 
-	; TODO: these all set flags and need to be handled a bit differently
-	; inc a
-	; inc b
-	; inc c
-	; inc d
-	; inc h
-	; inc l
-
 	; Multi-register incs don't change flags at all
 	inc bc
 	inc de
 	inc hl
 	inc sp
+
+	; TODO: explicit tests that half carry and zero flags are getting set
+	; and that subtract flag gets reset.
+	inc a
+	inc b
+	inc c
+	inc d
+	inc e
+	inc h
+	inc l
 
 	halt

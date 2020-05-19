@@ -154,6 +154,12 @@ private:
     }
     void inc_sp() { m_registers.stack_ptr++; }
     void dec_sp() { m_registers.stack_ptr--; }
+    void inc_reg(u8* reg_ptr) {
+        set_subtract_flag(false);
+        set_half_carry_flag(will_half_carry(*reg_ptr, 1));
+        *reg_ptr += 1;
+        set_zero_flag(*reg_ptr == 0);
+    }
 
     // Fetch
     u8 fetch_and_inc_8bit() {

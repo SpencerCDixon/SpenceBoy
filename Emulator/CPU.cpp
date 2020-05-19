@@ -206,6 +206,27 @@ bool CPU::step()
     case OpCode::INC_SP: // 8 cycles. Flags: - - - -
         inc_sp();
         break;
+    case OpCode::INC_A: // Flags: Z 0 H -
+        inc_reg(&m_registers.a);
+        break;
+    case OpCode::INC_B: // Flags: Z 0 H -
+        inc_reg(&m_registers.b);
+        break;
+    case OpCode::INC_C: // Flags: Z 0 H -
+        inc_reg(&m_registers.c);
+        break;
+    case OpCode::INC_D: // Flags: Z 0 H -
+        inc_reg(&m_registers.d);
+        break;
+    case OpCode::INC_E: // Flags: Z 0 H -
+        inc_reg(&m_registers.e);
+        break;
+    case OpCode::INC_H: // Flags: Z 0 H -
+        inc_reg(&m_registers.h);
+        break;
+    case OpCode::INC_L: // Flags: Z 0 H -
+        inc_reg(&m_registers.l);
+        break;
     case OpCode::DEC_HL: // 8 cycles. Flags: - - - -
         dec_hl();
         break;
