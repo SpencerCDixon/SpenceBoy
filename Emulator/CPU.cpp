@@ -176,6 +176,9 @@ bool CPU::step()
     case OpCode::JP_a16:
         m_registers.program_counter = fetch_and_inc_16bit();
         break;
+    case OpCode::JR_r8:
+        m_registers.program_counter += fetch_and_inc_8bit();
+        break;
     case OpCode::SUB_d8:
         m_registers.a -= fetch_and_inc_8bit();
         break;
