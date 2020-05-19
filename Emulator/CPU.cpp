@@ -26,6 +26,8 @@ constexpr u16 VRAM_START = 0x8000;
 constexpr u16 VRAM_END = 0xA000; // Isn't GBC supposed to have 16k VRAM? Look into this...
 constexpr u16 IO_START = 0xFF00;
 constexpr u16 IO_END = 0xFF7F;
+constexpr u16 HRAM_START = 0xFF80;
+constexpr u16 HRAM_END = 0xFFFE;
 // ERAM: A000 - BFFF
 // OAM:  FE00 - FE9F
 // HRAM: TBD
@@ -352,6 +354,9 @@ u8 CPU::read(u16 address)
     } else if (address >= IO_START && address <= IO_END) {
         u16 idx = address - IO_START;
         return m_rom[idx];
+    } else if (address >= HRAM_START && address <= HRAM_END) {
+        u16 idx = address - HRAM_START;
+        return m_hram[idx];
     } else {
         dbg() << "bad read address: " << address;
     }
@@ -378,6 +383,10 @@ void CPU::write(u16 address, u8 data)
     } else if (address >= IO_START && address <= IO_END) {
         u16 idx = address - IO_START;
         m_io_registers[idx] = data;
+        return;
+    } else if (address >= HRAM_START && address <= HRAM_END) {
+        u16 idx = address - HRAM_START;
+        m_hram[idx] = data;
         return;
     } else {
         dbg() << "bad write address: " << address;

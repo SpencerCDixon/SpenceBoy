@@ -13,6 +13,7 @@
 
 constexpr size_t WRAM_SIZE = KB * 8;
 constexpr size_t VRAM_SIZE = KB * 16;
+constexpr size_t HRAM_SIZE = 126;
 constexpr size_t IO_SIZE = 112;
 
 struct Registers {
@@ -45,6 +46,7 @@ public:
     {
         m_wram = (u8*)calloc(WRAM_SIZE, sizeof(u8));
         m_vram = (u8*)calloc(VRAM_SIZE, sizeof(u8));
+        m_hram = (u8*)calloc(HRAM_SIZE, sizeof(u8));
         m_io_registers = (u8*)calloc(IO_SIZE, sizeof(u8));
 
         // TOOD(scd): Look into how confident I am these are correct
@@ -67,6 +69,7 @@ public:
 
         free(m_wram);
         free(m_vram);
+        free(m_hram);
     }
 
     void load_rom(const char* rom_path);
@@ -171,6 +174,7 @@ private:
     u8* m_rom { nullptr };
     u8* m_wram { nullptr };
     u8* m_vram { nullptr };
+    u8* m_hram { nullptr };
     u8* m_io_registers { nullptr };
     bool m_interrupts_enabled { false };
 };

@@ -68,18 +68,19 @@ SECTION "StartOfGameCode",ROM0
 begin: ; GingerBread assumes that the label "begin" is where the game should start
     
     ld hl, hello_world_tile_data
-    ld de, TILEDATA_START
-    ld bc, hello_world_tile_data_size
-    call mCopyVRAM
+    ; ld de, TILEDATA_START
+    ; ld bc, hello_world_tile_data_size
+    ; call mCopyVRAM
 
-    ld b, $30 ; end character 
-    ld c, 0 ; draw to background
-    ld d, 4 ; X start position (0-19)
-    ld e, 8 ; Y start position (0-17)
-    ld hl, SomeText ; text to write 
-    call RenderTextToEnd
+    ; ld b, $30 ; end character 
+    ; ld c, 0 ; draw to background
+    ; ld d, 4 ; X start position (0-19)
+    ; ld e, 8 ; Y start position (0-17)
+    ; ld hl, SomeText ; text to write 
+    ; call RenderTextToEnd
     
-    call StartLCD
+    ; call StartLCD
+	halt
     
 main:
     halt 
