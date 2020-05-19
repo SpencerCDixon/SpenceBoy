@@ -12,7 +12,7 @@ Template for daily journal:
 
 ---
 
-**Date: 5/17/2020**
+**Date: 5/18/2020**
 ### What did I learn today?
 
 * Pandocs has the boot up sequence for the GBC well documented which I'll need to implement exactly. It involves locations

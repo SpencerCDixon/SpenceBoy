@@ -162,4 +162,5 @@ private:
     u8* m_wram { nullptr };
     u8* m_vram { nullptr };
     u8* m_io_registers { nullptr };
+    bool m_interrupts_enabled { false };
 };

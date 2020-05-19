@@ -185,6 +185,10 @@ bool CPU::step()
         m_registers.e = fetch_and_inc();
         m_registers.d = fetch_and_inc();
         break;
+    case OpCode::LD_BC_d16: // 12 cycles. Flags - - - -
+        m_registers.b = fetch_and_inc();
+        m_registers.c = fetch_and_inc();
+        break;
     case OpCode::LD_SP_d16: // 12 cycles. Flags - - - -
         m_registers.stack_ptr = fetch_and_inc_a16();
         break;
@@ -231,6 +235,12 @@ bool CPU::step()
         break;
     case OpCode::XOR_L:
         xor_reg(&m_registers.l);
+        break;
+    case OpCode::DI:
+        m_interrupts_enabled = false;
+        break;
+    case OpCode::EI:
+        m_interrupts_enabled = true;
         break;
     case OpCode::HALT:
 //        hex_dump("WRAM", m_wram, 32, WRAM_START);
