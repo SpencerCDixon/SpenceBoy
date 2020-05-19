@@ -101,7 +101,7 @@ the `C` standard library.
 - [ ] CALL_NC_a16 (0xD4)
 - [ ] CALL_NZ_a16 (0xC4)
 - [ ] CALL_Z_a16 (0xCC)
-- [ ] CALL_a16 (0xCD)
+- [x] CALL_a16 (0xCD)
 - [ ] CCF (0x3F)
 - [ ] CPL (0x2F)
 - [ ] CP_A (0xBF)

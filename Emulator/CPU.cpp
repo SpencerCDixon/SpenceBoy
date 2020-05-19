@@ -268,6 +268,10 @@ bool CPU::step()
     case OpCode::POP_HL:
         pop(&m_registers.h, &m_registers.l);
         break;
+    case OpCode::CALL_a16:
+        push(m_registers.program_counter);
+        m_registers.program_counter = fetch_and_inc_16bit();
+        break;
     case OpCode::HALT:
 //        hex_dump("WRAM", m_wram, WRAM_SIZE, WRAM_START);
         return false;
@@ -402,6 +406,17 @@ void CPU::push(u8* reg_one, u8* reg_two)
     write(get_sp(), *reg_one);
     dec_sp();
     write(get_sp(), *reg_two);
+}
+
+void CPU::push(u16 addr)
+{
+    u8 byte_one = addr;
+    u8 byte_two = addr >> 8;
+
+    dec_sp();
+    write(get_sp(), byte_one);
+    dec_sp();
+    write(get_sp(), byte_two);
 }
 
 void CPU::pop(u8* reg_one, u8* reg_two)

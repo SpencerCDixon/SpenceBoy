@@ -97,6 +97,7 @@ private:
     u8 read(u16 address);
     void write(u16 address, u8 data);
     void push(u8* reg_one, u8* reg_two);
+    void push(u16 addr);
     void pop(u8* reg_one, u8* reg_two);
 
     // Bit Masks
