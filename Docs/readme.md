@@ -37,7 +37,7 @@ the `C` standard library.
 - [x] Figure out how the GameBoy ROM file format works, and parse_rom a ROM into your emulator's memory at startup
 - [x] Build a simple PPU renderer that looks at all the PPU state in the emulator and renders the "screen" into an SDL window
 - [ ] [Proper boot up sequence](http://localhost:8080/pandocs/#power-up-sequence)
-- [ ] Stack push/pop
+- [x] Stack push/pop
 - [ ] Interrupts
 - [ ] Unprefixed raw op codes
 - [ ] Prefixed `cb` opcodes 
@@ -265,11 +265,11 @@ the `C` standard library.
 - [ ] OR_d8 (0xF6)
 - [ ] POP_AF (0xF1)
 - [ ] POP_BC (0xC1)
-- [ ] POP_DE (0xD1)
+- [x] POP_DE (0xD1)
 - [ ] POP_HL (0xE1)
 - [ ] PREFIX (0xCB)
 - [ ] PUSH_AF (0xF5)
-- [ ] PUSH_BC (0xC5)
+- [x] PUSH_BC (0xC5)
 - [ ] PUSH_DE (0xD5)
 - [ ] PUSH_HL (0xE5)
 - [ ] RET (0xC9)

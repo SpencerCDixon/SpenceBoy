@@ -217,6 +217,10 @@ int main(int argc, char* argv[])
     TEST_CASE(incrementing_registers, increments.gb)
     TEST_CASE(shifting_and_rotating_bits, shift-rotate.gb)
     TEST_CASE(bit_masks, bit-masks.gb)
+    TEST_CASE(stack, stack.gb)
+
+    // Not ready for prime time yet
+//    TEST_CASE(background_text_render, text-render.gb)
 
     return 0;
 }

@@ -11,7 +11,7 @@
 
 #include <stdlib.h>
 
-constexpr size_t WRAM_SIZE = KB * 32;
+constexpr size_t WRAM_SIZE = KB * 8;
 constexpr size_t VRAM_SIZE = KB * 16;
 constexpr size_t IO_SIZE = 112;
 

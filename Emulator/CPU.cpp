@@ -21,7 +21,7 @@ constexpr u8 FLAG_CARRY = 0b00010000;
 constexpr u16 ROM_START = 0x0000;
 constexpr u16 ROM_END = 0x3FFF;
 constexpr u16 WRAM_START = 0xC000;
-constexpr u16 WRAM_END = 0xCFFF;
+constexpr u16 WRAM_END = 0xDFFF;
 constexpr u16 VRAM_START = 0x8000;
 constexpr u16 VRAM_END = 0xA000; // Isn't GBC supposed to have 16k VRAM? Look into this...
 constexpr u16 IO_START = 0xFF00;
@@ -242,8 +242,20 @@ bool CPU::step()
     case OpCode::EI:
         m_interrupts_enabled = true;
         break;
+    case OpCode::PUSH_BC:
+        m_registers.stack_ptr -= 1;
+        write(m_registers.stack_ptr, m_registers.b);
+        m_registers.stack_ptr -= 1;
+        write(m_registers.stack_ptr, m_registers.c);
+        break;
+    case OpCode::POP_DE:
+        m_registers.e = read(m_registers.stack_ptr);
+        m_registers.stack_ptr += 1;
+        m_registers.d = read(m_registers.stack_ptr);
+        m_registers.stack_ptr += 1;
+        break;
     case OpCode::HALT:
-//        hex_dump("WRAM", m_wram, 32, WRAM_START);
+//        hex_dump("WRAM", m_wram, WRAM_SIZE, WRAM_START);
         return false;
     case OpCode::TEST_COMPLETE:
         //        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
@@ -317,19 +329,21 @@ u8 CPU::fetch_and_inc()
 
 u8 CPU::read(u16 address)
 {
-    if (address >= WRAM_START && address < WRAM_END) {
+    if (address >= WRAM_START && address <= WRAM_END) {
         u16 idx = address - WRAM_START;
         ASSERT(idx >= 0);
         return m_wram[idx];
-    } else if (address >= VRAM_START && address < VRAM_END) {
+    } else if (address >= VRAM_START && address <= VRAM_END) {
         u16 idx = address - VRAM_START;
         ASSERT(idx >= 0);
         return m_vram[idx];
-    } else if (address >= ROM_START && address < ROM_END) {
+    } else if (address >= ROM_START && address <= ROM_END) {
         return m_rom[address];
-    } else if (address >= IO_START && address < IO_END) {
+    } else if (address >= IO_START && address <= IO_END) {
         u16 idx = address - IO_START;
         return m_rom[idx];
+    } else {
+        dbg() << "bad read address: " << address;
     }
 
     ASSERT_NOT_REACHED();
@@ -338,25 +352,25 @@ u8 CPU::read(u16 address)
 
 void CPU::write(u16 address, u8 data)
 {
-    if (address >= WRAM_START && address < WRAM_END) {
+    if (address >= WRAM_START && address <= WRAM_END) {
         u16 idx = address - WRAM_START;
         ASSERT(idx >= 0);
         m_wram[idx] = data;
         return;
-    } else if (address >= VRAM_START && address < VRAM_END) {
+    } else if (address >= VRAM_START && address <= VRAM_END) {
         u16 idx = address - VRAM_START;
         ASSERT(idx >= 0);
         m_vram[idx] = data;
         return;
-    } else if (address >= ROM_START && address < ROM_END) {
+    } else if (address >= ROM_START && address <= ROM_END) {
         m_rom[address] = data;
         return;
-    } else if (address >= IO_START && address < IO_END) {
+    } else if (address >= IO_START && address <= IO_END) {
         u16 idx = address - IO_START;
         m_io_registers[idx] = data;
         return;
     } else {
-        dbg() << "bad address: " << address;
+        dbg() << "bad write address: " << address;
     }
 
     // If we've reached here it means we're trying to write to memory that is not set up yet.

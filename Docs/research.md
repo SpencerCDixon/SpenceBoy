@@ -195,3 +195,26 @@ Z: Zero - set if the instructions result was zero
 1. Write to tilemap
 1. Set scrolling (SCY, SCX)
 1. Set palette
+
+
+## Stack
+
+* Stack pointer is set to $FFFE when game boy first loads
+* It is the job of the programmer to set the stack pointer to something sensible at boot
+* A normal value to set SP is the end of WRAM (working ram or $e000)
+* When pushing onto the stack, the SP will decrement automatically before applying the push
+* The stack holds 16-bit values and the SP is a 16-bit address to that 16-bit value
+
+Example:
+
+```asm
+ld b, $ff
+ld c, $ff
+
+push bc
+
+// Last line of ram:
+// (START) 00 00 00 ... 00 FF FF (END)
+
+// SP = RAM END - 2;
+```
