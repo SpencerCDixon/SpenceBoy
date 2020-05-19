@@ -160,6 +160,12 @@ private:
         *reg_ptr += 1;
         set_zero_flag(*reg_ptr == 0);
     }
+    void dec_reg(u8* reg_ptr) {
+        set_subtract_flag(true);
+        set_half_carry_flag(will_half_carry(*reg_ptr, 1));
+        *reg_ptr -= 1;
+        set_zero_flag(*reg_ptr == 0);
+    }
 
     // Fetch
     u8 fetch_and_inc_8bit() {

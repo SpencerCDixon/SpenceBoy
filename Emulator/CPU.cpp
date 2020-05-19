@@ -154,16 +154,37 @@ bool CPU::step()
         write(get_hl(), fetch_and_inc_8bit());
         break;
     case OpCode::DEC_A: // 4 cycles. Flags: Z 1 H -
-        set_subtract_flag(true);
-        set_half_carry_flag(will_half_carry(m_registers.a, 1));
-        m_registers.a--;
-        set_zero_flag(m_registers.a == 0);
+        dec_reg(&m_registers.a);
         break;
     case OpCode::DEC_B: // 4 cycles. Flags: Z 1 H -
-        set_subtract_flag(true);
-        set_half_carry_flag(will_half_carry(m_registers.b, 1));
-        m_registers.b--;
-        set_zero_flag(m_registers.b == 0);
+        dec_reg(&m_registers.b);
+        break;
+    case OpCode::DEC_C: // 4 cycles. Flags: Z 1 H -
+        dec_reg(&m_registers.c);
+        break;
+    case OpCode::DEC_D: // 4 cycles. Flags: Z 1 H -
+        dec_reg(&m_registers.d);
+        break;
+    case OpCode::DEC_E: // 4 cycles. Flags: Z 1 H -
+        dec_reg(&m_registers.e);
+        break;
+    case OpCode::DEC_H: // 4 cycles. Flags: Z 1 H -
+        dec_reg(&m_registers.h);
+        break;
+    case OpCode::DEC_L: // 4 cycles. Flags: Z 1 H -
+        dec_reg(&m_registers.l);
+        break;
+    case OpCode::DEC_HL: // 8 cycles. Flags: - - - -
+        dec_hl();
+        break;
+    case OpCode::DEC_SP: // 8 cycles. Flags: - - - -
+        dec_sp();
+        break;
+    case OpCode::DEC_BC: // 8 cycles. Flags: - - - -
+        dec_bc();
+        break;
+    case OpCode::DEC_DE: // 8 cycles. Flags: - - - -
+        dec_de();
         break;
     case OpCode::JP_NZ_a16:
         if (m_registers.f & FLAG_ZERO) {
@@ -229,9 +250,6 @@ bool CPU::step()
         break;
     case OpCode::INC_L: // Flags: Z 0 H -
         inc_reg(&m_registers.l);
-        break;
-    case OpCode::DEC_HL: // 8 cycles. Flags: - - - -
-        dec_hl();
         break;
     case OpCode::LD_HL_ADDR_INC_A: // 8 cycles. Flags: - - - -
         write(get_hl(), m_registers.a);
