@@ -12,6 +12,19 @@ Template for daily journal:
 
 ---
 
+**Date: 5/19/2020**
+
+### What did I get done today?
+
+* Enable/disable interrupt instruction
+* LD_BC_d16 instruction
+* Push/Pop allowing for first stack interaction!
+* Adds HRAM access
+* Call A16
+* Relative jumps
+
+---
+
 **Date: 5/18/2020**
 ### What did I learn today?
 
