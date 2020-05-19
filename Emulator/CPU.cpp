@@ -9,6 +9,10 @@
 #include <sys/stat.h>
 #include <utility>
 
+// Useful to snag when debugging
+//        hex_dump("WRAM", m_wram, WRAM_SIZE, WRAM_START);
+//        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
+
 constexpr u16 MAX_ROM_SIZE = KB * 32;
 
 // Flags
@@ -198,7 +202,15 @@ bool CPU::step()
         m_registers.program_counter = fetch_and_inc_16bit();
         break;
     case OpCode::JR_r8:
-        m_registers.program_counter += fetch_and_inc_8bit();
+        m_registers.program_counter += static_cast<s8>(fetch_and_inc_8bit());
+        break;
+    case OpCode::JR_NZ_r8:
+        if (m_registers.f & FLAG_ZERO) {
+            m_registers.program_counter++;
+        } else {
+            s8 next = static_cast<s8>(fetch_and_inc_8bit());
+            m_registers.program_counter += next;
+        }
         break;
     case OpCode::SUB_d8:
         m_registers.a -= fetch_and_inc_8bit();
@@ -315,10 +327,8 @@ bool CPU::step()
         m_registers.program_counter = fetch_and_inc_16bit();
         break;
     case OpCode::HALT:
-//        hex_dump("WRAM", m_wram, WRAM_SIZE, WRAM_START);
         return false;
     case OpCode::TEST_COMPLETE:
-        //        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
         return false;
     case OpCode::PREFIX: {
         PrefixOpCode prefix_op_code = static_cast<PrefixOpCode>(fetch_and_inc_8bit());
@@ -437,6 +447,7 @@ void CPU::write(u16 address, u8 data)
     } else {
         dbg() << "bad write address: " << address;
     }
+
 
     // If we've reached here it means we're trying to write to memory that is not set up yet.
     ASSERT_NOT_REACHED();
