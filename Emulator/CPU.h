@@ -99,6 +99,7 @@ private:
     void push(u8* reg_one, u8* reg_two);
     void push(u16 addr);
     void pop(u8* reg_one, u8* reg_two);
+    void pop_return();
 
     // Bit Masks
     void shift_left(u8* reg_ptr);

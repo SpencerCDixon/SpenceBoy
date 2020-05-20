@@ -81,7 +81,7 @@ bool CPU::step()
 
     switch (op_code) {
     case OpCode::NOP:
-        break; // Noop, do nothing!
+        break;        // Noop, do nothing!
     case OpCode::CPL: // 4 cycles
         m_registers.a = ~m_registers.a;
         break;
@@ -326,6 +326,9 @@ bool CPU::step()
         push(m_registers.program_counter);
         m_registers.program_counter = fetch_and_inc_16bit();
         break;
+    case OpCode::RET:
+        pop_return();
+        break;
     case OpCode::HALT:
         return false;
     case OpCode::TEST_COMPLETE:
@@ -337,7 +340,8 @@ bool CPU::step()
     }
     default:
         if (is_opcode(op_code)) {
-            printf("[ " RED "FATAL" RESET " ] " "Missing implementation for the following op code: ");
+            printf("[ " RED "FATAL" RESET " ] "
+                   "Missing implementation for the following op code: ");
             print_opcode(op_code);
         } else {
             printf("missing op code: %x", (u8)op_code);
@@ -382,7 +386,8 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
         break;
     default:
         if (is_prefix_opcode(op_code)) {
-            printf("[ " RED "FATAL" RESET " ] " "Missing implementation for the following op code: ");
+            printf("[ " RED "FATAL" RESET " ] "
+                   "Missing implementation for the following op code: ");
             print_prefix_opcode(op_code);
         } else {
             printf("missing prefix op code: %x", (u8)op_code);
@@ -448,7 +453,6 @@ void CPU::write(u16 address, u8 data)
         dbg() << "bad write address: " << address;
     }
 
-
     // If we've reached here it means we're trying to write to memory that is not set up yet.
     ASSERT_NOT_REACHED();
 }
@@ -467,9 +471,9 @@ void CPU::push(u16 addr)
     u8 byte_two = addr >> 8;
 
     dec_sp();
-    write(get_sp(), byte_one);
-    dec_sp();
     write(get_sp(), byte_two);
+    dec_sp();
+    write(get_sp(), byte_one);
 }
 
 void CPU::pop(u8* reg_one, u8* reg_two)
@@ -480,6 +484,15 @@ void CPU::pop(u8* reg_one, u8* reg_two)
     inc_sp();
     *reg_one = read(get_sp());
     inc_sp();
+}
+
+void CPU::pop_return()
+{
+    u8 b1 = read(get_sp());
+    inc_sp();
+    u8 b2 = read(get_sp());
+    inc_sp();
+    m_registers.program_counter = to_le_16_bit(b1, b2);
 }
 
 //

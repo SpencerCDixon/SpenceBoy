@@ -1,0 +1,15 @@
+Registers:
+–---------
+
+a: 002 [$02]   f: 000 [$00]
+b: 006 [$06]   c: 004 [$04]
+d: 004 [$04]   e: 004 [$04]
+h: 000 [$00]   l: 000 [$00]
+s: 65535 [$ffff]   p: 024 [$18]
+
+Checksums:
+–---------
+
+WRAM Checksum: 0
+VRAM Checksum: 0
+IO   Checksum: 0

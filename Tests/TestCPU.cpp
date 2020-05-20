@@ -218,6 +218,7 @@ int main(int argc, char* argv[])
     TEST_CASE(shifting_and_rotating_bits, shift-rotate.gb)
     TEST_CASE(bit_masks, bit-masks.gb)
     TEST_CASE(stack, stack.gb)
+    TEST_CASE(pushing_and_popping, push-pop.gb)
 
     // Not ready for prime time yet
 //    TEST_CASE(background_text_render, text-render.gb)
