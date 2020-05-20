@@ -204,14 +204,12 @@ bool CPU::step()
     case OpCode::JR_r8:
         m_registers.program_counter += static_cast<s8>(fetch_and_inc_8bit());
         break;
-    case OpCode::JR_NZ_r8:
-        if (m_registers.f & FLAG_ZERO) {
-            m_registers.program_counter++;
-        } else {
-            s8 next = static_cast<s8>(fetch_and_inc_8bit());
-            m_registers.program_counter += next;
-        }
+    case OpCode::JR_NZ_r8: {
+        s8 offset = static_cast<s8>(fetch_and_inc_8bit());
+        if (!get_zero_flag())
+            m_registers.program_counter += offset;
         break;
+    }
     case OpCode::SUB_d8:
         m_registers.a -= fetch_and_inc_8bit();
         break;
@@ -548,6 +546,11 @@ void CPU::set_subtract_flag(bool should_set)
     } else {
         m_registers.f &= ~FLAG_SUBTRACT;
     }
+}
+
+bool CPU::get_zero_flag()
+{
+    return m_registers.f & FLAG_ZERO;
 }
 
 // TODO: Abstract the address checking into a method which tells me two things:
