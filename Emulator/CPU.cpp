@@ -32,9 +32,10 @@ constexpr u16 IO_START = 0xFF00;
 constexpr u16 IO_END = 0xFF7F;
 constexpr u16 HRAM_START = 0xFF80;
 constexpr u16 HRAM_END = 0xFFFE;
-// ERAM: A000 - BFFF
+// Echo ram is apparently not used by anything. We'll see how that holds up...
+constexpr u16 ERAM_START = 0xE000;
+constexpr u16 ERAM_END = 0xFDFF;
 // OAM:  FE00 - FE9F
-// HRAM: TBD
 
 // TODO: Use the logging interface for these
 // TODO: Use hex and decimal for faster debugging
@@ -324,8 +325,12 @@ bool CPU::step()
         break;
     case OpCode::RET:
         pop_return();
+        // Confused, why do I need this? Shouldn't this happen in the call or something? If I don't do it though then on the return I'm
+        // off by two and try to execute the data as if it was an op code...
+        m_registers.program_counter += 2;
         break;
     case OpCode::HALT:
+        hex_dump("WRAM", m_wram, 32, WRAM_START);
         return false;
     case OpCode::TEST_COMPLETE:
         return false;
@@ -444,6 +449,9 @@ void CPU::write(u16 address, u8 data)
     } else if (address >= HRAM_START && address <= HRAM_END) {
         u16 idx = address - HRAM_START;
         m_hram[idx] = data;
+        return;
+    } else if (address >= ERAM_START && address <= ERAM_END) {
+        dbg() << "echo ram write at: " << address << " treating as no-op";
         return;
     } else {
         dbg() << "bad write address: " << address;

@@ -13,25 +13,6 @@ ENDR
 
 SECTION "Game code", ROM0
 
-USER_RAM_START     EQU $C200 ; up to $E000
-
-; Sets data to a constant value in a way that is NOT safe to use when writing to VRAM while LCD is on (but faster than mSetVRAM)
-; A  - constant value to set
-; HL - memory position of the start of the copying destination
-; BC - the number of bytes to be written 
-; mSet:
-    ; inc b
-    ; inc c
-    ; jr  .skip
-; .loop:
-    ; ld [hl+], a 
-; .skip:
-    ; dec c
-    ; jr  nz, .loop
-    ; dec b
-    ; jr nz, .loop
-    ; ret
-
 setBAndA:
 	ld a, $02
 	ld b, $02
