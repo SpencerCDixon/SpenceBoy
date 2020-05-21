@@ -48,6 +48,44 @@ void print_registers(const Registers& reg)
           << "sp:  " << reg.stack_ptr << "    pc: " << reg.program_counter;
 }
 
+// NOTE: Caller needs to free memory after use.
+char* to_string(const CPUTestState& test_state)
+{
+    char* buffer = static_cast<char*>(malloc(256));
+    sprintf(
+        buffer,
+        "A: %03u [0x%02x] F: %03u [0x%02x]  "
+        "B: %03u [0x%02x] C: %03u [0x%02x]  "
+        "D: %03u [0x%02x] E: %03u [0x%02x]  "
+        "H: %03u [0x%02x] L: %03u [0x%02x] ---"
+        " WRAM: 0x%016llx | VRAM: 0x%016llx | IORAM: 0x%016llx |"
+        ,
+        test_state.registers.a,
+        test_state.registers.a,
+        test_state.registers.f,
+        test_state.registers.f,
+        test_state.registers.b,
+        test_state.registers.b,
+        test_state.registers.c,
+        test_state.registers.c,
+        test_state.registers.d,
+        test_state.registers.d,
+        test_state.registers.e,
+        test_state.registers.e,
+        test_state.registers.h,
+        test_state.registers.h,
+        test_state.registers.l,
+        test_state.registers.l,
+        test_state.wram_checksum,
+        test_state.vram_checksum,
+        test_state.io_checksum
+    );
+//    printf("Current length %u\n", (u16)strlen(buffer));
+    return buffer;
+}
+
+
+
 void CPU::load_rom(const char* rom_path)
 {
     if (m_verbose_logging)
@@ -564,3 +602,18 @@ bool CPU::get_zero_flag()
 //
 // -> Address { MemBank, NormalizedAddr }
 // -> MemBank { WRAM, VRAM, etc. }
+
+const LogStream& operator<<(const LogStream& stream, const CPUTestState& test_state)
+{
+    char* buffer = to_string(test_state);
+    stream << buffer;
+    free(buffer);
+    return stream;
+}
+const LogStream& operator<<(const LogStream& stream, CPU& cpu)
+{
+    char* buffer = to_string(cpu.test_state());
+    stream << buffer;
+    free(buffer);
+    return stream;
+}

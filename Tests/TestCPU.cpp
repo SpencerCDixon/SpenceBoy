@@ -47,7 +47,11 @@ public:
         if (m_verbose_logging)
             dbg() << "--> Running test: " << m_name;
 
-        while (m_cpu.step()) { };
+        while (m_cpu.step()) {
+            // TODO: Take snapshot of each step along the way!
+//            dbg() << m_cpu.test_state();
+            dbg() << m_cpu;
+        };
 
         if (m_should_update_snapshot) {
             update_snapshot();

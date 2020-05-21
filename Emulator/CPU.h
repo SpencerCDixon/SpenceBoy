@@ -36,6 +36,7 @@ struct CPUTestState {
     u64 vram_checksum;
     u64 io_checksum;
 };
+char* to_string(const CPUTestState&);
 
 class CPU {
 
@@ -76,10 +77,14 @@ public:
     bool step(); // TODO(scd): Have this return cycle count instead of bool
     bool interrupts_enabled() { return m_interrupts_enabled; }
 
+    //
     // Memory accessors
+    //
     u8* v_ram() { return m_vram; }
 
-    // Andreas: Should this be protected somehow and use a Friend class or something?
+    //
+    // Testing Utilities
+    //
     CPUTestState test_state()
     {
         CPUTestState result;
@@ -193,3 +198,6 @@ private:
     u8* m_io_registers { nullptr };
     bool m_interrupts_enabled { false };
 };
+
+const LogStream& operator<<(const LogStream&, const CPUTestState&);
+const LogStream& operator<<(const LogStream&, CPU&);
