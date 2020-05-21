@@ -11,6 +11,23 @@ Template for daily journal:
 ### Any questions for Andreas?
 
 ---
+ 
+**Date: 5/21/2020**
+
+### What did I get done today?
+
+* Fix bug with how I was incrementing PC when doing call/returns
+ 
+---
+ 
+**Date: 5/20/2020**
+
+### What did I get done today?
+
+* Flag getter
+* Pushing and popping test case
+
+---
 
 **Date: 5/19/2020**
 
