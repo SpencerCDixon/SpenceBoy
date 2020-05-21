@@ -36,15 +36,20 @@ the `C` standard library.
 - [x] Add RAM (really just a byte buffer) to your CPU and implement instructions for moving memory in/out of RAM
 - [x] Figure out how the GameBoy ROM file format works, and parse_rom a ROM into your emulator's memory at startup
 - [x] Build a simple PPU renderer that looks at all the PPU state in the emulator and renders the "screen" into an SDL window
-- [ ] [Proper boot up sequence](http://localhost:8080/pandocs/#power-up-sequence)
 - [x] Stack push/pop
-- [ ] Interrupts
-- [ ] Unprefixed raw op codes
-- [ ] Prefixed `cb` opcodes 
 - [x] Call/return from ASM 'functions'
-- [ ] VBlank
-- [ ] HBlank
-- [ ] Input mapping
+- [ ] [Proper boot up sequence](http://localhost:8080/pandocs/#power-up-sequence)
+- [ ] Implement the GameBoy buttons (D-pad, A, B, Select and Start). Listening for SDL keyboard events and update the appropriate memory location in the Emulator to reflect the button states. Then write a GB program that requires you to input a specific button sequence.
+- [ ] Add a GUI window that displays the button states (or perhaps: add a togglable button state overlay to the game window)
+- [ ] Write a program that fills the screen with a striped pattern.
+- [ ] Write a program that scrolls the background layer using the SCX and SCY registers.
+- [ ] Write a program that puts a sprite on screen and animates its movement
+- [ ] Add a GUI window that displays the contents of tile memory rendered as a tile map. This will give you fast visual clues later if/when something goes wrong in emulation.
+- [ ] Add a GUI window that displays outlines of all the moving surfaces (without content, i.e a "wireframe" view) so you can see how things move around separately from the main emulator screen.
+- [ ] Load one of the older ROMs into your emulator (something like Tetris, Tennis or Super Mario Land) and see if you can get it to render the title screen.
+- [ ] Interrupts
+- [ ] All unprefixed raw op codes
+- [ ] All prefixed `cb` opcodes 
 
 ## Testing Infra
 
