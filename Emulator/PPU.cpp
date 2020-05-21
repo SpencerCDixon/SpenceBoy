@@ -59,7 +59,7 @@ void PPU::render()
             // 00 01 10 = white AND 11 = black
             bool is_black = (first_byte & (1 << x)) && (second_byte & (1 << x));
 
-            *pixel++ = is_black ? Colors::BLACK_ARGB : Colors::WHITE_ARGB;
+            *pixel++ = is_black ? Color::BLACK_ARGB : Color::WHITE_ARGB;
         }
 
         color_row += bytes_per_pixel;
