@@ -13,10 +13,18 @@ Template for daily journal:
 ---
  
 **Date: 5/21/2020**
+### What did I learn today?
+
+* `constexpr` expressions can be used at runtime and compile time
+* Prefer `enum class` to raw `enum`s as it prevents possible scoping bugs. Also, the class variant can't be
+coerced into an int automatically thus saving your skin from potential arguments being passed incorrectly.
 
 ### What did I get done today?
 
 * Fix bug with how I was incrementing PC when doing call/returns
+* Clean up Color class to be more idiomatic C++
+* Research the String class in Serenity a bit to prepare how I would make a String class
+* Added `to_string` utilities to CPU/CPUTestState which will be used to improve testing situation soon
  
 ---
  
