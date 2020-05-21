@@ -70,7 +70,7 @@ in memory for specific instructions and a checksum that needs to match for the R
 
 ### Any questions for Andreas?
 
-* General commit strategy? He seems to have things namespaced on subsytem but maybe that's just because he has
+* General commit strategy? He seems to have things namespaced on subsystem but maybe that's just because he has
 such a large project
 
 ---
@@ -99,8 +99,6 @@ my emulator had different register state at the end of execution as some that I 
 
 * Jump A16 op code
 * Default register state
-
-### Any questions for Andreas?
 
 ---
 
@@ -140,6 +138,8 @@ does too. This is useful when working with masks.
 * I had trouble getting `memcmp` working properly in my test diffs. Instead, I compared raw bytes
 myself. Is that bad?
 
+---
+
 **Date: 5/12/2020**
 ### What did I learn today?
 
@@ -174,8 +174,6 @@ myself. Is that bad?
 ---
 
 **Date: 5/10/2020**
-### What did I learn today?
-
 ### What did I get done today?
 
 * Fix flags being set in a few op code handlers
@@ -308,10 +306,6 @@ using AK::CircularQueue; // Why??
 ### What did I get done today?
 
 * Fixed logging utility based on Andreas feedback
-
-### Any questions for Andreas?
-
-* None today! Time to write more GBC assembly :)
 
 ---
 
