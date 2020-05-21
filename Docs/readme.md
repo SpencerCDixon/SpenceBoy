@@ -41,7 +41,7 @@ the `C` standard library.
 - [ ] Interrupts
 - [ ] Unprefixed raw op codes
 - [ ] Prefixed `cb` opcodes 
-- [ ] Call/return from ASM 'functions'
+- [x] Call/return from ASM 'functions'
 - [ ] VBlank
 - [ ] HBlank
 - [ ] Input mapping
@@ -272,7 +272,7 @@ the `C` standard library.
 - [x] PUSH_BC (0xC5)
 - [x] PUSH_DE (0xD5)
 - [x] PUSH_HL (0xE5)
-- [ ] RET (0xC9)
+- [x] RET (0xC9)
 - [ ] RETI (0xD9)
 - [ ] RET_C (0xD8)
 - [ ] RET_NC (0xD0)
