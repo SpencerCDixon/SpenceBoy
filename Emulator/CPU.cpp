@@ -320,17 +320,14 @@ bool CPU::step()
         pop(&m_registers.h, &m_registers.l);
         break;
     case OpCode::CALL_a16:
-        push(m_registers.program_counter);
+        push(m_registers.program_counter + 2);
         m_registers.program_counter = fetch_and_inc_16bit();
         break;
     case OpCode::RET:
         pop_return();
-        // Confused, why do I need this? Shouldn't this happen in the call or something? If I don't do it though then on the return I'm
-        // off by two and try to execute the data as if it was an op code...
-        m_registers.program_counter += 2;
         break;
     case OpCode::HALT:
-        hex_dump("WRAM", m_wram, 32, WRAM_START);
+//        hex_dump("WRAM", m_wram, 32, WRAM_START);
         return false;
     case OpCode::TEST_COMPLETE:
         return false;

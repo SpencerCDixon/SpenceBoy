@@ -209,16 +209,16 @@ int main(int argc, char* argv[])
     dbg() << "\nRunning test suite with options: \n"
           << "  should_update_snapshots " << should_update_snapshots << "\n  verbose " << verbose << "\n";
 
-//    TEST_CASE(loop, loop.gb)
-//    TEST_CASE(ram_access, ram.gb)
-//    TEST_CASE(smily_rendering, smiley.gb)
-//    TEST_CASE(loading_into_registers, loading.gb)
-//    TEST_CASE(complement_a_reg_bits, complement.gb)
-//    TEST_CASE(incrementing_registers, increments.gb)
-//    TEST_CASE(shifting_and_rotating_bits, shift-rotate.gb)
-//    TEST_CASE(bit_masks, bit-masks.gb)
-//    TEST_CASE(stack, stack.gb)
-//    TEST_CASE(pushing_and_popping, push-pop.gb)
+    TEST_CASE(loop, loop.gb)
+    TEST_CASE(ram_access, ram.gb)
+    TEST_CASE(smily_rendering, smiley.gb)
+    TEST_CASE(loading_into_registers, loading.gb)
+    TEST_CASE(complement_a_reg_bits, complement.gb)
+    TEST_CASE(incrementing_registers, increments.gb)
+    TEST_CASE(shifting_and_rotating_bits, shift-rotate.gb)
+    TEST_CASE(bit_masks, bit-masks.gb)
+    TEST_CASE(stack, stack.gb)
+    TEST_CASE(pushing_and_popping, push-pop.gb)
     TEST_CASE(complex_subroutine, complex-routine.gb)
 
     // Not ready for prime time yet
