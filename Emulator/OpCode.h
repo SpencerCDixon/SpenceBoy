@@ -7,6 +7,8 @@
 #include <SD/LogStream.h>
 #include <SD/Types.h>
 
+#include <stdlib.h>
+
 #define ENUMERATE_OPCODES                  \
     __ENUMERATE(0x8F, ADC_A_A, 4)          \
     __ENUMERATE(0x88, ADC_A_B, 4)          \
@@ -302,6 +304,20 @@ inline bool is_opcode(const OpCode& code)
 #undef __ENUMERATE
     }
     return false;
+}
+
+// Andreas: better way to do this?
+inline char* to_string(const OpCode& code)
+{
+    char* buffer = (char*)malloc(20);
+    switch (code) {
+#define __ENUMERATE(_hex, name, _cycles) \
+    case OpCode::name:                   \
+        sprintf(buffer, "%20s", #name); \
+        return buffer;
+        ENUMERATE_OPCODES
+#undef __ENUMERATE
+    }
 }
 
 enum class PrefixOpCode : u8 {

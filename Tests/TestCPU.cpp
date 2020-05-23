@@ -50,7 +50,7 @@ public:
         while (m_cpu.step()) {
             // TODO: Take snapshot of each step along the way!
 //            dbg() << m_cpu.test_state();
-            dbg() << m_cpu;
+//            dbg() << m_cpu;
         };
 
         if (m_should_update_snapshot) {

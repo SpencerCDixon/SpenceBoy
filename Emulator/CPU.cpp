@@ -113,15 +113,10 @@ bool CPU::step()
     // TODO: handle interrupts?
     OpCode op_code = static_cast<OpCode>(fetch_and_inc_8bit());
 
-    if (m_verbose_logging) {
-        dbg() << "-----------------";
-        print_opcode(op_code);
-    }
-
     switch (op_code) {
     case OpCode::NOP:
-        break;        // Noop, do nothing!
-    case OpCode::CPL: // 4 cycles
+        break;
+    case OpCode::CPL:
         m_registers.a = ~m_registers.a;
         break;
     case OpCode::LD_A_d8:
@@ -172,10 +167,10 @@ bool CPU::step()
     case OpCode::LD_L_d8:
         m_registers.l = fetch_and_inc_8bit();
         break;
-    case OpCode::LD_A_HL_ADDR: // 8 cycles
+    case OpCode::LD_A_HL_ADDR:
         m_registers.a = read(get_hl());
         break;
-    case OpCode::LD_A_DE_ADDR: // 8 cycles
+    case OpCode::LD_A_DE_ADDR:
         m_registers.a = read(get_de());
         break;
     case OpCode::LD_HL_ADDR_B:
@@ -193,40 +188,40 @@ bool CPU::step()
     case OpCode::LD_HL_ADDR_C:
         write(get_hl(), m_registers.c);
         break;
-    case OpCode::LD_HL_ADDR_d8: // 12 cycles. Flags: - - - -
+    case OpCode::LD_HL_ADDR_d8:
         write(get_hl(), fetch_and_inc_8bit());
         break;
-    case OpCode::DEC_A: // 4 cycles. Flags: Z 1 H -
+    case OpCode::DEC_A:
         dec_reg(&m_registers.a);
         break;
-    case OpCode::DEC_B: // 4 cycles. Flags: Z 1 H -
+    case OpCode::DEC_B:
         dec_reg(&m_registers.b);
         break;
-    case OpCode::DEC_C: // 4 cycles. Flags: Z 1 H -
+    case OpCode::DEC_C:
         dec_reg(&m_registers.c);
         break;
-    case OpCode::DEC_D: // 4 cycles. Flags: Z 1 H -
+    case OpCode::DEC_D:
         dec_reg(&m_registers.d);
         break;
-    case OpCode::DEC_E: // 4 cycles. Flags: Z 1 H -
+    case OpCode::DEC_E:
         dec_reg(&m_registers.e);
         break;
-    case OpCode::DEC_H: // 4 cycles. Flags: Z 1 H -
+    case OpCode::DEC_H:
         dec_reg(&m_registers.h);
         break;
-    case OpCode::DEC_L: // 4 cycles. Flags: Z 1 H -
+    case OpCode::DEC_L:
         dec_reg(&m_registers.l);
         break;
-    case OpCode::DEC_HL: // 8 cycles. Flags: - - - -
+    case OpCode::DEC_HL:
         dec_hl();
         break;
-    case OpCode::DEC_SP: // 8 cycles. Flags: - - - -
+    case OpCode::DEC_SP:
         dec_sp();
         break;
-    case OpCode::DEC_BC: // 8 cycles. Flags: - - - -
+    case OpCode::DEC_BC:
         dec_bc();
         break;
-    case OpCode::DEC_DE: // 8 cycles. Flags: - - - -
+    case OpCode::DEC_DE:
         dec_de();
         break;
     case OpCode::JP_NZ_a16: {
@@ -250,59 +245,59 @@ bool CPU::step()
     case OpCode::SUB_d8:
         m_registers.a -= fetch_and_inc_8bit();
         break;
-    case OpCode::LD_HL_d16: // 12 cycles. Flags - - - -
+    case OpCode::LD_HL_d16:
         m_registers.l = fetch_and_inc_8bit();
         m_registers.h = fetch_and_inc_8bit();
         break;
-    case OpCode::LD_DE_d16: // 12 cycles. Flags - - - -
+    case OpCode::LD_DE_d16:
         m_registers.e = fetch_and_inc_8bit();
         m_registers.d = fetch_and_inc_8bit();
         break;
-    case OpCode::LD_BC_d16: // 12 cycles. Flags - - - -
+    case OpCode::LD_BC_d16:
         m_registers.b = fetch_and_inc_8bit();
         m_registers.c = fetch_and_inc_8bit();
         break;
-    case OpCode::LD_SP_d16: // 12 cycles. Flags - - - -
+    case OpCode::LD_SP_d16:
         m_registers.stack_ptr = fetch_and_inc_16bit();
         break;
-    case OpCode::INC_DE: // 8 cycles. Flags: - - - -
+    case OpCode::INC_DE:
         inc_de();
         break;
-    case OpCode::INC_BC: // 8 cycles. Flags: - - - -
+    case OpCode::INC_BC:
         inc_bc();
         break;
-    case OpCode::INC_HL: // 8 cycles. Flags: - - - -
+    case OpCode::INC_HL:
         inc_hl();
         break;
-    case OpCode::INC_SP: // 8 cycles. Flags: - - - -
+    case OpCode::INC_SP:
         inc_sp();
         break;
-    case OpCode::INC_A: // Flags: Z 0 H -
+    case OpCode::INC_A:
         inc_reg(&m_registers.a);
         break;
-    case OpCode::INC_B: // Flags: Z 0 H -
+    case OpCode::INC_B:
         inc_reg(&m_registers.b);
         break;
-    case OpCode::INC_C: // Flags: Z 0 H -
+    case OpCode::INC_C:
         inc_reg(&m_registers.c);
         break;
-    case OpCode::INC_D: // Flags: Z 0 H -
+    case OpCode::INC_D:
         inc_reg(&m_registers.d);
         break;
-    case OpCode::INC_E: // Flags: Z 0 H -
+    case OpCode::INC_E:
         inc_reg(&m_registers.e);
         break;
-    case OpCode::INC_H: // Flags: Z 0 H -
+    case OpCode::INC_H:
         inc_reg(&m_registers.h);
         break;
-    case OpCode::INC_L: // Flags: Z 0 H -
+    case OpCode::INC_L:
         inc_reg(&m_registers.l);
         break;
-    case OpCode::LD_HL_ADDR_INC_A: // 8 cycles. Flags: - - - -
+    case OpCode::LD_HL_ADDR_INC_A:
         write(get_hl(), m_registers.a);
         inc_hl();
         break;
-    case OpCode::LD_HL_ADDR_DEC_A: // 8 cycles. Flags: - - - -
+    case OpCode::LD_HL_ADDR_DEC_A:
         write(get_hl(), m_registers.a);
         dec_hl();
         break;
@@ -387,10 +382,9 @@ bool CPU::step()
     }
 
     if (m_verbose_logging) {
-        dbg() << "-----------------";
-        dbg() << "Registers:";
-        print_registers(m_registers);
-        dbg() << "-----------------\n";
+        char* op_code_str = to_string(op_code);
+        dbg() << op_code_str << "   " << *this;
+        free(op_code_str);
     }
 
     return true;
