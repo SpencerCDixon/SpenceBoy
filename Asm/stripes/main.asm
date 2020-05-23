@@ -24,20 +24,29 @@ copyData:
 
 
 Start:
-	ld hl, $9000 + 16
-	ld de, black_stripe
+	ld hl, $9000
+	ld de, white_stripe
 	ld b, 16
-
 	call copyData
 
-	ld hl, $9000 + 32
+	ld hl, $9010 
 	ld de, black_stripe
+	ld b, 16
+	call copyData
+
+	ld hl, $9020
+	ld de, bot_half_black
+	ld b, 16
+	call copyData
+
+	ld hl, $9030
+	ld de, top_half_black
 	ld b, 16
 	call copyData
 
 	; Set the sprite index that we're using to 1
 	ld hl, $9800
-	ld [hl], 1
+	ld [hl], 0
 
     ; Set the background palette
 	ld hl, $ff47
@@ -63,3 +72,9 @@ black_stripe:
 
 white_stripe: 
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+
+top_half_black: 
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00, $00, $00, $00
+
+bot_half_black: 
+	db $00, $00, $00, $00, $00, $00, $00, $00, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff

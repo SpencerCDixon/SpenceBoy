@@ -12,6 +12,14 @@ Template for daily journal:
 
 ---
 
+**Date: 5/23/2020**
+
+### What did I get done today?
+
+* Start work on displaying all the tile map vram on screen to aid in creating a program that with real background
+
+---
+
 **Date: 5/22/2020**
 
 ### What did I get done today?

@@ -9,19 +9,29 @@
 #include <SDL.h>
 #pragma clang diagnostic pop
 
+#include "Buffer.h"
 #include "CPU.h"
 #include "PPU.h"
-#include "Buffer.h"
 
-constexpr u16 WIN_HEIGHT = 144;
-constexpr u16 WIN_WIDTH = 160;
+// FIXME: This is the size that gets displayed. Before getting game rendering working I want to
+// get tile map data showing properly (which uses 32x32 (256x256))
+//constexpr u16 WIN_HEIGHT = 144;
+//constexpr u16 WIN_WIDTH = 160;
+
+constexpr u16 WIN_HEIGHT = 256;
+constexpr u16 WIN_WIDTH = 256;
+
 constexpr u16 BITS_PER_PIXEL = sizeof(u32);
 
 class Emulator {
 public:
     Emulator()
         : m_cpu(CPU(true))
-        , m_frame_buffer({ (void*)calloc(WIN_WIDTH * WIN_HEIGHT, BITS_PER_PIXEL), WIN_HEIGHT, WIN_WIDTH, WIN_WIDTH * BITS_PER_PIXEL })
+        , m_frame_buffer({ (void*)calloc(WIN_WIDTH * WIN_HEIGHT, BITS_PER_PIXEL),
+              WIN_HEIGHT,
+              WIN_WIDTH,
+              WIN_WIDTH * BITS_PER_PIXEL,
+              BITS_PER_PIXEL })
         , m_ppu(m_cpu.v_ram(), &m_frame_buffer)
     {
     }

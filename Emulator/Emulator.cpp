@@ -73,7 +73,7 @@ void Emulator::run()
         }
 
         m_ppu.clear({255, 255, 255, 255});
-        m_ppu.render();
+        m_ppu.fill_square(2, 2, Color::BLACK_ARGB);
         swap();
 
         SDL_RenderClear(m_renderer);

@@ -9,4 +9,5 @@ struct OffscreenFrameBuffer {
     int height;
     int width;
     int pitch;
+    int bpp;
 };
