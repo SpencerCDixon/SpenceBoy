@@ -11,6 +11,15 @@ Template for daily journal:
 ### Any questions for Andreas?
 
 ---
+
+**Date: 5/22/2020**
+
+### What did I get done today?
+
+* to_string for op codes to improve verbose logging
+* adds a stripes test cast to start rendering more than a single sprite
+
+---
  
 **Date: 5/21/2020**
 ### What did I learn today?

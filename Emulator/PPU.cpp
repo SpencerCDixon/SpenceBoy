@@ -32,12 +32,18 @@ void PPU::clear(Color color)
 
 void PPU::render()
 {
-    size_t smiley_start = 0x9010 - 0x8000;
+    size_t s1 = 0x9010 - 0x8000;
+    size_t s2 = 0x9020 - 0x8000;
 
-    u8 smiley[16];
+    u8 sprite[16];
+    u8 sprite_two[16];
 
     for (size_t i = 0; i < 16; ++i) {
-        smiley[i] = m_vram[smiley_start + i];
+        sprite[i] = m_vram[s1 + i];
+    }
+
+    for (size_t i = 0; i < 16; ++i) {
+        sprite_two[i] = m_vram[s2 + i];
     }
 
     // Rendering a tile:
@@ -46,7 +52,7 @@ void PPU::render()
     // the second byte is the second bit of the first line; the third byte is the first bit of the second line, etc.
 
     u8* row = (u8*)m_buffer->memory;
-    u8* color_row = smiley;
+    u8* color_row = sprite;
     u8 bytes_per_pixel = 2;
 
     for (int y = 0; y < 8; ++y) {
