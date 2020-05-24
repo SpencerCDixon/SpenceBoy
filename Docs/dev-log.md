@@ -12,6 +12,14 @@ Template for daily journal:
 
 ---
 
+**Date: 5/24/2020**
+
+### What did I get done today?
+
+* Basic String class that is probably leaking memory hardcore
+
+---
+
 **Date: 5/23/2020**
 
 ### What did I get done today?

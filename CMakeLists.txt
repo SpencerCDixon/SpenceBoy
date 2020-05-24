@@ -60,3 +60,6 @@ target_link_libraries(gameboy ${SDL2_LIBRARY})
 add_executable(cpu_test ./Tests/TestCPU.cpp ./Emulator/CPU.cpp ./SD/LogStream.cpp)
 target_include_directories(cpu_test PUBLIC ".")
 
+add_executable(string_test ./Tests/TestString.cpp ./SD/String.cpp)
+target_include_directories(string_test PUBLIC ".")
+
