@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <inttypes.h>
 
 /*
 
@@ -152,9 +153,9 @@ private:
             "s: %03u [$%02x]   p: %03u [$%02x]\n\n"
             "Checksums:\n"
             "–---------\n\n"
-            "WRAM Checksum: %llu\n"
-            "VRAM Checksum: %llu\n"
-            "IO   Checksum: %llu\n",
+            "WRAM Checksum: %" PRIu64 "\n"
+            "VRAM Checksum: %" PRIu64 "\n"
+            "IO   Checksum: %" PRIu64 "\n",
             state.registers.a,
             state.registers.a,
             state.registers.f,

@@ -5,6 +5,7 @@
 #include "CPU.h"
 #include <SD/Assertions.h>
 
+#include <inttypes.h>
 #include <stdio.h>
 #include <sys/stat.h>
 #include <utility>
@@ -47,8 +48,7 @@ String to_string(const CPUTestState& test_state)
         "B: %03u [0x%02x] C: %03u [0x%02x]  "
         "D: %03u [0x%02x] E: %03u [0x%02x]  "
         "H: %03u [0x%02x] L: %03u [0x%02x] ---"
-        " WRAM: 0x%016llx | VRAM: 0x%016llx | IORAM: 0x%016llx |"
-        ,
+        " WRAM: 0x%016" PRIx64 "| VRAM: 0x%016" PRIx64 " | IORAM: 0x%016" PRIx64 " |",
         test_state.registers.a,
         test_state.registers.a,
         test_state.registers.f,
@@ -67,9 +67,8 @@ String to_string(const CPUTestState& test_state)
         test_state.registers.l,
         test_state.wram_checksum,
         test_state.vram_checksum,
-        test_state.io_checksum
-    );
-//    printf("Current length %u\n", (u16)strlen(buffer));
+        test_state.io_checksum);
+    //    printf("Current length %u\n", (u16)strlen(buffer));
     return buffer;
 }
 

@@ -5,8 +5,8 @@
 #pragma once
 
 #include <SD/LogStream.h>
-#include <SD/Types.h>
 #include <SD/String.h>
+#include <SD/Types.h>
 
 #include <stdlib.h>
 
@@ -312,12 +312,12 @@ inline String to_string(const OpCode& code)
 {
     char* buffer = (char*)malloc(20);
     switch (code) {
-#define __ENUMERATE(_hex, name, _cycles) \
-    case OpCode::name: {                  \
-        snprintf(buffer, 20, "%20s", #name); \
-        auto str = String(buffer); \
-        free(buffer); \
-        return str; \
+#define __ENUMERATE(_hex, name, _cycles)     \
+    case OpCode::name: {                     \
+        snprintf(buffer, 21, "%20s", #name); \
+        auto str = String(buffer);           \
+        free(buffer);                        \
+        return str;                          \
     }
         ENUMERATE_OPCODES
 #undef __ENUMERATE
