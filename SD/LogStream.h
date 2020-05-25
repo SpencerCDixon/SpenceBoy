@@ -6,6 +6,8 @@
 #pragma once
 
 #include <SD/Types.h>
+#include <SD/String.h>
+
 #include <stdio.h>
 #include <string.h>
 
@@ -52,3 +54,6 @@ const LogStream& operator<<(const LogStream&, f64);
 // Other
 const LogStream& operator<<(const LogStream&, void*);
 const LogStream& operator<<(const LogStream&, bool);
+
+// SD Library Specific
+const LogStream& operator<<(const LogStream& stream, const String& string);

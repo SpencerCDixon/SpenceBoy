@@ -6,6 +6,7 @@
 
 #include <SD/LogStream.h>
 #include <SD/Types.h>
+#include <SD/String.h>
 
 #include <stdlib.h>
 
@@ -307,14 +308,17 @@ inline bool is_opcode(const OpCode& code)
 }
 
 // Andreas: better way to do this?
-inline char* to_string(const OpCode& code)
+inline String to_string(const OpCode& code)
 {
     char* buffer = (char*)malloc(20);
     switch (code) {
 #define __ENUMERATE(_hex, name, _cycles) \
-    case OpCode::name:                   \
-        sprintf(buffer, "%20s", #name); \
-        return buffer;
+    case OpCode::name: {                  \
+        snprintf(buffer, 20, "%20s", #name); \
+        auto str = String(buffer); \
+        free(buffer); \
+        return str; \
+    }
         ENUMERATE_OPCODES
 #undef __ENUMERATE
     }

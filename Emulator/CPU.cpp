@@ -37,19 +37,8 @@ constexpr u16 ERAM_START = 0xE000;
 constexpr u16 ERAM_END = 0xFDFF;
 // OAM:  FE00 - FE9F
 
-// TODO: Use the logging interface for these
-// TODO: Use hex and decimal for faster debugging
-void print_registers(const Registers& reg)
-{
-    dbg() << "a:   " << reg.a << "    f:  " << reg.f << "\n"
-          << "b:   " << reg.b << "    c:  " << reg.c << "\n"
-          << "d:   " << reg.d << "    e:  " << reg.e << "\n"
-          << "h:   " << reg.h << "  l:  " << reg.l << "\n"
-          << "sp:  " << reg.stack_ptr << "    pc: " << reg.program_counter;
-}
-
 // NOTE: Caller needs to free memory after use.
-char* to_string(const CPUTestState& test_state)
+String to_string(const CPUTestState& test_state)
 {
     char* buffer = static_cast<char*>(malloc(256));
     sprintf(
@@ -380,9 +369,7 @@ bool CPU::step()
     }
 
     if (m_verbose_logging) {
-        char* op_code_str = to_string(op_code);
-        dbg() << op_code_str << "   " << *this;
-        free(op_code_str);
+        dbg() << to_string(op_code) << "   " << *this;
     }
 
     return true;
@@ -597,15 +584,11 @@ bool CPU::get_zero_flag()
 
 const LogStream& operator<<(const LogStream& stream, const CPUTestState& test_state)
 {
-    char* buffer = to_string(test_state);
-    stream << buffer;
-    free(buffer);
+    stream << to_string(test_state);
     return stream;
 }
 const LogStream& operator<<(const LogStream& stream, CPU& cpu)
 {
-    char* buffer = to_string(cpu.test_state());
-    stream << buffer;
-    free(buffer);
+    stream << to_string(cpu.test_state());
     return stream;
 }

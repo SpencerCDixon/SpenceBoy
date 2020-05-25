@@ -4,14 +4,7 @@
 
 #pragma once
 
-#include <SD/LogStream.h>
-
 #include <stdlib.h>
-
-// No ref counting
-// No byte buffer
-// += primitives
-
 #include <stdio.h>
 #include <string.h>
 
@@ -71,20 +64,5 @@ private:
     size_t m_length { 0 };
 };
 
-String operator+(const String& a, const String& b)
-{
-    String c = a;
-    c += b;
-    return c;
-}
-
-String operator+(const String& a, const char* b)
-{
-    String c = a;
-    c += b;
-    return c;
-}
-
-const LogStream& operator<<(const LogStream& stream, const String& string) {
-    return stream << string.characters();
-}
+String operator+(const String& a, const String& b);
+String operator+(const String& a, const char* b);

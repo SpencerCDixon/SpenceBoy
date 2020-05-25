@@ -36,7 +36,7 @@ struct CPUTestState {
     u64 vram_checksum;
     u64 io_checksum;
 };
-char* to_string(const CPUTestState&);
+String to_string(const CPUTestState&);
 
 class CPU {
 

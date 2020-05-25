@@ -18,7 +18,9 @@ add_executable(gameboy
         Emulator/Emulator.h
         SD/Option.h
         Emulator/OpCode.h
-        Emulator/Buffer.h)
+        Emulator/Buffer.h
+        SD/String.cpp
+        )
 target_include_directories(gameboy PUBLIC ".")
 
 #-------------
@@ -60,6 +62,6 @@ target_link_libraries(gameboy ${SDL2_LIBRARY})
 add_executable(cpu_test ./Tests/TestCPU.cpp ./Emulator/CPU.cpp ./SD/LogStream.cpp)
 target_include_directories(cpu_test PUBLIC ".")
 
-add_executable(string_test ./Tests/TestString.cpp ./SD/LogStream.cpp)
+add_executable(string_test ./Tests/TestString.cpp ./SD/String.cpp ./SD/LogStream.cpp)
 target_include_directories(string_test PUBLIC ".")
 

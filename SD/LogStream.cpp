@@ -89,3 +89,6 @@ const LogStream &operator<<(const LogStream &stream, bool value) {
     return stream << buffer;
 }
 
+const LogStream& operator<<(const LogStream& stream, const String& string) {
+    return stream << string.characters();
+}
