@@ -17,7 +17,7 @@ public:
     const char* characters() const { return &m_inline_buffer[0]; }
 
     // Andreas: How to properly clean up here?
-//    ~String()
+    ~String();
 
 private:
     enum class ConstructEmptyStringTag {

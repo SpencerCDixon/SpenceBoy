@@ -83,12 +83,12 @@ void PPU::render_background_tiles()
     u8* sprite_src = (u8*)m_buffer->memory;
     for (size_t x = 0; x < MAX_TILES; ++x) {
         const u8* sprite = m_vram + start + (x * 16);
-        render_sprite(sprite_src, sprite);
+        render_tile(sprite_src, sprite);
         sprite_src += 16;
     }
 }
 
-void PPU::render_sprite(u8* src_dest, const u8* sprite)
+void PPU::render_tile([[maybe_unused]] u8* src_dest, [[maybe_unused]] const u8* sprite)
 {
     // TODO: Use fill_square() as an example of how to approach this
 }

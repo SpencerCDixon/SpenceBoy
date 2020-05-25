@@ -62,18 +62,24 @@ void Emulator::run()
     SDL_Event e;
     bool quit = false;
 
-    // Temporary, for now just run through the rom to get VRAM set up properly
+    // Temporary! For now, run through the rom to get VRAM set up properly so we can get
+    // all tile maps rendered properly
     while (m_cpu.step()) {};
 
     while (!quit) {
         while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT ) {
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+
+            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
                 quit = true;
             }
         }
 
         m_ppu.clear({255, 255, 255, 255});
         m_ppu.fill_square(2, 2, Color::BLACK_ARGB);
+        m_ppu.fill_square(2, 1, Color::RED_ARGB);
         swap();
 
         SDL_RenderClear(m_renderer);

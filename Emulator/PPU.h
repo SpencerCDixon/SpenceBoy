@@ -27,7 +27,7 @@ public:
     void fill_square(size_t x, size_t y, u32 color);
 
 private:
-    void render_sprite(u8* src_dest, const u8* sprite);
+    void render_tile(u8* src_dest, const u8* sprite);
 
 private:
     const u8* m_vram;

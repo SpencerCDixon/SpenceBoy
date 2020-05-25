@@ -32,15 +32,19 @@ String::String(ConstructWithInlineBufferTag, size_t length)
 String* String::create_uninitialized(size_t length, char*& buffer)
 {
     ASSERT(length);
-
-    // Andreas: So this puts the string into our slot but how do I properly clear the slot if I don't the address?
-    // will a free(*this) do it in ~String()??
+    // Andreas: So this puts the string into our slot but how do I properly clear the slot if I don't have the address?
+    // Will a free(this) do it in ~String()??
     void* slot = malloc(allocation_size_for_string(length));
     ASSERT(slot);
     auto new_string = new (slot) String(ConstructWithInlineBufferTag::ConstructWithInlineBuffer, length);
     buffer = const_cast<char*>(new_string->characters());
     buffer[length] = '\0';
     return new_string;
+}
+
+String::~String()
+{
+    free(this);
 }
 
 String* String::create(const char* cstring, size_t length)
