@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <SD/LogStream.h>
+
 #include <stdlib.h>
 
 // No ref counting
@@ -64,6 +66,7 @@ private:
         strcpy(m_characters, cstring);
     }
 
+private:
     char* m_characters { nullptr };
     size_t m_length { 0 };
 };
@@ -80,4 +83,8 @@ String operator+(const String& a, const char* b)
     String c = a;
     c += b;
     return c;
+}
+
+const LogStream& operator<<(const LogStream& stream, const String& string) {
+    return stream << string.characters();
 }

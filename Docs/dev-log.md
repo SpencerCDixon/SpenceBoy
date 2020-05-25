@@ -12,6 +12,14 @@ Template for daily journal:
 
 ---
 
+**Date: 5/25/2020**
+
+### What did I get done today?
+
+* String refactor to be less complicated and easier to reason about.
+
+---
+
 **Date: 5/24/2020**
 
 ### What did I get done today?
