@@ -64,5 +64,7 @@ private:
     size_t m_length { 0 };
 };
 
-String operator+(const String& a, const String& b);
-String operator+(const String& a, const char* b);
+String operator+(const String&, const String&);
+String operator+(const String&, const char*);
+bool operator==(const String&, const String&);
+bool operator!=(const String&, const String&);

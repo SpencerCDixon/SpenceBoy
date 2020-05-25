@@ -19,6 +19,7 @@ Template for daily journal:
 * String refactor to be less complicated and easier to reason about.
 * Use new String in various call sites that were previously returning `const char *`s
 * Refactor log stream format types to be cross platform so I can do more work on my Linux machine
+* Add equality operators for String
 
 ---
 

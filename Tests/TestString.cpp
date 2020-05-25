@@ -21,6 +21,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 
     printf("size of raw String %lu\n", sizeof(String));
 
+    // Concat
     {
         String s1;
         s1 = "hello";
@@ -33,8 +34,15 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
         printf("%s\n", s2.characters());
     }
 
+    // Log Streaming
     {
         auto s1 = String("logging to debug stream");
         dbg() << s1;
+    }
+
+    // Equality
+    {
+        ASSERT(String("equal") == String("equal"));
+        ASSERT(String("equal") != String("notequal"));
     }
 }
