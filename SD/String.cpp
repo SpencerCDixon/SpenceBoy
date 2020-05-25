@@ -16,6 +16,7 @@ String* String::the_empty_string()
         s_the_empty_string = new (slot) String(ConstructEmptyStringTag::ConstructEmptyString);
     }
     return s_the_empty_string;
+
 }
 
 static inline size_t allocation_size_for_string(size_t length)

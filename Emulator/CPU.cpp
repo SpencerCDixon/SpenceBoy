@@ -84,8 +84,6 @@ char* to_string(const CPUTestState& test_state)
     return buffer;
 }
 
-
-
 void CPU::load_rom(const char* rom_path)
 {
     if (m_verbose_logging)

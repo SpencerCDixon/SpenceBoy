@@ -6,6 +6,10 @@
 
 #include <stdlib.h>
 
+// No ref counting
+// No byte buffer
+// += primitives
+
 class String {
 public:
     static String* create_uninitialized(size_t length, char*& buffer);

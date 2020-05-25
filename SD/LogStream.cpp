@@ -3,6 +3,7 @@
 //
 
 #include "LogStream.h"
+// inttypes.h -> macros for proper llu
 
 LogStream::~LogStream() {
     char newline = '\n';
@@ -33,6 +34,8 @@ const LogStream &operator<<(const LogStream &stream, u32 value) {
 }
 
 const LogStream &operator<<(const LogStream &stream, u64 value) {
+    // For Linux: Use standardized macro instead of %llu so that code will compile
+    // on both platforms properly.
     char buffer[32];
     sprintf(buffer, "%llu", value);
     return stream << buffer;

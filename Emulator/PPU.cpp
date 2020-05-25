@@ -32,12 +32,20 @@ void PPU::clear(Color color)
 
 void PPU::render()
 {
+
+
+    // fetch a tile from VRAM
+    // render into specific location
+    //   -> index each pixel from tile into destination
+
     size_t tile1 = 0x9010 - 0x8000;
     u8 sprite[16];
 
     for (size_t i = 0; i < 16; ++i) {
         sprite[i] = m_vram[tile1 + i];
     }
+
+//    u32 tile[64];
 
     // Rendering a tile:
     // * 16 bytes: 8 pixels x 8 pixels x 2 bits per pixel
@@ -48,6 +56,12 @@ void PPU::render()
     // 1111 1111 1111 1111
     // 11 11 11 11  11 11 11 11
     // b  b  b  b   b  b  b  b
+
+    // shift first
+    // then mask (same mask each time)
+    // draw_into(src, dest, tile)
+    // Tile
+    //  get_pixel(x, y)
 
     u8* row = (u8*)m_buffer->memory;
     u8* color_row = sprite;
