@@ -3,7 +3,7 @@
 //
 
 #include "LogStream.h"
-// inttypes.h -> macros for proper llu
+#include <inttypes.h>
 
 LogStream::~LogStream() {
     char newline = '\n';
@@ -17,51 +17,49 @@ LogStream dbg() {
 
 const LogStream &operator<<(const LogStream &stream, u8 value) {
     char buffer[8];
-    sprintf(buffer, "%u", value);
+    sprintf(buffer, "%" PRIu8, value);
     return stream << buffer;
 }
 
 const LogStream &operator<<(const LogStream &stream, u16 value) {
     char buffer[16];
-    sprintf(buffer, "%hu", value);
+    sprintf(buffer, "%" PRIu16, value);
     return stream << buffer;
 }
 
 const LogStream &operator<<(const LogStream &stream, u32 value) {
     char buffer[32];
-    sprintf(buffer, "%u", value);
+    sprintf(buffer, "%" PRIu32, value);
     return stream << buffer;
 }
 
 const LogStream &operator<<(const LogStream &stream, u64 value) {
-    // For Linux: Use standardized macro instead of %llu so that code will compile
-    // on both platforms properly.
     char buffer[32];
-    sprintf(buffer, "%llu", value);
+    sprintf(buffer, "%" PRIu64, value);
     return stream << buffer;
 }
 
 const LogStream &operator<<(const LogStream &stream, s8 value) {
     char buffer[8];
-    sprintf(buffer, "%d", value);
+    sprintf(buffer, "%" PRId8, value);
     return stream << buffer;
 }
 
 const LogStream &operator<<(const LogStream &stream, s16 value) {
     char buffer[16];
-    sprintf(buffer, "%d", value);
+    sprintf(buffer, "%" PRId16, value);
     return stream << buffer;
 }
 
 const LogStream &operator<<(const LogStream &stream, s32 value) {
     char buffer[32];
-    sprintf(buffer, "%d", value);
+    sprintf(buffer, "%" PRId32, value);
     return stream << buffer;
 }
 
 const LogStream &operator<<(const LogStream &stream, s64 value) {
     char buffer[32];
-    sprintf(buffer, "%lld", value);
+    sprintf(buffer, "%" PRId64, value);
     return stream << buffer;
 }
 
