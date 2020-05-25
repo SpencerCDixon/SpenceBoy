@@ -10,34 +10,74 @@
 // No byte buffer
 // += primitives
 
+#include <stdio.h>
+#include <string.h>
+
 class String {
 public:
-    static String* create_uninitialized(size_t length, char*& buffer);
-    static String* create(const char* cstring, size_t length);
-    static String* create(const char* cstring);
-    static String* the_empty_string();
-
-    size_t length() const { return m_length; }
-    const char* characters() const { return &m_inline_buffer[0]; }
-
-    // Andreas: How to properly clean up here?
-    ~String();
-
-private:
-    enum class ConstructEmptyStringTag {
-        ConstructEmptyString
-    };
-    explicit String(ConstructEmptyStringTag)
+    String()
     {
-        m_inline_buffer[0] = '\0';
+        set_string("");
     }
 
-    enum class ConstructWithInlineBufferTag {
-        ConstructWithInlineBuffer
-    };
-    String(ConstructWithInlineBufferTag, size_t length);
+    String(const char* cstring)
+    {
+        set_string(cstring);
+    }
+
+    String(const String& other)
+    {
+        set_string(other.m_characters);
+    }
+
+    String& operator=(const String& other)
+    {
+        set_string(other.m_characters);
+        return *this;
+    }
+
+    ~String()
+    {
+        delete[] m_characters;
+    }
+
+    const char* characters() const { return m_characters; }
+    char* characters() { return m_characters; }
+
+    String& operator+=(const String& other)
+    {
+        char* new_characters = new char[m_length + other.m_length + 1];
+        new_characters[0] = '\0';
+        strcat(new_characters, m_characters);
+        strcat(new_characters, other.m_characters);
+        delete[] m_characters;
+        m_characters = new_characters;
+        return *this;
+    }
 
 private:
+    void set_string(const char* cstring)
+    {
+        delete[] m_characters;
+        m_length = strlen(cstring);
+        m_characters = new char[m_length + 1];
+        strcpy(m_characters, cstring);
+    }
+
+    char* m_characters { nullptr };
     size_t m_length { 0 };
-    char m_inline_buffer[0];
 };
+
+String operator+(const String& a, const String& b)
+{
+    String c = a;
+    c += b;
+    return c;
+}
+
+String operator+(const String& a, const char* b)
+{
+    String c = a;
+    c += b;
+    return c;
+}

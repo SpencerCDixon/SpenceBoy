@@ -3,8 +3,14 @@
 //
 
 #include <SD/String.h>
+#include <SD/Assertions.h>
 
 #include <stdio.h>
+#include <string.h>
+
+void assert_str_eq(String& lhs, const char* rhs) {
+    ASSERT(strcmp(lhs.characters(), rhs) == 0);
+}
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
@@ -12,22 +18,13 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     printf("--------------------------\n\n");
 
     printf("size of raw String %lu\n", sizeof(String));
-    printf("size of the empty String %lu\n", sizeof(String::the_empty_string()));
 
-    {
-        auto string = String::create("hello", 5);
-        printf("size of 'hello' String %lu\n", sizeof(string));
+    String s1;
+    s1 = "hello";
+    s1 += " there!";
+    assert_str_eq(s1, "hello there!");
+    printf("%s\n", s1.characters());
 
-        for (int i = 0; i < 5; ++i) {
-            printf("char: %c\n", string->characters()[i]);
-        }
-    }
-
-    auto s2 = String::create("world");
-    printf("size of 'world' String %lu\n", sizeof(s2));
-
-    for (int i = 0; i < 5; ++i) {
-        printf("char: %c\n", s2->characters()[i]);
-    }
-
+    String s2 = s1 + " this is a test!";
+    printf("%s\n", s2.characters());
 }
