@@ -11,26 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <inttypes.h>
 
-/*
-
- Test Phases
- -----------
-
- Phase 1: Snapshot Testing Final State
-
- Have the ability to run a ROM and save the CPU & memory state to an output file. Subsequent runs
- can then compare results with that output. This won't catch errors for in between steps but it
- can act as a canary that some refactor I did broke things.
-
- Phase 2: Tracing
-
- Full trace of steps the CPU & PPU is making.
-
- */
-
-// TODO: Maybe a verbose flag which let's us see each step
 class CPUSnapshotTest {
 public:
     CPUSnapshotTest(const char* test_name, const char* rom_path, bool should_update_snapshot, bool verbose_logging)
@@ -39,6 +20,7 @@ public:
         , m_should_update_snapshot(should_update_snapshot)
         , m_cpu(CPU(verbose_logging))
         , m_verbose_logging(verbose_logging)
+        , m_execution_trace(String("Trace:\n"))
     {
         m_cpu.load_rom(rom_path);
     }
@@ -49,9 +31,10 @@ public:
             dbg() << "--> Running test: " << m_name;
 
         while (m_cpu.step()) {
-            // TODO: Take snapshot of each step along the way!
-//            dbg() << m_cpu.test_state();
-//            dbg() << m_cpu;
+            // FIXME: for some reason this results in a crash:
+            // Incorrect checksum for freed object 0x7fef1ec02f28: probably modified after being freed.
+//            m_execution_trace += to_trace_line(m_cpu.test_state());
+            m_execution_trace = m_execution_trace + to_trace_line(m_cpu.test_state()) + "\n";
         };
 
         if (m_should_update_snapshot) {
@@ -65,22 +48,13 @@ public:
 private:
     void compare_snapshot()
     {
+        dbg() << m_execution_trace;
         String current_snapshot = to_snapshot(m_cpu.test_state());
-        char* existing_snapshot = read_existing_snapshot();
-
-        size_t existing_len = strlen(existing_snapshot);
+        String existing_snapshot = read_existing_snapshot();
 
         bool failed = false;
-        failed = current_snapshot.length() != existing_len;
-
-        if (!failed) {
-            for (size_t i = 0; i < current_snapshot.length(); ++i) {
-                if (current_snapshot.characters()[i] != existing_snapshot[i]) {
-                    failed = true;
-                    break;
-                }
-            }
-        }
+        failed = current_snapshot.length() != existing_snapshot.length();
+        failed = current_snapshot != existing_snapshot;
 
         if (failed) {
             dbg() << "[" << RED "FAIL" RESET << "] " << m_name;
@@ -91,9 +65,6 @@ private:
         } else {
             dbg() << "[ " << GREEN "OK" RESET << " ] " << m_name;
         }
-
-//        free(current_snapshot);
-        free(existing_snapshot);
     }
 
     void update_snapshot()
@@ -101,15 +72,8 @@ private:
         if (m_verbose_logging)
             dbg() << "--> Updating snapshot for: " << m_rom_path;
 
-        char snapshot_path[128];
-        strcpy(snapshot_path, m_rom_path);
-        strcat(snapshot_path, ".snapshot");
-
-        if (m_verbose_logging)
-            dbg() << "--> Writing snapshot to:   " << snapshot_path;
-
         FILE* fp;
-        fp = fopen(snapshot_path, "wb");
+        fp = fopen(snapshot_path().characters(), "wb");
         perror_exit_if(fp == nullptr, "update_snapshot()");
 
         String snapshot_buffer = to_snapshot(m_cpu.test_state());
@@ -117,28 +81,34 @@ private:
         fclose(fp);
     }
 
-    // Caller is responsible for freeing when done.
-    char* read_existing_snapshot()
+    String read_existing_snapshot()
     {
-        char snapshot_path[128];
-        strcpy(snapshot_path, m_rom_path);
-        strcat(snapshot_path, ".snapshot");
-
         FILE* fp;
-        fp = fopen(snapshot_path, "rb");
+        fp = fopen(snapshot_path().characters(), "rb");
         perror_exit_if(fp == nullptr, "compare_snapshot()");
 
         char* existing_snapshot = (char*)calloc(512, sizeof(char));
         fread(existing_snapshot, 512, 1, fp);
+        String result = existing_snapshot;
+        free(existing_snapshot);
 
-        return existing_snapshot;
+        return result;
     }
+
+    String snapshot_path()
+    {
+        auto path = String(m_rom_path);
+        path += ".snapshot";
+        return path;
+    }
+
 private:
     const char* m_name;
     const char* m_rom_path;
     bool m_should_update_snapshot;
     CPU m_cpu;
     bool m_verbose_logging;
+    String m_execution_trace;
 };
 
 #define TESTCASE_TYPE_NAME(x) TestCase_##x

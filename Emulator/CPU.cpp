@@ -564,9 +564,11 @@ const LogStream& operator<<(const LogStream& stream, CPU& cpu)
 
 String to_trace_line(const CPUTestState& test_state)
 {
-    char* buffer = static_cast<char*>(malloc(256));
-    sprintf(
+    local_persist u16 buf_size = 512;
+    char* buffer = (char*)calloc(buf_size, sizeof(char));
+    snprintf(
         buffer,
+        buf_size,
         "A: %03u [0x%02x] F: %03u [0x%02x]  "
         "B: %03u [0x%02x] C: %03u [0x%02x]  "
         "D: %03u [0x%02x] E: %03u [0x%02x]  "
@@ -599,9 +601,9 @@ String to_trace_line(const CPUTestState& test_state)
 String to_snapshot(const CPUTestState& state)
 {
     local_persist u16 buf_size = 512;
-    char* snapshot_buffer = (char*)calloc(buf_size, sizeof(char));
+    char* buffer = (char*)calloc(buf_size, sizeof(char));
     snprintf(
-        snapshot_buffer,
+        buffer,
         buf_size,
         "Registers:\n"
         "–---------\n\n"
@@ -639,7 +641,7 @@ String to_snapshot(const CPUTestState& state)
         state.vram_checksum,
         state.io_checksum);
 
-    auto str = String(snapshot_buffer);
-    free(snapshot_buffer);
+    auto str = String(buffer);
+    free(buffer);
     return str;
 }
