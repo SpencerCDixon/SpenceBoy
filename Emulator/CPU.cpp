@@ -38,40 +38,6 @@ constexpr u16 ERAM_START = 0xE000;
 constexpr u16 ERAM_END = 0xFDFF;
 // OAM:  FE00 - FE9F
 
-// NOTE: Caller needs to free memory after use.
-String to_string(const CPUTestState& test_state)
-{
-    char* buffer = static_cast<char*>(malloc(256));
-    sprintf(
-        buffer,
-        "A: %03u [0x%02x] F: %03u [0x%02x]  "
-        "B: %03u [0x%02x] C: %03u [0x%02x]  "
-        "D: %03u [0x%02x] E: %03u [0x%02x]  "
-        "H: %03u [0x%02x] L: %03u [0x%02x] ---"
-        " WRAM: 0x%016" PRIx64 "| VRAM: 0x%016" PRIx64 " | IORAM: 0x%016" PRIx64 " |",
-        test_state.registers.a,
-        test_state.registers.a,
-        test_state.registers.f,
-        test_state.registers.f,
-        test_state.registers.b,
-        test_state.registers.b,
-        test_state.registers.c,
-        test_state.registers.c,
-        test_state.registers.d,
-        test_state.registers.d,
-        test_state.registers.e,
-        test_state.registers.e,
-        test_state.registers.h,
-        test_state.registers.h,
-        test_state.registers.l,
-        test_state.registers.l,
-        test_state.wram_checksum,
-        test_state.vram_checksum,
-        test_state.io_checksum);
-    //    printf("Current length %u\n", (u16)strlen(buffer));
-    return buffer;
-}
-
 void CPU::load_rom(const char* rom_path)
 {
     if (m_verbose_logging)
@@ -583,11 +549,97 @@ bool CPU::get_zero_flag()
 
 const LogStream& operator<<(const LogStream& stream, const CPUTestState& test_state)
 {
-    stream << to_string(test_state);
+    stream << to_trace_line(test_state);
     return stream;
 }
 const LogStream& operator<<(const LogStream& stream, CPU& cpu)
 {
-    stream << to_string(cpu.test_state());
+    stream << to_trace_line(cpu.test_state());
     return stream;
+}
+
+//
+// Testing Utilities
+//
+
+String to_trace_line(const CPUTestState& test_state)
+{
+    char* buffer = static_cast<char*>(malloc(256));
+    sprintf(
+        buffer,
+        "A: %03u [0x%02x] F: %03u [0x%02x]  "
+        "B: %03u [0x%02x] C: %03u [0x%02x]  "
+        "D: %03u [0x%02x] E: %03u [0x%02x]  "
+        "H: %03u [0x%02x] L: %03u [0x%02x] ---"
+        " WRAM: 0x%016" PRIx64 "| VRAM: 0x%016" PRIx64 " | IORAM: 0x%016" PRIx64 " |",
+        test_state.registers.a,
+        test_state.registers.a,
+        test_state.registers.f,
+        test_state.registers.f,
+        test_state.registers.b,
+        test_state.registers.b,
+        test_state.registers.c,
+        test_state.registers.c,
+        test_state.registers.d,
+        test_state.registers.d,
+        test_state.registers.e,
+        test_state.registers.e,
+        test_state.registers.h,
+        test_state.registers.h,
+        test_state.registers.l,
+        test_state.registers.l,
+        test_state.wram_checksum,
+        test_state.vram_checksum,
+        test_state.io_checksum);
+    auto str = String(buffer);
+    free(buffer);
+    return str;
+}
+
+String to_snapshot(const CPUTestState& state)
+{
+    local_persist u16 buf_size = 512;
+    char* snapshot_buffer = (char*)calloc(buf_size, sizeof(char));
+    snprintf(
+        snapshot_buffer,
+        buf_size,
+        "Registers:\n"
+        "–---------\n\n"
+        "a: %03u [$%02x]   f: %03u [$%02x]\n"
+        "b: %03u [$%02x]   c: %03u [$%02x]\n"
+        "d: %03u [$%02x]   e: %03u [$%02x]\n"
+        "h: %03u [$%02x]   l: %03u [$%02x]\n"
+        "s: %03u [$%02x]   p: %03u [$%02x]\n\n"
+        "Checksums:\n"
+        "–---------\n\n"
+        "WRAM Checksum: %" PRIu64 "\n"
+        "VRAM Checksum: %" PRIu64 "\n"
+        "IO   Checksum: %" PRIu64 "\n",
+        state.registers.a,
+        state.registers.a,
+        state.registers.f,
+        state.registers.f,
+        state.registers.b,
+        state.registers.b,
+        state.registers.c,
+        state.registers.c,
+        state.registers.d,
+        state.registers.d,
+        state.registers.e,
+        state.registers.e,
+        state.registers.h,
+        state.registers.h,
+        state.registers.l,
+        state.registers.l,
+        state.registers.stack_ptr,
+        state.registers.stack_ptr,
+        state.registers.program_counter,
+        state.registers.program_counter,
+        state.wram_checksum,
+        state.vram_checksum,
+        state.io_checksum);
+
+    auto str = String(snapshot_buffer);
+    free(snapshot_buffer);
+    return str;
 }

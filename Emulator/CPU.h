@@ -28,7 +28,6 @@ struct Registers {
     u16 stack_ptr { 0 };
     u16 program_counter { 0 };
 };
-void print_registers(const Registers& reg);
 
 struct CPUTestState {
     Registers registers;
@@ -36,7 +35,8 @@ struct CPUTestState {
     u64 vram_checksum;
     u64 io_checksum;
 };
-String to_string(const CPUTestState&);
+String to_trace_line(const CPUTestState&);
+String to_snapshot(const CPUTestState&);
 
 class CPU {
 

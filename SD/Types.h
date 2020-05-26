@@ -30,3 +30,12 @@ typedef double f64;
 constexpr unsigned KB = 1024;
 constexpr unsigned MB = KB * KB;
 constexpr unsigned GB = KB * KB * KB;
+
+// Due to C/C++ being silly and allowing one word to mean three things
+// we've created these aliases to allow for more expressive code
+// and more importantly searchable. By using these macros we can
+// now quickly search for truly 'global' variables that we need
+// to be careful with for thread safety.
+#define global static
+#define internal static
+#define local_persist static

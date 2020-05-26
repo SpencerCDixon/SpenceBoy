@@ -65,18 +65,17 @@ public:
 private:
     void compare_snapshot()
     {
-        char* current_snapshot = generate_snapshot();
+        String current_snapshot = to_snapshot(m_cpu.test_state());
         char* existing_snapshot = read_existing_snapshot();
 
-        size_t current_len = strlen(current_snapshot);
         size_t existing_len = strlen(existing_snapshot);
 
         bool failed = false;
-        failed = current_len != existing_len;
+        failed = current_snapshot.length() != existing_len;
 
         if (!failed) {
-            for (size_t i = 0; i < current_len; ++i) {
-                if (current_snapshot[i] != existing_snapshot[i]) {
+            for (size_t i = 0; i < current_snapshot.length(); ++i) {
+                if (current_snapshot.characters()[i] != existing_snapshot[i]) {
                     failed = true;
                     break;
                 }
@@ -93,7 +92,7 @@ private:
             dbg() << "[ " << GREEN "OK" RESET << " ] " << m_name;
         }
 
-        free(current_snapshot);
+//        free(current_snapshot);
         free(existing_snapshot);
     }
 
@@ -113,11 +112,9 @@ private:
         fp = fopen(snapshot_path, "wb");
         perror_exit_if(fp == nullptr, "update_snapshot()");
 
-        char* snapshot_buffer = generate_snapshot();
-        fwrite(snapshot_buffer, sizeof(char), strlen(snapshot_buffer), fp);
+        String snapshot_buffer = to_snapshot(m_cpu.test_state());
+        fwrite(snapshot_buffer.characters(), sizeof(char), snapshot_buffer.length(), fp);
         fclose(fp);
-
-        free(snapshot_buffer);
     }
 
     // Caller is responsible for freeing when done.
@@ -136,53 +133,6 @@ private:
 
         return existing_snapshot;
     }
-
-    // Caller is responsible for freeing when done.
-    char* generate_snapshot()
-    {
-        auto state = m_cpu.test_state();
-        char* snapshot_buffer = (char*)calloc(512, sizeof(char));
-        sprintf(
-            snapshot_buffer,
-            "Registers:\n"
-            "–---------\n\n"
-            "a: %03u [$%02x]   f: %03u [$%02x]\n"
-            "b: %03u [$%02x]   c: %03u [$%02x]\n"
-            "d: %03u [$%02x]   e: %03u [$%02x]\n"
-            "h: %03u [$%02x]   l: %03u [$%02x]\n"
-            "s: %03u [$%02x]   p: %03u [$%02x]\n\n"
-            "Checksums:\n"
-            "–---------\n\n"
-            "WRAM Checksum: %" PRIu64 "\n"
-            "VRAM Checksum: %" PRIu64 "\n"
-            "IO   Checksum: %" PRIu64 "\n",
-            state.registers.a,
-            state.registers.a,
-            state.registers.f,
-            state.registers.f,
-            state.registers.b,
-            state.registers.b,
-            state.registers.c,
-            state.registers.c,
-            state.registers.d,
-            state.registers.d,
-            state.registers.e,
-            state.registers.e,
-            state.registers.h,
-            state.registers.h,
-            state.registers.l,
-            state.registers.l,
-            state.registers.stack_ptr,
-            state.registers.stack_ptr,
-            state.registers.program_counter,
-            state.registers.program_counter,
-            state.wram_checksum,
-            state.vram_checksum,
-            state.io_checksum);
-
-        return snapshot_buffer;
-    }
-
 private:
     const char* m_name;
     const char* m_rom_path;
