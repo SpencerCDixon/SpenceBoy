@@ -40,7 +40,7 @@ public:
 
     const char* characters() const { return m_characters; }
     char* characters() { return m_characters; }
-    size_t length() { return m_length; }
+    size_t length() const { return m_length; }
 
     String& operator+=(const String& other)
     {
