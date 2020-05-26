@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 class CPUSnapshotTest {
 public:
@@ -20,7 +21,7 @@ public:
         , m_should_update_snapshot(should_update_snapshot)
         , m_cpu(CPU(verbose_logging))
         , m_verbose_logging(verbose_logging)
-        , m_execution_trace(String("Trace:\n"))
+        , m_execution_trace(String("Trace:\n------\n"))
     {
         m_cpu.load_rom(rom_path);
     }
@@ -48,20 +49,18 @@ public:
 private:
     void compare_snapshot()
     {
-        dbg() << m_execution_trace;
-        String current_snapshot = to_snapshot(m_cpu.test_state());
-        String existing_snapshot = read_existing_snapshot();
+        String current = current_snapshot();
+        String existing = read_existing_snapshot();
 
-        bool failed = false;
-        failed = current_snapshot.length() != existing_snapshot.length();
-        failed = current_snapshot != existing_snapshot;
+        bool failed = current.length() != existing.length();
+        failed = current != existing;
 
         if (failed) {
             dbg() << "[" << RED "FAIL" RESET << "] " << m_name;
             dbg() << YELLOW "EXPECTED: \n" RESET;
-            dbg() << existing_snapshot;
+            dbg() << existing;
             dbg() << RED "GOT: \n" RESET;
-            dbg() << current_snapshot;
+            dbg() << current;
         } else {
             dbg() << "[ " << GREEN "OK" RESET << " ] " << m_name;
         }
@@ -76,8 +75,8 @@ private:
         fp = fopen(snapshot_path().characters(), "wb");
         perror_exit_if(fp == nullptr, "update_snapshot()");
 
-        String snapshot_buffer = to_snapshot(m_cpu.test_state());
-        fwrite(snapshot_buffer.characters(), sizeof(char), snapshot_buffer.length(), fp);
+        auto current = current_snapshot();
+        fwrite(current.characters(), sizeof(char), current.length(), fp);
         fclose(fp);
     }
 
@@ -87,11 +86,22 @@ private:
         fp = fopen(snapshot_path().characters(), "rb");
         perror_exit_if(fp == nullptr, "compare_snapshot()");
 
-        char* existing_snapshot = (char*)calloc(512, sizeof(char));
-        fread(existing_snapshot, 512, 1, fp);
+        struct stat st;
+        stat(snapshot_path().characters(), &st);
+
+        char* existing_snapshot = (char*)calloc(st.st_size, sizeof(char));
+        fread(existing_snapshot, st.st_size, 1, fp);
         String result = existing_snapshot;
         free(existing_snapshot);
 
+        return result;
+    }
+
+    String current_snapshot() {
+        auto result = String("");
+        result = result + m_execution_trace;
+        result = result + "\n";
+        result = result + to_snapshot(m_cpu.test_state());
         return result;
     }
 
@@ -134,6 +144,7 @@ int main(int argc, char* argv[])
     dbg() << "\nRunning test suite with options: \n"
           << "  should_update_snapshots " << should_update_snapshots << "\n  verbose " << verbose << "\n";
 
+    // clang-format off
     TEST_CASE(loop, loop.gb)
     TEST_CASE(ram_access, ram.gb)
     TEST_CASE(smily_rendering, smiley.gb)
@@ -147,7 +158,8 @@ int main(int argc, char* argv[])
     TEST_CASE(complex_subroutine, complex-routine.gb)
 
     // Not ready for prime time yet
-//    TEST_CASE(background_text_render, text-render.gb)
+    //    TEST_CASE(background_text_render, text-render.gb)
+    // clang-format on
 
     return 0;
 }

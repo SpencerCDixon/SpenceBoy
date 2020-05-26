@@ -16,6 +16,15 @@ Template for daily journal:
 
 ### What did I get done today?
 
+* Added CPU step traces to snapshot tests to get a better idea if I break things
+* Refactored CPUSnapshot to use more String utilities
+
+---
+
+**Date: 5/25/2020**
+
+### What did I get done today?
+
 * String refactor to be less complicated and easier to reason about.
 * Use new String in various call sites that were previously returning `const char *`s
 * Refactor log stream format types to be cross platform so I can do more work on my Linux machine
