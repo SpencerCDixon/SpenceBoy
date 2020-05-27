@@ -12,12 +12,13 @@ Template for daily journal:
 
 ---
 
-**Date: 5/25/2020**
+**Date: 5/26/2020**
 
 ### What did I get done today?
 
 * Added CPU step traces to snapshot tests to get a better idea if I break things
 * Refactored CPUSnapshot to use more String utilities
+* Added a custom File class to make building test functionality easier to do
 
 ---
 

@@ -7,6 +7,7 @@
 
 #include <SD/Types.h>
 #include <SD/String.h>
+#include <SD/File.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -57,3 +58,4 @@ const LogStream& operator<<(const LogStream&, bool);
 
 // SD Library Specific
 const LogStream& operator<<(const LogStream& stream, const String& string);
+const LogStream& operator<<(const LogStream& stream, const File& string);

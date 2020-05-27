@@ -5,13 +5,9 @@
 #include <SD/Assertions.h>
 #include <SD/Bytes.h>
 #include <SD/LogStream.h>
+#include <SD/File.h>
 
 #include <Emulator/CPU.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
 
 class CPUSnapshotTest {
 public:
@@ -71,30 +67,14 @@ private:
         if (m_verbose_logging)
             dbg() << "--> Updating snapshot for: " << m_rom_path;
 
-        FILE* fp;
-        fp = fopen(snapshot_path().characters(), "wb");
-        perror_exit_if(fp == nullptr, "update_snapshot()");
-
-        auto current = current_snapshot();
-        fwrite(current.characters(), sizeof(char), current.length(), fp);
-        fclose(fp);
+        auto file = File::open(snapshot_path(), FileMode::Write);
+        file.write(current_snapshot());
     }
 
     String read_existing_snapshot()
     {
-        FILE* fp;
-        fp = fopen(snapshot_path().characters(), "rb");
-        perror_exit_if(fp == nullptr, "compare_snapshot()");
-
-        struct stat st;
-        stat(snapshot_path().characters(), &st);
-
-        char* existing_snapshot = (char*)calloc(st.st_size, sizeof(char));
-        fread(existing_snapshot, st.st_size, 1, fp);
-        String result = existing_snapshot;
-        free(existing_snapshot);
-
-        return result;
+        auto file = File::open(String(snapshot_path()));
+        return file.read_all();
     }
 
     String current_snapshot() {
