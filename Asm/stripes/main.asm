@@ -25,17 +25,17 @@ copyData:
 
 Start:
 	ld hl, $9000
-	ld de, white_stripe
+	ld de, checker_stripe
 	ld b, 16
 	call copyData
 
 	ld hl, $9010 
-	ld de, black_stripe
+	ld de, top_half_black
 	ld b, 16
 	call copyData
 
 	ld hl, $9020
-	ld de, bot_half_black
+	ld de, checker_stripe
 	ld b, 16
 	call copyData
 
@@ -67,14 +67,17 @@ Start:
 	nop
 	halt
 
-black_stripe: 
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+checker_stripe: 
+	db $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc
 
-white_stripe: 
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+; black_stripe: 
+	; db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+
+; white_stripe: 
+	; db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 top_half_black: 
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00, $00, $00, $00
 
-bot_half_black: 
-	db $00, $00, $00, $00, $00, $00, $00, $00, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+; bot_half_black: 
+	; db $00, $00, $00, $00, $00, $00, $00, $00, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff

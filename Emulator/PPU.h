@@ -4,11 +4,39 @@
 
 #pragma once
 
+#include <SD/Color.h>
 #include <SD/LogStream.h>
 #include <SD/Types.h>
-#include <SD/Color.h>
 
 #include "Buffer.h"
+
+class Tile8x8 {
+public:
+    Tile8x8();
+    Tile8x8(const u8* buffer)
+    {
+        populate_from_palete(buffer);
+    }
+
+    inline u32 pixel(size_t x, size_t y) const
+    {
+        size_t idx = y * 8 + x;
+        ASSERT(idx >= 0 && idx <= 63);
+        return m_pixels[idx];
+    }
+
+    void set_pixel(size_t x, size_t y, u32 color)
+    {
+        size_t idx = y * 8 + x;
+        ASSERT(idx >= 0 && idx <= 63);
+        m_pixels[idx] = color;
+    }
+
+    void populate_from_palete(const u8* buffer);
+
+private:
+    u32 m_pixels[64];
+};
 
 class PPU {
 public:
@@ -33,3 +61,5 @@ private:
     const u8* m_vram;
     OffscreenFrameBuffer* m_buffer;
 };
+
+const LogStream& operator<<(const LogStream&, const Tile8x8&);

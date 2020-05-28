@@ -12,6 +12,15 @@ Template for daily journal:
 
 ---
 
+**Date: 5/27/2020**
+
+### What did I get done today?
+
+* Adds a Tile8x8 class with useful introspection to start getting the background tilemap
+rendering properly
+
+---
+
 **Date: 5/26/2020**
 
 ### What did I get done today?

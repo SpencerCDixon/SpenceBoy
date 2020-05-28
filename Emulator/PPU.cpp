@@ -10,15 +10,51 @@
 // * A scanline normally takes 456 clocks (912 clocks in double speed mode) to complete
 // * Vertical Blank interrupt is triggered when the LCD controller enters the VBL screen mode (mode 1, LY=144).
 //   This happens once per frame, so this interrupt is triggered 59.7 times per second.
+Tile8x8::Tile8x8()
+{
+}
+
+void Tile8x8::populate_from_palete(const u8* buffer)
+{
+    local_persist u8 black_mask = 0x2;
+
+    for (size_t row = 0; row < 8; ++row) {
+        u16 row_bytes = buffer[row];
+        row_bytes = (row_bytes << 8) | buffer[row + 1];
+
+        for (size_t col = 0; col < 8; ++col) {
+            // 2 bits for pixel. 11 = black anything else = white (for now)
+            bool is_black = (row_bytes >> col * 2) & black_mask;
+            set_pixel(col, row, is_black ? Color::BLACK_ARGB : Color::WHITE_ARGB);
+        }
+    }
+}
+
+const LogStream& operator<<(const LogStream& stream, const Tile8x8& tile)
+{
+    for (size_t row = 0; row < 8; ++row) {
+        for (size_t col = 0; col < 8; ++col) {
+            u32 pixel = tile.pixel(col, row);
+            if (pixel == Color::BLACK_ARGB) {
+                stream.write(" B ", 3);
+            } else {
+                stream.write(" W ", 3);
+            }
+        }
+        stream.write("\n", 1);
+    }
+    return stream;
+}
 
 void PPU::clear(Color color)
 {
+    u32 arg_color = color.to_argb();
     u8* row = (u8*)m_buffer->memory;
     for (int y = 0; y < m_buffer->height; ++y) {
         u32* pixel = (u32*)row;
 
         for (int x = 0; x < m_buffer->width; ++x) {
-            *pixel++ = color.to_argb();
+            *pixel++ = arg_color;
         }
 
         row += m_buffer->pitch;
@@ -33,19 +69,22 @@ void PPU::clear(Color color)
 void PPU::render()
 {
 
-
-    // fetch a tile from VRAM
-    // render into specific location
-    //   -> index each pixel from tile into destination
-
-    size_t tile1 = 0x9010 - 0x8000;
-    u8 sprite[16];
-
-    for (size_t i = 0; i < 16; ++i) {
-        sprite[i] = m_vram[tile1 + i];
+    size_t tile_start = 0x9000 - 0x8000;
+    Tile8x8 tiles[4];
+    for (size_t i = 0; i < 4; ++i) {
+        dbg() << (void*)&m_vram[tile_start + (i * 16)];
+        tiles[i].populate_from_palete(&m_vram[tile_start + (i * 16)]);
     }
 
-//    u32 tile[64];
+    for (size_t i = 0; i < 4; ++i)
+        dbg() << tiles[i];
+
+    //
+    //    for (size_t i = 0; i < 16; ++i) {
+    //        sprite[i] = m_vram[tile1 + i];
+    //    }
+
+    //    u32 tile[64];
 
     // Rendering a tile:
     // * 16 bytes: 8 pixels x 8 pixels x 2 bits per pixel
@@ -63,27 +102,27 @@ void PPU::render()
     // Tile
     //  get_pixel(x, y)
 
-    u8* row = (u8*)m_buffer->memory;
-    u8* color_row = sprite;
-    u8 bits_per_pixel = 2;
-
-    for (int y = 0; y < 8; ++y) {
-        u32* pixel = (u32*)row;
-
-        for (int x = 0; x < 8; ++x) {
-            u8 first_byte = color_row[0];
-            u8 second_byte = color_row[1];
-
-            // FIXME: I don't think this works as I exepct it is :/
-            // 00 01 10 = white AND 11 = black
-            bool is_black = (first_byte & (1 << x)) && (second_byte & (1 << x));
-
-            *pixel++ = is_black ? Color::BLACK_ARGB : Color::WHITE_ARGB;
-        }
-
-        color_row += bits_per_pixel;
-        row += m_buffer->pitch;
-    }
+    //    u8* row = (u8*)m_buffer->memory;
+    //    u8* color_row = sprite;
+    //    u8 bits_per_pixel = 2;
+    //
+    //    for (int y = 0; y < 8; ++y) {
+    //        u32* pixel = (u32*)row;
+    //
+    //        for (int x = 0; x < 8; ++x) {
+    //            u8 first_byte = color_row[0];
+    //            u8 second_byte = color_row[1];
+    //
+    //            // FIXME: I don't think this works as I exepct it is :/
+    //            // 00 01 10 = white AND 11 = black
+    //            bool is_black = (first_byte & (1 << x)) && (second_byte & (1 << x));
+    //
+    //            *pixel++ = is_black ? Color::BLACK_ARGB : Color::WHITE_ARGB;
+    //        }
+    //
+    //        color_row += bits_per_pixel;
+    //        row += m_buffer->pitch;
+    //    }
 }
 
 void PPU::render_background_tiles()
@@ -107,7 +146,8 @@ void PPU::render_tile([[maybe_unused]] u8* src_dest, [[maybe_unused]] const u8* 
     // TODO: Use fill_square() as an example of how to approach this
 }
 
-void PPU::fill_square(size_t x, size_t y, u32 color) {
+void PPU::fill_square(size_t x, size_t y, u32 color)
+{
     ASSERT(x < 32);
     ASSERT(y < 32);
 
