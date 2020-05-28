@@ -5,7 +5,6 @@
 #pragma once
 
 #include <SD/Assertions.h>
-#include <SD/LogStream.h>
 #include <SD/String.h>
 #include <SD/Types.h>
 
@@ -74,20 +73,12 @@ public:
         }
         m_file_ptr = fopen(m_path.characters(), open_mode);
         perror_exit_if(m_file_ptr == nullptr, "File::open()");
-
-        if (FILE_DEBUG)
-            dbg() << "opened file: " << (u64)m_file_ptr;
     }
 
     ~File()
     {
-        if (m_file_ptr) {
-            if (FILE_DEBUG) {
-                dbg() << "closing file: " << (u64)m_file_ptr;
-            }
-
+        if (m_file_ptr)
             fclose(m_file_ptr);
-        }
     }
 
 private:
