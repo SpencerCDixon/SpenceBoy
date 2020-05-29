@@ -12,15 +12,20 @@
 //   This happens once per frame, so this interrupt is triggered 59.7 times per second.
 Tile8x8::Tile8x8()
 {
+    memset(m_pixels, 0, sizeof(m_pixels));
 }
 
 void Tile8x8::populate_from_palette(const u8* buffer)
 {
-    local_persist u8 black_mask = 0x2;
+    local_persist u8 black_mask = 0x3;
 
-    for (size_t row = 0; row < 8; ++row) {
-        u16 row_bytes = buffer[row];
-        row_bytes = (row_bytes << 8) | buffer[row + 1];
+    // Andreas: Maybe there is a better way to do this? I need to iterate in pairs of two bytes
+    for (size_t row = 0; row < 8; row++) {
+        size_t idx_one = row * 2;
+        size_t idx_two = idx_one + 1;
+
+        u16 row_bytes = buffer[idx_one];
+        row_bytes = (row_bytes << 8) | buffer[idx_two];
 
         for (size_t col = 0; col < 8; ++col) {
             // 2 bits for pixel. 11 = black anything else = white (for now)

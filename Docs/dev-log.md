@@ -12,6 +12,16 @@ Template for daily journal:
 
 ---
 
+**Date: 5/28/2020**
+
+### What did I get done today?
+
+* Use the new Tile8x8 to render pixels into the frame buffer. Successfully generalized tile background rendering!
+* Fix bug with how black/white pixel calculations were being done
+* Zero out pixel data in Tiles to ensure no incorrect colors are being rendered
+
+---
+
 **Date: 5/27/2020**
 
 ### What did I get done today?

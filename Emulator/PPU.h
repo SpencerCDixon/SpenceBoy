@@ -15,6 +15,7 @@ public:
     Tile8x8();
     Tile8x8(const u8* buffer)
     {
+        memset(m_pixels, 0, sizeof(m_pixels));
         populate_from_palette(buffer);
     }
 
