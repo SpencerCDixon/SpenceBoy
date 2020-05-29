@@ -14,7 +14,7 @@ Tile8x8::Tile8x8()
 {
 }
 
-void Tile8x8::populate_from_palete(const u8* buffer)
+void Tile8x8::populate_from_palette(const u8* buffer)
 {
     local_persist u8 black_mask = 0x2;
 
@@ -68,85 +68,19 @@ void PPU::clear(Color color)
 
 void PPU::render()
 {
-
     size_t tile_start = 0x9000 - 0x8000;
     Tile8x8 tiles[4];
     for (size_t i = 0; i < 4; ++i) {
-        dbg() << (void*)&m_vram[tile_start + (i * 16)];
-        tiles[i].populate_from_palete(&m_vram[tile_start + (i * 16)]);
+        tiles[i].populate_from_palette(&m_vram[tile_start + (i * 16)]);
     }
 
-    for (size_t i = 0; i < 4; ++i)
+    for (size_t i = 0; i < 4; ++i) {
         dbg() << tiles[i];
-
-    //
-    //    for (size_t i = 0; i < 16; ++i) {
-    //        sprite[i] = m_vram[tile1 + i];
-    //    }
-
-    //    u32 tile[64];
-
-    // Rendering a tile:
-    // * 16 bytes: 8 pixels x 8 pixels x 2 bits per pixel
-    // * It’s stored in lines, so the first byte is the first bit of the first line;
-    // the second byte is the second bit of the first line; the third byte is the first bit of the second line, etc.
-
-    // $ff $ff
-    // 1111 1111 1111 1111
-    // 11 11 11 11  11 11 11 11
-    // b  b  b  b   b  b  b  b
-
-    // shift first
-    // then mask (same mask each time)
-    // draw_into(src, dest, tile)
-    // Tile
-    //  get_pixel(x, y)
-
-    //    u8* row = (u8*)m_buffer->memory;
-    //    u8* color_row = sprite;
-    //    u8 bits_per_pixel = 2;
-    //
-    //    for (int y = 0; y < 8; ++y) {
-    //        u32* pixel = (u32*)row;
-    //
-    //        for (int x = 0; x < 8; ++x) {
-    //            u8 first_byte = color_row[0];
-    //            u8 second_byte = color_row[1];
-    //
-    //            // FIXME: I don't think this works as I exepct it is :/
-    //            // 00 01 10 = white AND 11 = black
-    //            bool is_black = (first_byte & (1 << x)) && (second_byte & (1 << x));
-    //
-    //            *pixel++ = is_black ? Color::BLACK_ARGB : Color::WHITE_ARGB;
-    //        }
-    //
-    //        color_row += bits_per_pixel;
-    //        row += m_buffer->pitch;
-    //    }
-}
-
-void PPU::render_background_tiles()
-{
-    // FIXME: get proper start location of bg tile data based on the IO Flag that determines it.
-    [[maybe_unused]] size_t start = 0x9000 - 0x8000;
-
-    constexpr size_t MAX_TILES = 2;
-
-    // Start with just first row for now...
-    u8* sprite_src = (u8*)m_buffer->memory;
-    for (size_t x = 0; x < MAX_TILES; ++x) {
-        const u8* sprite = m_vram + start + (x * 16);
-        render_tile(sprite_src, sprite);
-        sprite_src += 16;
+        fill_square(i, 0, tiles[i]);
     }
 }
 
-void PPU::render_tile([[maybe_unused]] u8* src_dest, [[maybe_unused]] const u8* sprite)
-{
-    // TODO: Use fill_square() as an example of how to approach this
-}
-
-void PPU::fill_square(size_t x, size_t y, u32 color)
+void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile)
 {
     ASSERT(x < 32);
     ASSERT(y < 32);
@@ -159,10 +93,10 @@ void PPU::fill_square(size_t x, size_t y, u32 color)
     u8* start = (u8*)m_buffer->memory;
     start += offset;
 
-    for (int y = 0; y < 8; y++) {
+    for (size_t y = 0; y < 8; y++) {
         u32* pixel = (u32*)start;
-        for (int x = 0; x < 8; x++) {
-            *pixel++ = color;
+        for (size_t x = 0; x < 8; x++) {
+            *pixel++ = tile.pixel(x, y);
         }
 
         start += m_buffer->pitch;

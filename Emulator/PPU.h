@@ -15,7 +15,7 @@ public:
     Tile8x8();
     Tile8x8(const u8* buffer)
     {
-        populate_from_palete(buffer);
+        populate_from_palette(buffer);
     }
 
     inline u32 pixel(size_t x, size_t y) const
@@ -32,7 +32,7 @@ public:
         m_pixels[idx] = color;
     }
 
-    void populate_from_palete(const u8* buffer);
+    void populate_from_palette(const u8* buffer);
 
 private:
     u32 m_pixels[64];
@@ -51,11 +51,7 @@ public:
 
     void clear(Color color);
     void render();
-    void render_background_tiles();
-    void fill_square(size_t x, size_t y, u32 color);
-
-private:
-    void render_tile(u8* src_dest, const u8* sprite);
+    void fill_square(size_t x, size_t y, const Tile8x8& tile);
 
 private:
     const u8* m_vram;

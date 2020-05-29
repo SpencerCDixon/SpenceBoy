@@ -25,12 +25,12 @@ copyData:
 
 Start:
 	ld hl, $9000
-	ld de, checker_stripe
+	ld de, white_stripe
 	ld b, 16
 	call copyData
 
 	ld hl, $9010 
-	ld de, top_half_black
+	ld de, black_stripe
 	ld b, 16
 	call copyData
 
@@ -67,14 +67,16 @@ Start:
 	nop
 	halt
 
+SECTION "BGTileData",ROM0[$1000]
+
 checker_stripe: 
 	db $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc
 
-; black_stripe: 
-	; db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+black_stripe: 
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
 
-; white_stripe: 
-	; db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+white_stripe: 
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 top_half_black: 
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00, $00, $00, $00
