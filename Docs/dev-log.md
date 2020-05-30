@@ -12,6 +12,14 @@ Template for daily journal:
 
 ---
 
+**Date: 5/30/2020**
+
+### What did I get done today?
+
+* Add move constructor to custom String class
+
+---
+
 **Date: 5/29/2020**
 
 ### What did I get done today?

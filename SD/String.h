@@ -27,6 +27,15 @@ public:
         set_string(other.m_characters);
     }
 
+    String(String&& other)
+    {
+        m_characters = other.m_characters;
+        m_length = other.m_length;
+
+        other.m_length = 0;
+        other.m_characters = nullptr;
+    }
+
     String& operator=(const String& other)
     {
         set_string(other.m_characters);
