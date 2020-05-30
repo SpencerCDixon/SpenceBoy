@@ -17,6 +17,8 @@ Template for daily journal:
 ### What did I get done today?
 
 * Stripe pattern ASM being rendered to screen
+* Adds more load CPU instructions to aid in writing more robust assembly test
+    programs
 
 ---
 
