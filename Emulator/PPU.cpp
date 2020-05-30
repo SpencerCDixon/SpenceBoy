@@ -62,22 +62,24 @@ void PPU::clear(Color color)
 
 void PPU::render()
 {
-    size_t tile_start = 0x9000 - 0x8000;
+    // TODO: Tile start can change based on a bit flag. Will need to adjust accordingly.
+    size_t tile_start = 0;
     Tile8x8 tiles[TOTAL_BG_TILES];
     for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
         size_t idx = tile_start + (i * 16);
         auto* pointer = &m_vram[idx];
-        dbg() << "\n---";
-        dbg() << "address is: " << (void*)pointer;
-        hex_dump("Dump:", pointer, 16, idx);
-        dbg() << "---\n";
         tiles[i].populate_from_palette(pointer);
     }
 
+    // A special chunk of memory starting at 0x9800 is used to map which tile index
+    // should be used to render. Each byte represents the index into the tile map.
+    size_t map_start = 0x9800 - 0x8000; // 0x8000 will be dynamic based on bit flag
+
     for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
+        size_t tile_idx = m_vram[map_start + i];
         size_t x = i % 32;
         size_t y = i / 32;
-        fill_square(x, y, tiles[i]);
+        fill_square(x, y, tiles[tile_idx]);
     }
 }
 

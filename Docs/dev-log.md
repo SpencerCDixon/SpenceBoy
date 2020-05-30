@@ -23,6 +23,10 @@ mode.
 ### What did I get done today?
 
 * Add move constructor to custom String class
+* Fix a super big bug in ld bc, d16 causing all sorts of issues. Byte order was flipped accidently
+* Got stripes rendering successfully in SameBoy emulator with the help of some Gingerbread macros
+* Got stripes rendering successfully in SpenceBoy PPU!
+* Add support for opcode: LD_A_HL_ADDR_INC
 
 ---
 

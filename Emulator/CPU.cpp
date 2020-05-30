@@ -322,7 +322,7 @@ bool CPU::step()
         pop_return();
         break;
     case OpCode::HALT:
-        //        hex_dump("WRAM", m_wram, 32, WRAM_START);
+//        hex_dump("WRAM", m_wram, 5200, WRAM_START);
 //        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
         return false;
     case OpCode::TEST_COMPLETE:
