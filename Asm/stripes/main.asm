@@ -22,27 +22,52 @@ copyData:
 	jp nz, .loop
 	ret
 
+; Rows are 32 tiles wide
+; de - the sprite to render
+; TODO: This is not working as expected in SameBoy -- something is wrong :-(
+writeRow:
+	ld c, 32
+.loop
+	ld b, 16
+	call copyData
+	ld a, e
+	sub 16
+	ld e, a
+	dec c
+	jp nz, .loop
+	ret
 
 Start:
 	ld hl, $9000
-	ld de, white_stripe
-	ld b, 16
-	call copyData
-
-	ld hl, $9010 
 	ld de, black_stripe
-	ld b, 16
-	call copyData
+	call writeRow
 
-	ld hl, $9020
-	ld de, checker_stripe
-	ld b, 16
-	call copyData
+	ld hl, $9200
+	ld de, white_stripe
+	call writeRow
 
-	ld hl, $9030
-	ld de, top_half_black
-	ld b, 16
-	call copyData
+	; ld hl, $9400
+	; ld de, black_stripe
+	; call writeRow
+
+	; ld hl, $9600
+	; ld de, white_stripe
+	; call writeRow
+
+	; ld hl, $9010 
+	; ld de, black_stripe
+	; ld b, 16
+	; call copyData
+
+	; ld hl, $9020
+	; ld de, checker_stripe
+	; ld b, 16
+	; call copyData
+
+	; ld hl, $9030
+	; ld de, top_half_black
+	; ld b, 16
+	; call copyData
 
 	; Set the sprite index that we're using to 1
 	ld hl, $9800
@@ -69,8 +94,8 @@ Start:
 
 SECTION "BGTileData",ROM0[$1000]
 
-checker_stripe: 
-	db $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc
+; checker_stripe: 
+	; db $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc
 
 black_stripe: 
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
@@ -78,8 +103,8 @@ black_stripe:
 white_stripe: 
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-top_half_black: 
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00, $00, $00, $00
+; top_half_black: 
+	; db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00, $00, $00, $00
 
 ; bot_half_black: 
 	; db $00, $00, $00, $00, $00, $00, $00, $00, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff

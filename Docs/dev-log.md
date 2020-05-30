@@ -12,6 +12,14 @@ Template for daily journal:
 
 ---
 
+**Date: 5/29/2020**
+
+### What did I get done today?
+
+* Stripe pattern ASM being rendered to screen
+
+---
+
 **Date: 5/28/2020**
 
 ### What did I get done today?
