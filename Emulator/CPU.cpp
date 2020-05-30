@@ -125,6 +125,10 @@ bool CPU::step()
     case OpCode::LD_L_d8:
         m_registers.l = fetch_and_inc_8bit();
         break;
+    case OpCode::LD_A_HL_ADDR_INC:
+        m_registers.a = read(get_hl());
+        inc_hl();
+        break;
     case OpCode::LD_A_HL_ADDR:
         m_registers.a = read(get_hl());
         break;
