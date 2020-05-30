@@ -15,17 +15,18 @@ the `C` standard library.
 
 ## Standard Lib
 
-- [ ] String
-- [ ] Unique Pointer
-- [ ] Shared Pointer
-- [ ] Vector
 - [ ] Hash Map
-- [ ] File I/O
 - [ ] Pair/Tuple (useful for converting u16 into two u8's etc.)
-- [x] Option
+- [ ] Result
+- [ ] Shared Pointer
+- [ ] Unique Pointer
+- [ ] Vector
 - [x] Assertions
 - [x] Basic Logging
 - [x] Color
+- [x] File I/O
+- [x] Option
+- [x] String
 
 ## Emulator
 
