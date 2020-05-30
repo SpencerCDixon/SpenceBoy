@@ -212,8 +212,8 @@ bool CPU::step()
         m_registers.d = fetch_and_inc_8bit();
         break;
     case OpCode::LD_BC_d16:
-        m_registers.b = fetch_and_inc_8bit();
         m_registers.c = fetch_and_inc_8bit();
+        m_registers.b = fetch_and_inc_8bit();
         break;
     case OpCode::LD_SP_d16:
         m_registers.stack_ptr = fetch_and_inc_16bit();
