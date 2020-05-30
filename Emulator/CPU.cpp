@@ -71,6 +71,9 @@ bool CPU::step()
     case OpCode::CPL:
         m_registers.a = ~m_registers.a;
         break;
+    case OpCode::LD_A_E:
+        m_registers.a = m_registers.e;
+        break;
     case OpCode::LD_A_d8:
         m_registers.a = fetch_and_inc_8bit();
         break;
@@ -103,6 +106,9 @@ bool CPU::step()
         break;
     case OpCode::LD_D_D:
         m_registers.d = m_registers.d;
+        break;
+    case OpCode::LD_E_A:
+        m_registers.e = m_registers.a;
         break;
     case OpCode::LD_H_B:
         m_registers.h = m_registers.b;
