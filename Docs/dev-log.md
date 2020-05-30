@@ -14,6 +14,12 @@ Template for daily journal:
 
 **Date: 5/30/2020**
 
+### What did I learn today?
+
+* Sometimes it can appear that my emulator is in an infinite loop when really it's just taking a super long time
+to complete the program. In the future, be patient and keep an eye on decrementing counters when running in verbose
+mode.
+
 ### What did I get done today?
 
 * Add move constructor to custom String class

@@ -125,20 +125,25 @@ int main(int argc, char* argv[])
           << "  should_update_snapshots " << should_update_snapshots << "\n  verbose " << verbose << "\n";
 
     // clang-format off
-    TEST_CASE(loop, loop.gb)
-    TEST_CASE(ram_access, ram.gb)
-    TEST_CASE(smily_rendering, smiley.gb)
-    TEST_CASE(loading_into_registers, loading.gb)
-    TEST_CASE(complement_a_reg_bits, complement.gb)
-    TEST_CASE(incrementing_registers, increments.gb)
-    TEST_CASE(shifting_and_rotating_bits, shift-rotate.gb)
-    TEST_CASE(bit_masks, bit-masks.gb)
-    TEST_CASE(stack, stack.gb)
-    TEST_CASE(pushing_and_popping, push-pop.gb)
-    TEST_CASE(complex_subroutine, complex-routine.gb)
+//    TEST_CASE(loop, loop.gb)
+//    TEST_CASE(ram_access, ram.gb)
+//    TEST_CASE(smily_rendering, smiley.gb)
+//    TEST_CASE(loading_into_registers, loading.gb)
+//    TEST_CASE(complement_a_reg_bits, complement.gb)
+//    TEST_CASE(incrementing_registers, increments.gb)
+//    TEST_CASE(shifting_and_rotating_bits, shift-rotate.gb)
+//    TEST_CASE(bit_masks, bit-masks.gb)
+//    TEST_CASE(stack, stack.gb)
+//    TEST_CASE(pushing_and_popping, push-pop.gb)
+//    TEST_CASE(complex_subroutine, complex-routine.gb)
 
     // Not ready for prime time yet
-    //    TEST_CASE(background_text_render, text-render.gb)
+//    TEST_CASE(background_text_render, text-render.gb)
+
+// This example takes 10-15 seconds to complete on my machine. Something is up
+// because in SameBoy emulator this is instant. Need to investigate perf reasons for
+// this at some point.
+    TEST_CASE(dec_jumps, dec-jumps.gb)
     // clang-format on
 
     return 0;

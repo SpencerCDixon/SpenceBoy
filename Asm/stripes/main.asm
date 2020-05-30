@@ -24,7 +24,6 @@ copyData:
 
 ; Rows are 32 tiles wide
 ; de - the sprite to render
-; TODO: This is not working as expected in SameBoy -- something is wrong :-(
 writeRow:
 	ld c, 32
 .loop
@@ -37,14 +36,50 @@ writeRow:
 	jp nz, .loop
 	ret
 
-Start:
-	ld hl, $9000
-	ld de, black_stripe
-	call writeRow
+; Rows are 32 tiles wide
+; de - the sprite to render
+fillRow:
+	ld c, $12 
+.loop
+	ld [hl+], a
+	dec c
+	jp nz, .loop
+	ret
 
-	ld hl, $9200
+Start:
+	; Load our tiles into the tile map
+	ld hl, $9000
 	ld de, white_stripe
-	call writeRow
+	ld b, 16
+	call copyData
+
+	ld hl, $9010 
+	ld de, black_stripe
+	ld b, 16
+	call copyData
+
+	ld hl, $9020 
+	ld de, checker_stripe
+	ld b, 16
+	call copyData
+
+	; ld hl, $9030 
+	; ld de, top_half_black
+	; ld b, 16
+	; call copyData
+
+	; ld hl, $9040 
+	; ld de, bot_half_black
+	; ld b, 16
+	; call copyData
+
+	; ld hl, $9000
+	; ld de, black_stripe
+	; call writeRow
+
+	; ld hl, $9200
+	; ld de, white_stripe
+	; call writeRow
 
 	; ld hl, $9400
 	; ld de, black_stripe
@@ -71,9 +106,44 @@ Start:
 
 	; Set the sprite index that we're using to 1
 	ld hl, $9800
-	ld [hl], 0
+	ld a, 2
+	call fillRow
 
-    ; Set the background palette
+	ld a, 1
+	call fillRow
+
+	ld a, 0
+	call fillRow
+
+	ld a, 1
+	call fillRow
+	; ld [hl], 2
+
+	; ld hl, $9801
+	; ld [hl], 2
+
+	; ld hl, $9802
+	; ld [hl], 1
+
+	; ld hl, $9803
+	; ld [hl], 1
+
+	; ld hl, $9804
+	; ld [hl], 0
+
+	; ld hl, $9805
+	; ld [hl], 1
+
+	; ld hl, $9802
+	; ld [hl], 0
+
+	; ld hl, $9803
+	; ld [hl], 1
+
+	; ld hl, $9804
+	; ld [hl], 2
+
+	; Set the background palette
 	ld hl, $ff47
 	ld [hl], $e4 ; 1110_0100
 
@@ -94,8 +164,8 @@ Start:
 
 SECTION "BGTileData",ROM0[$1000]
 
-; checker_stripe: 
-	; db $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc
+checker_stripe: 
+	db $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc, $cc
 
 black_stripe: 
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
