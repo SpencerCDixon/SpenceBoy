@@ -78,8 +78,6 @@ void Emulator::run()
         }
 
         m_ppu.clear({255, 255, 255, 255});
-//        m_ppu.fill_square(2, 2, Color::BLACK_ARGB);
-//        m_ppu.fill_square(2, 1, Color::RED_ARGB);
         m_ppu.render();
         swap();
 
