@@ -405,7 +405,7 @@ u8 CPU::read(u16 address)
         return m_rom[address];
     } else if (address >= IO_START && address <= IO_END) {
         u16 idx = address - IO_START;
-        return m_rom[idx];
+        return m_io_registers[idx];
     } else if (address >= HRAM_START && address <= HRAM_END) {
         u16 idx = address - HRAM_START;
         return m_hram[idx];
