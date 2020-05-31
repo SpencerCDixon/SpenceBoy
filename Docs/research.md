@@ -11,6 +11,7 @@
 * [ROM tests](https://gbdev.gg8.se/files/roms/blargg-gb-tests/)
 * [Ultimate GameBoy talk](https://www.youtube.com/watch?v=HyzD8pNlpwI)
 * [Direct Memory Access](https://exez.in/gameboy-dma)
+* [Random useful looking info](https://www.devrs.com/gb/docs.php#faqs)
 
 
 ## GBC - Game Boy Color (GBz80)
