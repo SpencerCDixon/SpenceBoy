@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
     TEST_CASE(bit_masks, bit-masks.gb)
     TEST_CASE(stack, stack.gb)
     TEST_CASE(pushing_and_popping, push-pop.gb)
-//    TEST_CASE(complex_subroutine, complex-routine.gb)
+    TEST_CASE(complex_subroutine, complex-routine.gb)
 
     // Not ready for prime time yet
 //    TEST_CASE(background_text_render, text-render.gb)

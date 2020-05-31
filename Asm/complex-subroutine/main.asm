@@ -40,7 +40,7 @@ Start:
 	ld sp, $ffff 
 
 	ld hl, USER_RAM_START
-	ld bc, $1000
+	ld bc, $0010
 
 	ld a, $02
 	; Set first 16 bytes of WRAM to 02
