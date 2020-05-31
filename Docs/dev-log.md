@@ -12,6 +12,22 @@ Template for daily journal:
 
 ---
 
+**Date: 5/31/2020**
+
+### What did I learn today?
+
+* Often GB devs will read from the joypad register a few times and only take the last reads values to ensure
+any I/O issues are resolved
+
+### What did I get done today?
+
+* Fix broken test 'complex_subroutine' which broke when fixing the `ld bc, d16` op code. 
+* Added an ASM test for reading joypad values
+* Fix bug with reading IO RAM
+* Implement op codes: LDH_a8_ADDR_A, LDH_A_a8_ADDR, AND_d8, LD_B_A, SWAP_A, OR_B, and LD_A_B
+
+---
+
 **Date: 5/30/2020**
 
 ### What did I learn today?

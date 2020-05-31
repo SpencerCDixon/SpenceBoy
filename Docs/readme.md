@@ -51,16 +51,20 @@ the `C` standard library.
 - [ ] Interrupts
 - [ ] All unprefixed raw op codes
 - [ ] All prefixed `cb` opcodes 
+- [ ] Render title properly
 
 ## Testing Infra
 
 - [ ] Add flags at end of execution to snapshots
 - [ ] Add some sort of ASM assertion that writes to unused memory and can be shown in console
+- [ ] Properly capture prefix opcodes in test snapshots
 
 ## Game Targets
 
-– [ ] Get super mario land to render on screen
+- [ ] Super Mario Land
 - [ ] Tetris 
+- [ ] Snake
+- [ ] Pokemon Red
 
 ## Chores
 
@@ -102,7 +106,7 @@ the `C` standard library.
 - [ ] AND_H (0xA4)
 - [ ] AND_HL_ADDR (0xA6)
 - [ ] AND_L (0xA5)
-- [ ] AND_d8 (0xE6)
+- [x] AND_d8 (0xE6)
 - [ ] CALL_C_a16 (0xDC)
 - [ ] CALL_NC_a16 (0xD4)
 - [ ] CALL_NZ_a16 (0xC4)
@@ -186,7 +190,7 @@ the `C` standard library.
 - [x] LD_A_d8 (0x3E)
 - [x] LD_BC_ADDR_A (0x02)
 - [x] LD_BC_d16 (0x01)
-- [ ] LD_B_A (0x47)
+- [x] LD_B_A (0x47)
 - [x] LD_B_B (0x40)
 - [x] LD_B_C (0x41)
 - [x] LD_B_D (0x42)
@@ -261,7 +265,7 @@ the `C` standard library.
 - [ ] LD_a16_ADDR_SP (0x08)
 - [x] NOP (0x00)
 - [ ] OR_A (0xB7)
-- [ ] OR_B (0xB0)
+- [x] OR_B (0xB0)
 - [ ] OR_C (0xB1)
 - [ ] OR_D (0xB2)
 - [ ] OR_E (0xB3)
