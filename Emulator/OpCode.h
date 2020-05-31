@@ -275,7 +275,8 @@
     __ENUMERATE(0x22, SLA_D /*, 8 */) \
     __ENUMERATE(0x23, SLA_E /*, 8 */) \
     __ENUMERATE(0x24, SLA_H /*, 8 */) \
-    __ENUMERATE(0x25, SLA_L /*, 8 */)
+    __ENUMERATE(0x25, SLA_L /*, 8 */) \
+    __ENUMERATE(0x37, SWAP_A /*, 8 */)
 
 enum class OpCode : u8 {
 #define __ENUMERATE(hex, name, _cycles) name = hex,

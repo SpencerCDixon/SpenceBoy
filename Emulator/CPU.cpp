@@ -71,6 +71,9 @@ bool CPU::step()
     case OpCode::CPL:
         m_registers.a = ~m_registers.a;
         break;
+    case OpCode::LD_A_B:
+        m_registers.a = m_registers.b;
+        break;
     case OpCode::LD_A_E:
         m_registers.a = m_registers.e;
         break;
@@ -88,6 +91,9 @@ bool CPU::step()
         break;
     case OpCode::LD_E_d8:
         m_registers.e = fetch_and_inc_8bit();
+        break;
+    case OpCode::LD_B_A:
+        m_registers.b = m_registers.a;
         break;
     case OpCode::LD_B_B:
         m_registers.b = m_registers.b;
@@ -153,6 +159,16 @@ bool CPU::step()
     case OpCode::LD_HL_ADDR_d8:
         write(get_hl(), fetch_and_inc_8bit());
         break;
+    case OpCode::LDH_a8_ADDR_A: {
+        u16 address = IO_START + fetch_and_inc_8bit();
+        write(address, m_registers.a);
+        break;
+    }
+    case OpCode::LDH_A_a8_ADDR: {
+        u16 address = IO_START + fetch_and_inc_8bit();
+        m_registers.a = read(address);
+        break;
+    }
     case OpCode::DEC_A:
         dec_reg(&m_registers.a);
         break;
@@ -262,6 +278,12 @@ bool CPU::step()
     case OpCode::LD_HL_ADDR_DEC_A:
         write(get_hl(), m_registers.a);
         dec_hl();
+        break;
+    case OpCode::AND_d8:
+        and_with_a(fetch_and_inc_8bit());
+        break;
+    case OpCode::OR_B:
+        or_with_a(m_registers.b);
         break;
     case OpCode::XOR_A:
         xor_reg(&m_registers.a);
@@ -375,10 +397,13 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
     case PrefixOpCode::SLA_L:
         shift_left(&m_registers.l);
         break;
+    case PrefixOpCode::SWAP_A:
+        swap_reg(&m_registers.a);
+        break;
     default:
         if (is_prefix_opcode(op_code)) {
             printf("[ " RED "FATAL" RESET " ] "
-                   "Missing implementation for the following op code: ");
+                   "Missing implementation for the following prefix op code: ");
             print_prefix_opcode(op_code);
         } else {
             printf("missing prefix op code: %x", (u8)op_code);
@@ -490,7 +515,7 @@ void CPU::pop_return()
 }
 
 //
-// Bit Manipulations
+// Bit Twiddling
 //
 
 void CPU::shift_left(u8* reg_ptr)
@@ -506,6 +531,34 @@ void CPU::xor_reg(u8* reg_ptr)
 {
     *reg_ptr ^= m_registers.a;
     set_zero_flag(*reg_ptr == 0);
+}
+
+void CPU::and_with_a(u8 value)
+{
+    // FIXME: Implement half carry
+//    set_half_carry_flag(will_half_carry(*reg_ptr, result));
+    m_registers.a &= value;
+    set_zero_flag(m_registers.a == 0);
+    set_carry_flag(false);
+    set_subtract_flag(false);
+}
+
+void CPU::swap_reg(u8* reg_ptr)
+{
+    *reg_ptr = swap_nibbles(*reg_ptr);
+    set_subtract_flag(false);
+    set_half_carry_flag(false);
+    set_carry_flag(false);
+    set_zero_flag(*reg_ptr == 0);
+}
+
+void CPU::or_with_a(u8 value)
+{
+    m_registers.a |= value;
+    set_subtract_flag(false);
+    set_half_carry_flag(false);
+    set_carry_flag(false);
+    set_zero_flag(m_registers.a == 0);
 }
 
 //

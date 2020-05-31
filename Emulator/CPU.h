@@ -106,9 +106,12 @@ private:
     void pop(u8* reg_one, u8* reg_two);
     void pop_return();
 
-    // Bit Masks
+    // Bit Twiddling
     void shift_left(u8* reg_ptr);
     void xor_reg(u8* reg_ptr);
+    void and_with_a(u8 value);
+    void or_with_a(u8 value);
+    void swap_reg(u8* reg_ptr);
 
     // Flag Setting
     void set_zero_flag(bool should_set);

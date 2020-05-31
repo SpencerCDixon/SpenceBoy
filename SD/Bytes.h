@@ -28,6 +28,10 @@ inline bool will_half_carry(u8 byte1, u8 byte2)
     return (result & (half_carry_flag)) == half_carry_flag;
 }
 
+inline u8 swap_nibbles(u8 byte) {
+    return ((byte & 0x0f) << 4 | (byte & 0xf0) >> 4);
+}
+
 inline bool will_carry(u8 byte1, u8 byte2)
 {
     u16 result = byte1 + byte2;
