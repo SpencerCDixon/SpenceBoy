@@ -42,7 +42,7 @@ the `C` standard library.
 - [ ] [Proper boot up sequence](http://localhost:8080/pandocs/#power-up-sequence)
 - [ ] Implement the GameBoy buttons (D-pad, A, B, Select and Start). Listening for SDL keyboard events and update the appropriate memory location in the Emulator to reflect the button states. Then write a GB program that requires you to input a specific button sequence.
 - [ ] Add a GUI window that displays the button states (or perhaps: add a togglable button state overlay to the game window)
-- [ ] Write a program that fills the screen with a striped pattern.
+- [x] Write a program that fills the screen with a striped pattern.
 - [ ] Write a program that scrolls the background layer using the SCX and SCY registers.
 - [ ] Write a program that puts a sprite on screen and animates its movement
 - [ ] Add a GUI window that displays the contents of tile memory rendered as a tile map. This will give you fast visual clues later if/when something goes wrong in emulation.
@@ -180,7 +180,7 @@ the `C` standard library.
 - [ ] LD_A_H (0x7C)
 - [x] LD_A_HL_ADDR (0x7E)
 - [ ] LD_A_HL_ADDR_DEC (0x3A)
-- [ ] LD_A_HL_ADDR_INC (0x2A)
+- [x] LD_A_HL_ADDR_INC (0x2A)
 - [ ] LD_A_L (0x7D)
 - [ ] LD_A_a16_ADDR (0xFA)
 - [x] LD_A_d8 (0x3E)
