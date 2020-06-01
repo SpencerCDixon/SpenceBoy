@@ -29,6 +29,11 @@ struct Registers {
     u16 program_counter { 0 };
 };
 
+struct StepResult {
+    u8 cycles { 0 };
+    bool should_halt { false };
+};
+
 struct CPUTestState {
     Registers registers;
     u64 wram_checksum;
@@ -74,7 +79,7 @@ public:
     }
 
     void load_rom(const char* rom_path);
-    bool step(); // TODO(scd): Have this return cycle count instead of bool
+    StepResult step(); // TODO(scd): Have this return cycle count instead of bool
     bool interrupts_enabled() { return m_interrupts_enabled; }
 
     //

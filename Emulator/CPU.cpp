@@ -60,9 +60,10 @@ void CPU::load_rom(const char* rom_path)
     fread(m_rom, st.st_size, 1, fp);
 }
 
-bool CPU::step()
+StepResult CPU::step()
 {
     // TODO: handle interrupts?
+    StepResult result;
     OpCode op_code = static_cast<OpCode>(fetch_and_inc_8bit());
 
     switch (op_code) {
@@ -343,15 +344,16 @@ bool CPU::step()
     case OpCode::RET:
         pop_return();
         break;
+    case OpCode::TEST_COMPLETE:
     case OpCode::HALT:
         //        hex_dump("WRAM", m_wram, 5200, WRAM_START);
         //        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
-        return false;
-    case OpCode::TEST_COMPLETE:
-        return false;
+        result.should_halt = true;
+        break;
     case OpCode::PREFIX: {
         PrefixOpCode prefix_op_code = static_cast<PrefixOpCode>(fetch_and_inc_8bit());
         handle_prefix_op_code(prefix_op_code);
+        result.cycles += cycles_for_prefix_opcode(prefix_op_code);
         break;
     }
     default:
@@ -370,7 +372,8 @@ bool CPU::step()
         dbg() << to_string(op_code) << "   " << *this;
     }
 
-    return true;
+    result.cycles += cycles_for_opcode(op_code);
+    return result;
 }
 
 void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)

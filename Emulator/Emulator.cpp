@@ -3,30 +3,13 @@
 //
 
 #include "Emulator.h"
+#include <SD/Types.h>
 #include <SD/Assertions.h>
 #include <SD/Color.h>
 #include <unistd.h>
 
-// background - always on bottom
-//  open a window with all my tiles so I can see if they're correct
-// sprites
-// window - always on top
-
-void render_gradient_test(OffscreenFrameBuffer* buffer, int blue_offset, int green_offset)
-{
-    u8* row = (u8*)buffer->memory;
-    for (int y = 0; y < buffer->height; ++y) {
-        u32* pixel = (u32*)row;
-
-        for (int x = 0; x < buffer->width; ++x) {
-            u8 blue = (x + blue_offset);
-            u8 green = (y + green_offset);
-            *pixel++ = ((green << 8) | blue);
-        }
-
-        row += buffer->pitch;
-    }
-}
+// FIXME: Look into correct clock speed info. For now, going to hardcode 4 Megahertz
+constexpr u64 CYCLES_PER_SECOND = 4000000;
 
 void Emulator::init()
 {
@@ -61,10 +44,9 @@ void Emulator::run()
 {
     SDL_Event e;
     bool quit = false;
+    bool halted = false;
 
-    // Temporary! For now, run through the rom to get VRAM set up properly so we can get
-    // all tile maps rendered properly
-    while (m_cpu.step()) {};
+    u64 cycle_count = 0;
 
     while (!quit) {
         while (SDL_PollEvent(&e)) {
@@ -75,6 +57,23 @@ void Emulator::run()
             if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
                 quit = true;
             }
+        }
+
+        if (!halted) {
+            for (;;) {
+                auto result = m_cpu.step();
+                if (result.should_halt) {
+                    halted = true;
+                    break;
+                } else {
+                    cycle_count += result.cycles;
+                    if (cycle_count >= CYCLES_PER_SECOND) {
+                        cycle_count = 0;
+                        break;
+                    }
+                }
+            }
+            dbg() << "Cycle count: " << cycle_count;
         }
 
         m_ppu.clear({255, 255, 255, 255});
