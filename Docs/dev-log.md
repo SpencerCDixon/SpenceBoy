@@ -12,6 +12,14 @@ Template for daily journal:
 
 ---
 
+**Date: 6/1/2020**
+
+### What did I get done today?
+
+* Started using cycle count of op codes inside emulator loop in order to get input handling working
+
+---
+
 **Date: 5/31/2020**
 
 ### What did I learn today?

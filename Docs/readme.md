@@ -52,6 +52,8 @@ the `C` standard library.
 - [ ] All unprefixed raw op codes
 - [ ] All prefixed `cb` opcodes 
 - [ ] Render title properly
+- [ ] Set up correct clock rate based on if in high speed mode or not
+- [ ] Be able to set window title based on title in ROM
 
 ## Testing Infra
 
