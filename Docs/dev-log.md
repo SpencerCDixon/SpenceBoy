@@ -17,6 +17,7 @@ Template for daily journal:
 ### What did I get done today?
 
 * Started using cycle count of op codes inside emulator loop in order to get input handling working
+* Optimize some byte manipulations
 
 ---
 

@@ -3,9 +3,9 @@
 //
 
 #include "Emulator.h"
-#include <SD/Types.h>
 #include <SD/Assertions.h>
 #include <SD/Color.h>
+#include <SD/Types.h>
 #include <unistd.h>
 
 // FIXME: Look into correct clock speed info. For now, going to hard code 4 Megahertz
@@ -60,7 +60,7 @@ void Emulator::run()
             }
 
             if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_a) {
-//                dbg() << "holding A down";
+                //                dbg() << "holding A down";
             }
         }
 
@@ -80,18 +80,13 @@ void Emulator::run()
             }
         }
 
-        m_ppu.clear({255, 255, 255, 255});
+        m_ppu.clear({ 255, 255, 255, 255 });
         m_ppu.render();
         swap();
 
         SDL_RenderClear(m_renderer);
         SDL_RenderCopy(m_renderer, m_gb_screen, NULL, NULL);
         SDL_RenderPresent(m_renderer);
-
-        // Update CPU ticks until ready for frame render
-        // Give PPU frame buffer and VRAM for updates
-        // Do the 'swap' and render buffer
-        // Sleep for appropriate amount of time
     }
 }
 

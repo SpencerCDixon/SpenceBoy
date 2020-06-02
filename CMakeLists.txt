@@ -20,7 +20,7 @@ add_executable(gameboy
         Emulator/OpCode.h
         Emulator/Buffer.h
         SD/String.cpp
-        SD/File.cpp SD/File.h)
+        SD/File.cpp SD/File.h Emulator/Input.cpp Emulator/Input.h)
 target_include_directories(gameboy PUBLIC ".")
 
 #-------------
