@@ -8,8 +8,9 @@
 #include <SD/Color.h>
 #include <unistd.h>
 
-// FIXME: Look into correct clock speed info. For now, going to hardcode 4 Megahertz
-constexpr u64 CYCLES_PER_SECOND = 4000000;
+// FIXME: Look into correct clock speed info. For now, going to hard code 4 Megahertz
+//constexpr u64 CYCLES_PER_SECOND = 4000000;
+constexpr u64 CYCLES_PER_SECOND = 50000; // DEBUG purposes
 
 void Emulator::init()
 {
@@ -57,6 +58,10 @@ void Emulator::run()
             if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
                 quit = true;
             }
+
+            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_a) {
+//                dbg() << "holding A down";
+            }
         }
 
         if (!halted) {
@@ -73,7 +78,6 @@ void Emulator::run()
                     }
                 }
             }
-            dbg() << "Cycle count: " << cycle_count;
         }
 
         m_ppu.clear({255, 255, 255, 255});
@@ -83,7 +87,6 @@ void Emulator::run()
         SDL_RenderClear(m_renderer);
         SDL_RenderCopy(m_renderer, m_gb_screen, NULL, NULL);
         SDL_RenderPresent(m_renderer);
-        usleep(5000);
 
         // Update CPU ticks until ready for frame render
         // Give PPU frame buffer and VRAM for updates

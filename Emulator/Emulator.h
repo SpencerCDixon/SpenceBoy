@@ -30,7 +30,7 @@ constexpr u16 BITS_PER_PIXEL = sizeof(u32);
 class Emulator {
 public:
     Emulator()
-        : m_cpu(CPU(true))
+        : m_cpu(CPU(false))
         , m_frame_buffer({ (void*)calloc(WIN_WIDTH * WIN_HEIGHT, BITS_PER_PIXEL),
               WIN_HEIGHT,
               WIN_WIDTH,

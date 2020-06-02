@@ -13,9 +13,7 @@
 
 inline u16 to_le_16_bit(u8 byte1, u8 byte2)
 {
-    u16 result = byte2;
-    result = (result << 8) | byte1;
-    return result;
+    return ((byte2 << 8) | byte1);
 }
 
 // NOTE: half carry is not used much in real world, was required for old hardware but new hardware
