@@ -3,8 +3,8 @@
 //
 
 #include "Emulator.h"
+#include "Input.h"
 #include <SD/Assertions.h>
-#include <SD/Color.h>
 #include <SD/Types.h>
 #include <unistd.h>
 
@@ -55,12 +55,15 @@ void Emulator::run()
                 quit = true;
             }
 
-            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
-                quit = true;
-            }
-
-            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_a) {
-                //                dbg() << "holding A down";
+            if (e.type == SDL_KEYDOWN) {
+                Input input;
+                switch (e.key.keysym.sym) {
+                case SDLK_ESCAPE:
+                    quit = true;
+                    break;
+                case SDLK_a:
+                    input.set_key_state(Key::Left, true);
+                }
             }
         }
 
