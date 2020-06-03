@@ -22,14 +22,15 @@ public:
     inline u32 pixel(size_t x, size_t y) const
     {
         size_t idx = y * 8 + x;
-        ASSERT(idx >= 0 && idx <= 63);
+//        ASSERT(idx >= 0 && idx <= 63);
         return m_pixels[idx];
+
     }
 
     void set_pixel(size_t x, size_t y, u32 color)
     {
         size_t idx = y * 8 + x;
-        ASSERT(idx >= 0 && idx <= 63);
+//        ASSERT(idx >= 0 && idx <= 63);
         m_pixels[idx] = color;
     }
 

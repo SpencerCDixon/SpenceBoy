@@ -12,6 +12,14 @@ Template for daily journal:
 
 ---
 
+**Date: 6/2/2020**
+
+### What did I get done today?
+
+* Fixed SDL compiling on my Linux machine so I can work here more.
+
+---
+
 **Date: 6/1/2020**
 
 ### What did I get done today?

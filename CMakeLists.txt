@@ -27,11 +27,8 @@ target_include_directories(gameboy PUBLIC ".")
 # Dependencies
 #-------------
 
-# Configure SDL2
-# TODO(scd): Set up for Linux environment
-
 if (APPLE)
-    message("Configuring SDL2 for windowing")
+    message("Configuring SDL2 for windowing on OSX")
     find_library(SDL2_LIBRARY sdl2)
     set(SDL2_INCLUDE_DIR "/usr/local/include/SDL2")
     message("  sdl2 lib path     : ${SDL2_LIBRARY}")
@@ -39,21 +36,15 @@ if (APPLE)
 endif()
 
 if (NOT APPLE)
-    find_package (Threads)
-    target_link_libraries (gameboy ${CMAKE_THREAD_LIBS_INIT})
-
-    message("Configuring SDL2 for windowing")
-    find_library(SDL2 sdl2)
-    set(SDL2_INCLUDE_DIR "/usr/include/SDL2/")
-    set(SDL2_LIBRARY "/usr/lib/libSDL2.a")
+    message("Configuring SDL2 for windowing on Linux")
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+    find_package(SDL2 REQUIRED)
     message("  sdl2 lib path     : ${SDL2_LIBRARY}")
     message("  sdl2 include path : ${SDL2_INCLUDE_DIR}")
-
-    target_link_libraries(gameboy dl)
 endif()
 
-target_include_directories(gameboy PUBLIC ${SDL2_INCLUDE_DIR})
-target_link_libraries(gameboy ${SDL2_LIBRARY})
+include_directories(${SDL2_INCLUDE_DIRS})
+target_link_libraries(gameboy ${SDL2_LIBRARIES})
 
 #---------
 # Testing

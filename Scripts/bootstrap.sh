@@ -8,10 +8,12 @@ case "${unameOut}" in
     *)          machine="Unsupported:${unameOut}"
 esac
 
+echo "machine is: $machine"
+
 if [ "$machine" == "Mac" ]; then
   echo "detected machine is macOS... installing deps"
   brew install rgbds
-else 
+elif [ "$machine" == "Linux" ]; then
   echo "detected machine is Linux... installing deps"
   pushd ..
   mkdir -p third_party
@@ -23,5 +25,9 @@ else
   make install
   popd # rgbds
   popd # third_party
+  echo "installing SDL dependencies"
+  sudo apt install cmake libsdl2-dev g++
   popd # root
+else
+  echo "your platform is not currently supported :-("
 fi
