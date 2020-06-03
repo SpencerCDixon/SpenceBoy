@@ -46,6 +46,7 @@ void Emulator::run()
     SDL_Event e;
     bool quit = false;
     bool halted = false;
+    Input input;
 
     u64 cycle_count = 0;
 
@@ -55,14 +56,30 @@ void Emulator::run()
                 quit = true;
             }
 
-            if (e.type == SDL_KEYDOWN) {
-                Input input;
+            if (e.type == SDL_KEYDOWN || e.type == SDL_KEYUP) {
+                bool is_down = e.type == SDL_KEYDOWN;
                 switch (e.key.keysym.sym) {
                 case SDLK_ESCAPE:
                     quit = true;
                     break;
                 case SDLK_a:
-                    input.set_key_state(Key::Left, true);
+                    input.set_key_state(Key::Left, is_down);
+                    break;
+                case SDLK_d:
+                    input.set_key_state(Key::Right, is_down);
+                    break;
+                case SDLK_s:
+                    input.set_key_state(Key::Down, is_down);
+                    break;
+                case SDLK_w:
+                    input.set_key_state(Key::Up, is_down);
+                    break;
+                case SDLK_q:
+                    input.set_key_state(Key::A, is_down);
+                    break;
+                case SDLK_e:
+                    input.set_key_state(Key::B, is_down);
+                    break;
                 }
             }
         }
@@ -82,6 +99,8 @@ void Emulator::run()
                 }
             }
         }
+
+        dbg() << input;
 
         m_ppu.clear({ 255, 255, 255, 255 });
         m_ppu.render();
