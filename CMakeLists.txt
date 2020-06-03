@@ -33,6 +33,8 @@ if (APPLE)
     set(SDL2_INCLUDE_DIR "/usr/local/include/SDL2")
     message("  sdl2 lib path     : ${SDL2_LIBRARY}")
     message("  sdl2 include path : ${SDL2_INCLUDE_DIR}")
+    include_directories(${SDL2_INCLUDE_DIR})
+    target_link_libraries(gameboy ${SDL2_LIBRARY})
 endif()
 
 if (NOT APPLE)
@@ -41,10 +43,11 @@ if (NOT APPLE)
     find_package(SDL2 REQUIRED)
     message("  sdl2 lib path     : ${SDL2_LIBRARY}")
     message("  sdl2 include path : ${SDL2_INCLUDE_DIR}")
+    include_directories(${SDL2_INCLUDE_DIRS})
+    target_link_libraries(gameboy ${SDL2_LIBRARIES})
 endif()
 
-include_directories(${SDL2_INCLUDE_DIRS})
-target_link_libraries(gameboy ${SDL2_LIBRARIES})
+
 
 #---------
 # Testing
