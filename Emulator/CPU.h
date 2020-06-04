@@ -81,6 +81,7 @@ public:
     void load_rom(const char* rom_path);
     StepResult step(); // TODO(scd): Have this return cycle count instead of bool
     bool interrupts_enabled() { return m_interrupts_enabled; }
+    void set_input_ram(u8 mask) { m_io_registers[0] = mask; }
 
     //
     // Memory accessors

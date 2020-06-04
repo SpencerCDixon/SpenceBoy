@@ -84,6 +84,8 @@ void Emulator::run()
             }
         }
 
+        m_cpu.set_input_ram(input.to_bit_mask());
+
         if (!halted) {
             for (;;) {
                 auto result = m_cpu.step();
@@ -99,8 +101,6 @@ void Emulator::run()
                 }
             }
         }
-
-        dbg() << input;
 
         m_ppu.clear({ 255, 255, 255, 255 });
         m_ppu.render();
