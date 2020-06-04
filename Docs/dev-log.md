@@ -12,6 +12,17 @@ Template for daily journal:
 
 ---
 
+**Date: 6/3/2020**
+
+### What did I get done today?
+
+* Fixed SDL compiling on my macOS machine after breaking it yesterday lol
+* Op code: JP_Z_a16
+* Read in arrow key inputs and update IO RAM every frame
+* ASM program that when pressing Right - Left - Up - Down will show stripes on the screen
+
+---
+
 **Date: 6/2/2020**
 
 ### What did I get done today?
