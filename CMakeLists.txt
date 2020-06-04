@@ -6,21 +6,26 @@ set(CMAKE_CXX_STANDARD 17)
 add_compile_options(-Wimplicit-fallthrough -Wall -Wextra -Werror)
 
 add_executable(gameboy
-        Emulator/main.cpp
-        SD/LogStream.cpp
-        SD/LogStream.h
+        Emulator/Buffer.h
         Emulator/CPU.cpp
         Emulator/CPU.h
-        SD/Bytes.h
-        Emulator/PPU.cpp
-        Emulator/PPU.h
         Emulator/Emulator.cpp
         Emulator/Emulator.h
-        SD/Option.h
+        Emulator/Input.cpp
+        Emulator/Input.h
         Emulator/OpCode.h
-        Emulator/Buffer.h
+        Emulator/PPU.cpp
+        Emulator/PPU.h
+        Emulator/main.cpp
+        SD/Bytes.h
+        SD/File.cpp
+        SD/File.h
+        SD/LogStream.cpp
+        SD/LogStream.h
+        SD/Option.h
         SD/String.cpp
-        SD/File.cpp SD/File.h Emulator/Input.cpp Emulator/Input.h)
+        SD/Timer.h
+        )
 target_include_directories(gameboy PUBLIC ".")
 
 #-------------
