@@ -12,6 +12,15 @@ Template for daily journal:
 
 ---
 
+**Date: 6/4/2020**
+
+### What did I get done today?
+
+* Perf testing to find the cause of a slow ASM test
+* Added a Timer() class for being able to get a quick sense of how long certain ops are taking
+
+---
+
 **Date: 6/3/2020**
 
 ### What did I get done today?
