@@ -6,11 +6,10 @@
 #include "Input.h"
 #include <SD/Assertions.h>
 #include <SD/Types.h>
-#include <unistd.h>
+#include <SD/Timer.h>
 
 // FIXME: Look into correct clock speed info. For now, going to hard code 4 Megahertz
-//constexpr u64 CYCLES_PER_SECOND = 4000000;
-constexpr u64 CYCLES_PER_SECOND = 50000; // DEBUG purposes
+constexpr u64 CYCLES_PER_SECOND = 4000000;
 
 void Emulator::init()
 {
@@ -87,6 +86,8 @@ void Emulator::run()
         m_cpu.set_input_ram(input.to_bit_mask());
 
         if (!halted) {
+            auto t = Timer("4 megahertz()");
+
             for (;;) {
                 auto result = m_cpu.step();
                 if (result.should_halt) {
@@ -101,6 +102,9 @@ void Emulator::run()
                 }
             }
         }
+
+//        if (halted)
+//            dbg() << "halted!"
 
         m_ppu.clear({ 255, 255, 255, 255 });
         m_ppu.render();

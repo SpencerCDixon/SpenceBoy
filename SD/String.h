@@ -36,12 +36,14 @@ public:
         other.m_characters = nullptr;
     }
 
+    // PERF: Needs to be optimized
     String& operator=(const String& other)
     {
         set_string(other.m_characters);
         return *this;
     }
 
+    // PERF: Needs to be optimized
     ~String()
     {
         delete[] m_characters;
@@ -76,7 +78,9 @@ private:
     size_t m_length { 0 };
 };
 
+// PERF: These two operator+ calls are VERY slow and need to be optimized.
 String operator+(const String&, const String&);
 String operator+(const String&, const char*);
+
 bool operator==(const String&, const String&);
 bool operator!=(const String&, const String&);

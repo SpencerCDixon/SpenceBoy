@@ -4,8 +4,9 @@
 
 #include <SD/Assertions.h>
 #include <SD/Bytes.h>
-#include <SD/LogStream.h>
 #include <SD/File.h>
+#include <SD/LogStream.h>
+#include <SD/Timer.h>
 
 #include <Emulator/CPU.h>
 
@@ -30,7 +31,7 @@ public:
         while (!m_cpu.step().should_halt) {
             // FIXME: for some reason this results in a crash:
             // Incorrect checksum for freed object 0x7fef1ec02f28: probably modified after being freed.
-//            m_execution_trace += to_trace_line(m_cpu.test_state());
+            //            m_execution_trace += to_trace_line(m_cpu.test_state());
             m_execution_trace = m_execution_trace + to_trace_line(m_cpu.test_state()) + "\n";
         };
 
@@ -77,7 +78,8 @@ private:
         return file.read_all();
     }
 
-    String current_snapshot() {
+    String current_snapshot()
+    {
         auto result = String("");
         result = result + m_execution_trace;
         result = result + "\n";
@@ -102,8 +104,8 @@ private:
 };
 
 #define TESTCASE_TYPE_NAME(x) TestCase_##x
-#define TEST_CASE(name, path)                                                                         \
-    CPUSnapshotTest TESTCASE_TYPE_NAME(name)(#name, "data/" #path, should_update_snapshots, verbose); \
+#define TEST_CASE(name, path)                                                                                 \
+    CPUSnapshotTest TESTCASE_TYPE_NAME(name)(#name, "./Tests/data/" #path, should_update_snapshots, verbose); \
     TESTCASE_TYPE_NAME(name).run();
 
 //
@@ -125,18 +127,20 @@ int main(int argc, char* argv[])
           << "  should_update_snapshots " << should_update_snapshots << "\n  verbose " << verbose << "\n";
 
     // clang-format off
-    TEST_CASE(loop, loop.gb)
-    TEST_CASE(ram_access, ram.gb)
-    TEST_CASE(smily_rendering, smiley.gb)
-    TEST_CASE(loading_into_registers, loading.gb)
-    TEST_CASE(complement_a_reg_bits, complement.gb)
-    TEST_CASE(incrementing_registers, increments.gb)
-    TEST_CASE(shifting_and_rotating_bits, shift-rotate.gb)
-    TEST_CASE(bit_masks, bit-masks.gb)
-    TEST_CASE(stack, stack.gb)
-    TEST_CASE(pushing_and_popping, push-pop.gb)
-    TEST_CASE(complex_subroutine, complex-routine.gb)
-//    TEST_CASE(joypad_inputs, joypad.gb)
+    {
+        auto timer = Timer("Test Suite");
+        TEST_CASE(loop, loop.gb)
+        TEST_CASE(ram_access, ram.gb)
+        TEST_CASE(smily_rendering, smiley.gb)
+        TEST_CASE(loading_into_registers, loading.gb)
+        TEST_CASE(complement_a_reg_bits, complement.gb)
+        TEST_CASE(incrementing_registers, increments.gb)
+        TEST_CASE(shifting_and_rotating_bits, shift-rotate.gb)
+        TEST_CASE(bit_masks, bit-masks.gb)
+        TEST_CASE(stack, stack.gb)
+        TEST_CASE(pushing_and_popping, push-pop.gb)
+        TEST_CASE(complex_subroutine, complex-routine.gb)
+    }
 
     // Not ready for prime time yet
 //    TEST_CASE(background_text_render, text-render.gb)
@@ -144,7 +148,15 @@ int main(int argc, char* argv[])
 // This example takes 10-15 seconds to complete on my machine. Something is up
 // because in SameBoy emulator this is instant. Need to investigate perf reasons for
 // this at some point.
+//
+// After some perf testing, it appears that the culprit is strcat and checksum(). When running
+// this program in the gameboy binary everything goes very fast (so it's not op handling code).
 //    TEST_CASE(dec_jumps, dec-jumps.gb)
+
+// Will cause infinite loop since we need to enter commands to exit the program.
+//        TEST_CASE(joypad_inputs, joypad.gb)
+
+
     // clang-format on
 
     return 0;
