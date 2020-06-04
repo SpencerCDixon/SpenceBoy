@@ -56,14 +56,14 @@ public:
         m_io_registers = (u8*)calloc(IO_SIZE, sizeof(u8));
 
         // TOOD(scd): Look into how confident I am these are correct
-//        m_registers.a = 0x11;
-//        m_registers.f = 0x80;
-//        m_registers.b = 0x00;
-//        m_registers.c = 0x00;
-//        m_registers.d = 0xff;
-//        m_registers.e = 0x56;
-//        m_registers.h = 0x00;
-//        m_registers.l = 0x0d;
+        //        m_registers.a = 0x11;
+        //        m_registers.f = 0x80;
+        //        m_registers.b = 0x00;
+        //        m_registers.c = 0x00;
+        //        m_registers.d = 0xff;
+        //        m_registers.e = 0x56;
+        //        m_registers.h = 0x00;
+        //        m_registers.l = 0x0d;
         m_registers.stack_ptr = 0xfffe;
         m_registers.program_counter = 0x100;
     }
@@ -131,51 +131,62 @@ private:
     u16 get_hl() { return to_le_16_bit(m_registers.l, m_registers.h); }
     u16 get_bc() { return to_le_16_bit(m_registers.c, m_registers.b); }
     u16 get_sp() { return m_registers.stack_ptr; }
-    void set_de(u16 value) {
+    void set_de(u16 value)
+    {
         m_registers.e = value;
         m_registers.d = (value >> 8);
     }
-    void set_hl(u16 value) {
+    void set_hl(u16 value)
+    {
         m_registers.l = value;
         m_registers.h = (value >> 8);
     }
-    void set_bc(u16 value) {
+    void set_bc(u16 value)
+    {
         m_registers.c = value;
         m_registers.b = (value >> 8);
     }
-    void inc_hl() {
+    void inc_hl()
+    {
         u16 hl = get_hl();
         set_hl(++hl);
     }
-    void dec_hl() {
+    void dec_hl()
+    {
         u16 hl = get_hl();
         set_hl(--hl);
     }
-    void inc_de() {
+    void inc_de()
+    {
         u16 de = get_de();
         set_de(++de);
     }
-    void dec_de() {
+    void dec_de()
+    {
         u16 de = get_de();
         set_de(--de);
     }
-    void inc_bc() {
+    void inc_bc()
+    {
         u16 bc = get_bc();
         set_bc(++bc);
     }
-    void dec_bc() {
+    void dec_bc()
+    {
         u16 bc = get_bc();
         set_bc(--bc);
     }
     void inc_sp() { m_registers.stack_ptr++; }
     void dec_sp() { m_registers.stack_ptr--; }
-    void inc_reg(u8* reg_ptr) {
+    void inc_reg(u8* reg_ptr)
+    {
         set_subtract_flag(false);
         set_half_carry_flag(will_half_carry(*reg_ptr, 1));
         *reg_ptr += 1;
         set_zero_flag(*reg_ptr == 0);
     }
-    void dec_reg(u8* reg_ptr) {
+    void dec_reg(u8* reg_ptr)
+    {
         set_subtract_flag(true);
         set_half_carry_flag(will_half_carry(*reg_ptr, 1));
         *reg_ptr -= 1;
@@ -183,16 +194,19 @@ private:
     }
 
     // Fetch
-    u8 fetch_and_inc_8bit() {
+    u8 fetch_and_inc_8bit()
+    {
         u8 next = m_rom[m_registers.program_counter];
         m_registers.program_counter++;
         return next;
     }
-    u16 fetch_and_inc_16bit() {
+    u16 fetch_and_inc_16bit()
+    {
         u8 b1 = fetch_and_inc_8bit();
         u8 b2 = fetch_and_inc_8bit();
         return to_le_16_bit(b1, b2);
     }
+
 private:
     bool m_verbose_logging;
     Registers m_registers;

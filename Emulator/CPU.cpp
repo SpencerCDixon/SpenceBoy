@@ -209,6 +209,12 @@ StepResult CPU::step()
             m_registers.program_counter = new_address;
         break;
     }
+    case OpCode::JP_Z_a16: {
+        u16 new_address = fetch_and_inc_16bit();
+        if (get_zero_flag())
+            m_registers.program_counter = new_address;
+        break;
+    }
     case OpCode::JP_a16:
         m_registers.program_counter = fetch_and_inc_16bit();
         break;
