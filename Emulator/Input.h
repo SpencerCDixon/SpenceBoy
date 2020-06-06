@@ -4,10 +4,19 @@
 
 #pragma once
 
-#include <SD/Types.h>
-#include <SD/LogStream.h>
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wimplicit-fallthrough"
+#include <SDL.h>
+#pragma clang diagnostic pop
+#else
+#include <SDL.h>
+#endif
 
-enum class Key: u8 {
+#include <SD/LogStream.h>
+#include <SD/Types.h>
+
+enum class Key : u8 {
     Right,
     Left,
     Up,
@@ -80,11 +89,23 @@ private:
 
 class InputDebugWindow {
 public:
-    InputDebugWindow();
+    InputDebugWindow(SDL_Renderer* renderer);
+    ~InputDebugWindow();
+
+    void render(u8 input_bitmask);
 
 private:
-
     SDL_Renderer* m_renderer { nullptr };
+
+    // Textures
+    SDL_Texture* m_left_tex { nullptr };
+    SDL_Texture* m_right_tex { nullptr };
+    SDL_Texture* m_up_tex { nullptr };
+    SDL_Texture* m_down_tex { nullptr };
+    SDL_Texture* m_a_tex { nullptr };
+    SDL_Texture* m_b_tex { nullptr };
+    SDL_Texture* m_start_tex { nullptr };
+    SDL_Texture* m_select_tex { nullptr };
 };
 
 const LogStream& operator<<(const LogStream& stream, const Input& input);

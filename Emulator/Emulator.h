@@ -63,7 +63,4 @@ private:
     SDL_Window* m_window { nullptr };
     SDL_Renderer* m_renderer { nullptr };
     SDL_Texture* m_gb_screen { nullptr };
-
-    // Debug Input Textures
-    SDL_Texture* m_left_tx { nullptr };
 };

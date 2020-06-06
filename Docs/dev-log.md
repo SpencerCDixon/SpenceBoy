@@ -12,6 +12,16 @@ Template for daily journal:
 
 ---
 
+**Date: 6/5/2020**
+
+### What did I get done today?
+
+* Created textures for showing input controls
+* Finished the rest of the input bitmasks
+* Created an InputDebug window which will start rendering the state of input when activated
+
+---
+
 **Date: 6/4/2020**
 
 ### What did I get done today?

@@ -34,10 +34,6 @@ void Emulator::init()
         SDL_TEXTUREACCESS_STREAMING,
         GB_WIN_WIDTH,
         GB_WIN_HEIGHT);
-
-    auto left_surf = SDL_LoadBMP("../Assets/input-bmps/a.bmp");
-    m_left_tx = SDL_CreateTextureFromSurface(m_renderer, left_surf);
-    SDL_FreeSurface(left_surf);
 }
 
 // TODO(scd): Decide if I want to be able to load a new rom once the emulator is running. For now,
@@ -53,6 +49,7 @@ void Emulator::run()
     bool quit = false;
     bool halted = false;
     bool show_input_debug = false;
+    InputDebugWindow input_debug(m_renderer);
     Input input;
 
     u64 cycle_count = 0;
@@ -96,7 +93,8 @@ void Emulator::run()
                 show_input_debug = !show_input_debug;
         }
 
-        m_cpu.set_input_ram(input.to_bit_mask());
+        auto input_bitmask = input.to_bit_mask();
+        m_cpu.set_input_ram(input_bitmask);
 
         if (!halted) {
             auto t = Timer("4 megahertz()");
@@ -128,24 +126,12 @@ void Emulator::run()
 
         // Render Debug:
         if (show_input_debug) {
-            SDL_Rect SrcR;
-            SDL_Rect DestR;
-
-            SrcR.x = 0;
-            SrcR.y = 0;
-            SrcR.w = 19;
-            SrcR.h = 19;
-
-            DestR.x = 0;
-            DestR.y = 0;
-            DestR.w = 19;
-            DestR.h = 19;
-
-            SDL_SetTextureColorMod(m_left_tx, 255, 0, 0);
-            SDL_RenderCopy(m_renderer, m_left_tx, &SrcR, &DestR);
+            input_debug.render(input_bitmask);
         }
 
         SDL_RenderPresent(m_renderer);
+
+        // TODO: Timing to determine how much I should sleep to hit 60 FPS.
     }
 }
 
