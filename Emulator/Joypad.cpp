@@ -90,25 +90,25 @@ void InputDebugWindow::render(u8 input_bitmask)
     if (input_bitmask & KEY_DOWN_MASK) {
         SDL_SetTextureColorMod(m_down_tex, 255, 0, 0);
     } else {
-        SDL_SetTextureColorMod(m_down_tex, 255, 255, 255);
+        SDL_SetTextureColorMod(m_down_tex, 0, 0, 0);
     }
 
     if (input_bitmask & KEY_UP_MASK) {
         SDL_SetTextureColorMod(m_up_tex, 255, 0, 0);
     } else {
-        SDL_SetTextureColorMod(m_up_tex, 255, 255, 255);
+        SDL_SetTextureColorMod(m_up_tex, 0, 0, 0);
     }
 
     if (input_bitmask & KEY_LEFT_MASK) {
         SDL_SetTextureColorMod(m_left_tex, 255, 0, 0);
     } else {
-        SDL_SetTextureColorMod(m_left_tex, 255, 255, 255);
+        SDL_SetTextureColorMod(m_left_tex, 0, 0, 0);
     }
 
     if (input_bitmask & KEY_RIGHT_MASK) {
         SDL_SetTextureColorMod(m_right_tex, 255, 0, 0);
     } else {
-        SDL_SetTextureColorMod(m_right_tex, 255, 255, 255);
+        SDL_SetTextureColorMod(m_right_tex, 0, 0, 0);
     }
 
     SDL_RenderCopy(m_renderer, m_down_tex, &SrcR, &DestR);

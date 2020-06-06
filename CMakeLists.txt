@@ -11,8 +11,8 @@ add_executable(gameboy
         Emulator/CPU.h
         Emulator/Emulator.cpp
         Emulator/Emulator.h
-        Emulator/Input.cpp
-        Emulator/Input.h
+        Emulator/Joypad.cpp
+        Emulator/Joypad.h
         Emulator/OpCode.h
         Emulator/PPU.cpp
         Emulator/PPU.h
@@ -25,8 +25,21 @@ add_executable(gameboy
         SD/Option.h
         SD/String.cpp
         SD/Timer.h
-        )
+        Emulator/IODevice.h)
 target_include_directories(gameboy PUBLIC ".")
+
+#---------
+# Testing
+#---------
+
+add_executable(cpu_test Tests/TestCPU.cpp Emulator/CPU.cpp SD/LogStream.cpp SD/String.cpp SD/File.cpp SD/File.h)
+target_include_directories(cpu_test PUBLIC ".")
+
+add_executable(string_test Tests/TestString.cpp SD/String.cpp SD/LogStream.cpp SD/Utility.h)
+target_include_directories(string_test PUBLIC ".")
+
+add_executable(joypad_test Tests/TestJoypadDevice.cpp SD/LogStream.cpp Emulator/Joypad.cpp)
+target_include_directories(joypad_test PUBLIC ".")
 
 #-------------
 # Dependencies
@@ -40,6 +53,7 @@ if (APPLE)
     message("  sdl2 include path : ${SDL2_INCLUDE_DIR}")
     include_directories(${SDL2_INCLUDE_DIR})
     target_link_libraries(gameboy ${SDL2_LIBRARY})
+    target_link_libraries(joypad_test ${SDL2_LIBRARY})
 endif()
 
 if (NOT APPLE)
@@ -50,17 +64,6 @@ if (NOT APPLE)
     message("  sdl2 include path : ${SDL2_INCLUDE_DIR}")
     include_directories(${SDL2_INCLUDE_DIRS})
     target_link_libraries(gameboy ${SDL2_LIBRARIES})
+    target_link_libraries(joypad_test ${SDL2_LIBRARIES})
 endif()
-
-
-
-#---------
-# Testing
-#---------
-
-add_executable(cpu_test ./Tests/TestCPU.cpp ./Emulator/CPU.cpp ./SD/LogStream.cpp ./SD/String.cpp SD/File.cpp SD/File.h)
-target_include_directories(cpu_test PUBLIC ".")
-
-add_executable(string_test ./Tests/TestString.cpp ./SD/String.cpp ./SD/LogStream.cpp SD/Utility.h)
-target_include_directories(string_test PUBLIC ".")
 

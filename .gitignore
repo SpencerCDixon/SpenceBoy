@@ -28,3 +28,6 @@ build
 third_party
 Asm/Tools/SameBoy.app
 Asm/Tools/mgbdis
+
+# Platform Specific
+.DS_Store

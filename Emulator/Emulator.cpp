@@ -3,7 +3,7 @@
 //
 
 #include "Emulator.h"
-#include "Input.h"
+#include "Joypad.h"
 #include <SD/Assertions.h>
 #include <SD/Timer.h>
 #include <SD/Types.h>
