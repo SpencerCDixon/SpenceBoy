@@ -12,6 +12,7 @@
 * [Ultimate GameBoy talk](https://www.youtube.com/watch?v=HyzD8pNlpwI)
 * [Direct Memory Access](https://exez.in/gameboy-dma)
 * [Random useful looking info](https://www.devrs.com/gb/docs.php#faqs)
+* [SDL Tutorials](https://lazyfoo.net/tutorials/SDL/index.php#Color%20Modulation)
 
 
 ## GBC - Game Boy Color (GBz80)

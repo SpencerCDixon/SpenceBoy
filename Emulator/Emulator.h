@@ -22,8 +22,8 @@
 //constexpr u16 WIN_HEIGHT = 144;
 //constexpr u16 WIN_WIDTH = 160;
 
-constexpr u16 WIN_HEIGHT = 256;
-constexpr u16 WIN_WIDTH = 256;
+constexpr u16 GB_WIN_HEIGHT = 256;
+constexpr u16 GB_WIN_WIDTH = 256;
 
 constexpr u16 BITS_PER_PIXEL = sizeof(u32);
 
@@ -31,10 +31,10 @@ class Emulator {
 public:
     Emulator()
         : m_cpu(CPU(false))
-        , m_frame_buffer({ (void*)calloc(WIN_WIDTH * WIN_HEIGHT, BITS_PER_PIXEL),
-              WIN_HEIGHT,
-              WIN_WIDTH,
-              WIN_WIDTH * BITS_PER_PIXEL,
+        , m_frame_buffer({ (void*)calloc(GB_WIN_WIDTH * GB_WIN_HEIGHT, BITS_PER_PIXEL),
+              GB_WIN_HEIGHT,
+              GB_WIN_WIDTH,
+              GB_WIN_WIDTH * BITS_PER_PIXEL,
               BITS_PER_PIXEL })
         , m_ppu(m_cpu.v_ram(), &m_frame_buffer)
     {
@@ -63,4 +63,7 @@ private:
     SDL_Window* m_window { nullptr };
     SDL_Renderer* m_renderer { nullptr };
     SDL_Texture* m_gb_screen { nullptr };
+
+    // Debug Input Textures
+    SDL_Texture* m_left_tx { nullptr };
 };

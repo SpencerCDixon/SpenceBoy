@@ -5,10 +5,12 @@
 #include "Emulator.h"
 #include "Input.h"
 #include <SD/Assertions.h>
-#include <SD/Types.h>
 #include <SD/Timer.h>
+#include <SD/Types.h>
 
 // FIXME: Look into correct clock speed info. For now, going to hard code 4 Megahertz
+// FIXME: Of course I need to device by the frame rate to calculate how many cycles to execute before
+// rendering. 4,000,000 / 60 = 66k cycles worth of work a frame.
 constexpr u64 CYCLES_PER_SECOND = 4000000;
 
 void Emulator::init()
@@ -17,20 +19,25 @@ void Emulator::init()
         error("unable to initialize SDL video subsystem");
     }
 
-    if (SDL_CreateWindowAndRenderer(WIN_HEIGHT, WIN_WIDTH, 0, &m_window, &m_renderer)) {
+    if (SDL_CreateWindowAndRenderer(GB_WIN_HEIGHT, GB_WIN_WIDTH, 0, &m_window, &m_renderer)) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window and renderer: %s", SDL_GetError());
         error("creating window and renderer");
     }
 
     SDL_SetWindowTitle(m_window, "SpenceBoy");
-    SDL_RenderSetLogicalSize(m_renderer, WIN_HEIGHT, WIN_WIDTH);
+    SDL_SetWindowResizable(m_window, SDL_bool::SDL_TRUE);
+    SDL_RenderSetLogicalSize(m_renderer, GB_WIN_HEIGHT, GB_WIN_WIDTH);
 
     m_gb_screen = SDL_CreateTexture(
         m_renderer,
         SDL_PIXELFORMAT_ARGB8888,
         SDL_TEXTUREACCESS_STREAMING,
-        WIN_WIDTH,
-        WIN_HEIGHT);
+        GB_WIN_WIDTH,
+        GB_WIN_HEIGHT);
+
+    auto left_surf = SDL_LoadBMP("../Assets/input-bmps/a.bmp");
+    m_left_tx = SDL_CreateTextureFromSurface(m_renderer, left_surf);
+    SDL_FreeSurface(left_surf);
 }
 
 // TODO(scd): Decide if I want to be able to load a new rom once the emulator is running. For now,
@@ -45,6 +52,7 @@ void Emulator::run()
     SDL_Event e;
     bool quit = false;
     bool halted = false;
+    bool show_input_debug = false;
     Input input;
 
     u64 cycle_count = 0;
@@ -79,8 +87,13 @@ void Emulator::run()
                 case SDLK_e:
                     input.set_key_state(Key::B, is_down);
                     break;
+                default:
+                    break;
                 }
             }
+
+            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_k && SDL_GetModState() & KMOD_CTRL)
+                show_input_debug = !show_input_debug;
         }
 
         m_cpu.set_input_ram(input.to_bit_mask());
@@ -103,8 +116,8 @@ void Emulator::run()
             }
         }
 
-//        if (halted)
-//            dbg() << "halted!"
+        //        if (halted)
+        //            dbg() << "halted!"
 
         m_ppu.clear({ 255, 255, 255, 255 });
         m_ppu.render();
@@ -112,6 +125,26 @@ void Emulator::run()
 
         SDL_RenderClear(m_renderer);
         SDL_RenderCopy(m_renderer, m_gb_screen, NULL, NULL);
+
+        // Render Debug:
+        if (show_input_debug) {
+            SDL_Rect SrcR;
+            SDL_Rect DestR;
+
+            SrcR.x = 0;
+            SrcR.y = 0;
+            SrcR.w = 19;
+            SrcR.h = 19;
+
+            DestR.x = 0;
+            DestR.y = 0;
+            DestR.w = 19;
+            DestR.h = 19;
+
+            SDL_SetTextureColorMod(m_left_tx, 255, 0, 0);
+            SDL_RenderCopy(m_renderer, m_left_tx, &SrcR, &DestR);
+        }
+
         SDL_RenderPresent(m_renderer);
     }
 }
