@@ -2,6 +2,7 @@
 // Created by Spencer Dixon on 5/9/20.
 //
 
+#include <SD/String.h>
 #include <SD/Types.h>
 
 #pragma once
@@ -10,6 +11,24 @@
 #define RED "\033[31m"
 #define GREEN "\033[32m"
 #define YELLOW "\033[33m"
+
+#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
+#define BYTE_TO_BINARY(byte)       \
+    (byte & 0x80 ? '1' : '0'),     \
+        (byte & 0x40 ? '1' : '0'), \
+        (byte & 0x20 ? '1' : '0'), \
+        (byte & 0x10 ? '1' : '0'), \
+        (byte & 0x08 ? '1' : '0'), \
+        (byte & 0x04 ? '1' : '0'), \
+        (byte & 0x02 ? '1' : '0'), \
+        (byte & 0x01 ? '1' : '0')
+
+inline String to_bits(u8 value)
+{
+    char buf[10] = { '0', 'b' };
+    snprintf(buf + 2, 8, BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(value));
+    return String(buf);
+}
 
 inline u16 to_le_16_bit(u8 byte1, u8 byte2)
 {
@@ -26,7 +45,8 @@ inline bool will_half_carry(u8 byte1, u8 byte2)
     return (result & (half_carry_flag)) == half_carry_flag;
 }
 
-inline u8 swap_nibbles(u8 byte) {
+inline u8 swap_nibbles(u8 byte)
+{
     return ((byte & 0x0f) << 4 | (byte & 0xf0) >> 4);
 }
 
