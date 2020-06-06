@@ -50,7 +50,7 @@ void Emulator::run()
     bool halted = false;
     bool show_input_debug = false;
     InputDebugWindow input_debug(m_renderer);
-    Input input;
+    Joypad input;
 
     u64 cycle_count = 0;
 

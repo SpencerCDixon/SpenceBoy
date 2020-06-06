@@ -2,14 +2,41 @@
 // Created by Spencer Dixon on 6/1/20.
 //
 
-#include "Input.h"
+#include "Joypad.h"
 
-void Input::set_key_state(const Key& key, bool is_down)
+Joypad::Joypad() : m_mode(JoypadReadMode::None)
+{
+}
+
+u8 Joypad::read([[maybe_unused]] u16  address)
+{
+    // We only have 1 address being used for Joypad related logic so we don't need to use the address
+    // to return the bitmask.
+
+
+    return 0;
+}
+
+void Joypad::write([[maybe_unused]] u16 address, u8 value)
+{
+    // 0010 0000 - Read DPad
+    // 0001 0000 - Read Buttons
+    // 0011 0000 - None
+    if ((value & 0x20) && !(value & 0x10)) {
+        set_mode(JoypadReadMode::DPad);
+    } else if ((value & 0x10) && !(value & 0x20)) {
+        set_mode(JoypadReadMode::Button);
+    } else {
+        set_mode(JoypadReadMode::None);
+    }
+}
+
+void Joypad::set_key_state(const Key& key, bool is_down)
 {
     m_keys[static_cast<int>(key)] = is_down;
 }
 
-const LogStream& operator<<(const LogStream& stream, const Input& input)
+const LogStream& operator<<(const LogStream& stream, const Joypad& input)
 {
     stream << "Input: " << input.to_bit_mask();
     return stream;
@@ -37,6 +64,7 @@ static SDL_Texture* load_texture_from_bmp(SDL_Renderer* renderer, const char* fi
 
 InputDebugWindow::InputDebugWindow(SDL_Renderer* renderer)
     : m_renderer(renderer)
+
 {
     // FIXME: Does SDL have rotation? Seems silly to duplicate all these textures.
     m_right_tex = load_texture_from_bmp(renderer, "../Assets/input-bmps/right.bmp");

@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "IODevice.h"
+
 #ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wimplicit-fallthrough"
@@ -16,11 +18,8 @@
 #include <SD/LogStream.h>
 #include <SD/Types.h>
 
-class IODevice {
-    virtual u8 read(u16 address) = 0;
-    virtual void write(u16 address, u8 value) = 0;
-};
-
+// Overview of how Joypad I/O Works:
+//
 // Bit 7 - Not used
 // Bit 6 - Not used
 // Bit 5 - P15 Select Button Keys      (0=Select)
@@ -42,19 +41,33 @@ enum class Key : u8 {
     _Count,
 };
 
+enum class JoypadReadMode {
+    DPad,
+    Button,
+    None,
+};
+
 // clang-format off
-constexpr u8 KEY_RIGHT_MASK  = (1 << 0);
-constexpr u8 KEY_LEFT_MASK   = (1 << 1);
-constexpr u8 KEY_UP_MASK     = (1 << 2);
-constexpr u8 KEY_DOWN_MASK   = (1 << 3);
-constexpr u8 KEY_A_MASK      = (1 << 4);
-constexpr u8 KEY_B_MASK      = (1 << 5);
-constexpr u8 KEY_SELECT_MASK = (1 << 6);
-constexpr u8 KEY_START_MASK  = (1 << 7);
+// When in DPad mode:
+constexpr u8 KEY_RIGHT_MASK   = (1 << 0);
+constexpr u8 KEY_LEFT_MASK    = (1 << 1);
+constexpr u8 KEY_UP_MASK      = (1 << 2);
+constexpr u8 KEY_DOWN_MASK    = (1 << 3);
+
+// When in Button mode:
+constexpr u8 KEY_A_MASK       = (1 << 0);
+constexpr u8 KEY_B_MASK       = (1 << 1);
+constexpr u8 KEY_SELECT_MASK  = (1 << 2);
+constexpr u8 KEY_START_MASK   = (1 << 3);
 // clang-format on
 
-class Input {
+class Joypad final : public IODevice {
 public:
+    Joypad();
+
+    u8 read(u16 address) override;
+    void write(u16 address, u8 value) override;
+
     void set_key_state(const Key& key, bool is_down);
 
     bool is_up_down() const { return m_keys[static_cast<int>(Key::Up)]; }
@@ -68,6 +81,7 @@ public:
 
     u8 to_bit_mask() const
     {
+        // FIXME: This is wrong! Need to change based on if in D-Pad or Button mode
         u8 result = 0;
 
         if (is_right_down())
@@ -97,7 +111,10 @@ public:
         return result;
     }
 
+    void set_mode(JoypadReadMode mode) { m_mode = mode; }
+
 private:
+    JoypadReadMode m_mode;
     bool m_keys[static_cast<int>(Key::_Count)];
 };
 
@@ -122,4 +139,4 @@ private:
     SDL_Texture* m_select_tex { nullptr };
 };
 
-const LogStream& operator<<(const LogStream& stream, const Input& input);
+const LogStream& operator<<(const LogStream& stream, const Joypad& input);
