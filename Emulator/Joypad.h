@@ -7,12 +7,12 @@
 #include "IODevice.h"
 
 #ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wimplicit-fallthrough"
-#include <SDL.h>
-#pragma clang diagnostic pop
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wimplicit-fallthrough"
+#    include <SDL.h>
+#    pragma clang diagnostic pop
 #else
-#include <SDL.h>
+#    include <SDL.h>
 #endif
 
 #include <SD/LogStream.h>
@@ -61,57 +61,31 @@ constexpr u8 KEY_SELECT_MASK  = (1 << 2);
 constexpr u8 KEY_START_MASK   = (1 << 3);
 // clang-format on
 
+class InputDebugWindow;
+
 class Joypad final : public IODevice {
 public:
+    friend InputDebugWindow;
     Joypad();
 
+    // IODevice Interface
     u8 read(u16 address) override;
     void write(u16 address, u8 value) override;
 
+    // Interface with SDL
     void set_key_state(const Key& key, bool is_down);
 
-    bool is_up_down() const { return m_keys[static_cast<int>(Key::Up)]; }
-    bool is_down_down() const { return m_keys[static_cast<int>(Key::Down)]; }
+protected:
+    void set_mode(JoypadReadMode mode) { m_mode = mode; }
+
     bool is_right_down() const { return m_keys[static_cast<int>(Key::Right)]; }
     bool is_left_down() const { return m_keys[static_cast<int>(Key::Left)]; }
+    bool is_up_down() const { return m_keys[static_cast<int>(Key::Up)]; }
+    bool is_down_down() const { return m_keys[static_cast<int>(Key::Down)]; }
     bool is_a_down() const { return m_keys[static_cast<int>(Key::A)]; }
     bool is_b_down() const { return m_keys[static_cast<int>(Key::B)]; }
     bool is_start_down() const { return m_keys[static_cast<int>(Key::Start)]; }
     bool is_select_down() const { return m_keys[static_cast<int>(Key::Select)]; }
-
-    u8 to_bit_mask() const
-    {
-        // FIXME: This is wrong! Need to change based on if in D-Pad or Button mode
-        u8 result = 0;
-
-        if (is_right_down())
-            result |= KEY_RIGHT_MASK;
-
-        if (is_left_down())
-            result |= KEY_LEFT_MASK;
-
-        if (is_up_down())
-            result |= KEY_UP_MASK;
-
-        if (is_down_down())
-            result |= KEY_DOWN_MASK;
-
-        if (is_a_down())
-            result |= KEY_A_MASK;
-
-        if (is_b_down())
-            result |= KEY_B_MASK;
-
-        if (is_select_down())
-            result |= KEY_SELECT_MASK;
-
-        if (is_start_down())
-            result |= KEY_START_MASK;
-
-        return result;
-    }
-
-    void set_mode(JoypadReadMode mode) { m_mode = mode; }
 
 private:
     JoypadReadMode m_mode;
@@ -119,11 +93,12 @@ private:
 };
 
 class InputDebugWindow {
+
 public:
     InputDebugWindow(SDL_Renderer* renderer);
     ~InputDebugWindow();
 
-    void render(u8 input_bitmask);
+    void render(Joypad*);
 
 private:
     SDL_Renderer* m_renderer { nullptr };

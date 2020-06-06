@@ -3,18 +3,58 @@
 //
 
 #include "Joypad.h"
+#include <SD/Assertions.h>
+#include <SD/Bytes.h>
 
-Joypad::Joypad() : m_mode(JoypadReadMode::None)
+#include <stdio.h>
+
+Joypad::Joypad()
+    : m_mode(JoypadReadMode::None)
 {
+    for (int i = 0; i < static_cast<int>(Key::_Count); ++i)
+        m_keys[i] = false;
 }
 
-u8 Joypad::read([[maybe_unused]] u16  address)
+u8 Joypad::read([[maybe_unused]] u16 address)
 {
-    // We only have 1 address being used for Joypad related logic so we don't need to use the address
-    // to return the bitmask.
+    // Note: We only have 1 address (0xff00) being used for Joypad
+    // related logic so we don't need to use the address
+    // and it can be safely ignored.
 
+    // Remember this weirdness:
+    // 0 -> pressed   1 -> not pressed
 
-    return 0;
+    u8 result = 0x0f; // Assume none pressed
+
+    if (m_mode == JoypadReadMode::DPad) {
+        result |= 0x20;
+
+        if (is_down_down())
+            result ^= KEY_DOWN_MASK;
+        if (is_up_down())
+            result ^= KEY_UP_MASK;
+        if (is_right_down())
+            result ^= KEY_RIGHT_MASK;
+        if (is_left_down())
+            result ^= KEY_LEFT_MASK;
+    } else if (m_mode == JoypadReadMode::Button) {
+        result |= 0x10;
+
+        if (is_a_down())
+            result ^= KEY_A_MASK;
+        if (is_b_down())
+            result ^= KEY_B_MASK;
+        if (is_start_down())
+            result ^= KEY_START_MASK;
+        if (is_select_down())
+            result ^= KEY_SELECT_MASK;
+    } else {
+        dbg() << "Program was trying to read Joypad data but didn't have the IODevice "
+              << "in a proper state to be able to get useful data back (0x10 or 0x20)";
+        ASSERT_NOT_REACHED();
+    }
+
+    return result;
 }
 
 void Joypad::write([[maybe_unused]] u16 address, u8 value)
@@ -38,7 +78,7 @@ void Joypad::set_key_state(const Key& key, bool is_down)
 
 const LogStream& operator<<(const LogStream& stream, const Joypad& input)
 {
-    stream << "Input: " << input.to_bit_mask();
+    stream << "Joypad Bitmask: " << to_bits(const_cast<Joypad&>(input).read(0));
     return stream;
 }
 
@@ -97,7 +137,7 @@ InputDebugWindow::~InputDebugWindow()
         SDL_DestroyTexture(m_select_tex);
 }
 
-void InputDebugWindow::render(u8 input_bitmask)
+void InputDebugWindow::render(Joypad* joypad)
 {
     SDL_Rect SrcR;
     SDL_Rect DestR;
@@ -115,25 +155,25 @@ void InputDebugWindow::render(u8 input_bitmask)
     // Up/down = 8x13
     // Left/right = 14x8
 
-    if (input_bitmask & KEY_DOWN_MASK) {
+    if (joypad->is_down_down()) {
         SDL_SetTextureColorMod(m_down_tex, 255, 0, 0);
     } else {
         SDL_SetTextureColorMod(m_down_tex, 0, 0, 0);
     }
 
-    if (input_bitmask & KEY_UP_MASK) {
+    if (joypad->is_up_down()) {
         SDL_SetTextureColorMod(m_up_tex, 255, 0, 0);
     } else {
         SDL_SetTextureColorMod(m_up_tex, 0, 0, 0);
     }
 
-    if (input_bitmask & KEY_LEFT_MASK) {
+    if (joypad->is_left_down()) {
         SDL_SetTextureColorMod(m_left_tex, 255, 0, 0);
     } else {
         SDL_SetTextureColorMod(m_left_tex, 0, 0, 0);
     }
 
-    if (input_bitmask & KEY_RIGHT_MASK) {
+    if (joypad->is_right_down()) {
         SDL_SetTextureColorMod(m_right_tex, 255, 0, 0);
     } else {
         SDL_SetTextureColorMod(m_right_tex, 0, 0, 0);

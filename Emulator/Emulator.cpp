@@ -50,7 +50,7 @@ void Emulator::run()
     bool halted = false;
     bool show_input_debug = false;
     InputDebugWindow input_debug(m_renderer);
-    Joypad input;
+    Joypad joypad;
 
     u64 cycle_count = 0;
 
@@ -67,22 +67,22 @@ void Emulator::run()
                     quit = true;
                     break;
                 case SDLK_a:
-                    input.set_key_state(Key::Left, is_down);
+                    joypad.set_key_state(Key::Left, is_down);
                     break;
                 case SDLK_d:
-                    input.set_key_state(Key::Right, is_down);
+                    joypad.set_key_state(Key::Right, is_down);
                     break;
                 case SDLK_s:
-                    input.set_key_state(Key::Down, is_down);
+                    joypad.set_key_state(Key::Down, is_down);
                     break;
                 case SDLK_w:
-                    input.set_key_state(Key::Up, is_down);
+                    joypad.set_key_state(Key::Up, is_down);
                     break;
                 case SDLK_q:
-                    input.set_key_state(Key::A, is_down);
+                    joypad.set_key_state(Key::A, is_down);
                     break;
                 case SDLK_e:
-                    input.set_key_state(Key::B, is_down);
+                    joypad.set_key_state(Key::B, is_down);
                     break;
                 default:
                     break;
@@ -93,8 +93,8 @@ void Emulator::run()
                 show_input_debug = !show_input_debug;
         }
 
-        auto input_bitmask = input.to_bit_mask();
-        m_cpu.set_input_ram(input_bitmask);
+//        auto input_bitmask = input.to_bit_mask();
+//        m_cpu.set_input_ram(input_bitmask);
 
         if (!halted) {
             auto t = Timer("4 megahertz()");
@@ -126,7 +126,7 @@ void Emulator::run()
 
         // Render Debug:
         if (show_input_debug) {
-            input_debug.render(input_bitmask);
+            input_debug.render(&joypad);
         }
 
         SDL_RenderPresent(m_renderer);

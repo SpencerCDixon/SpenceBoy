@@ -7,7 +7,13 @@
 #include <SD/LogStream.h>
 
 constexpr u8 TURN_BUTTON_MODE_ON = 0x10;
-constexpr u8 TURN_DPAD_MODE_ON = 0x10;
+constexpr u8 TURN_DPAD_MODE_ON = 0x20;
+
+bool is_key_down(Joypad* joypad, u8 key_mask)
+{
+    // 0: pressed 1: not pressed
+    return !(joypad->read(0) & key_mask);
+}
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
@@ -15,13 +21,23 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 
     Joypad joypad;
 
-    // Buttons
+    // DPad
+    joypad.write(0, TURN_DPAD_MODE_ON);
     joypad.set_key_state(Key::Down, true);
     joypad.set_key_state(Key::Right, true);
-    ASSERT(joypad.is_down_down());
-    ASSERT(joypad.is_right_down());
+    ASSERT(is_key_down(&joypad, KEY_DOWN_MASK));
+    ASSERT(is_key_down(&joypad, KEY_RIGHT_MASK));
+    ASSERT(!is_key_down(&joypad, KEY_UP_MASK));
+    ASSERT(!is_key_down(&joypad, KEY_LEFT_MASK));
+    dbg() << "Joypad state: " << joypad;
 
+    // Buttons
     joypad.write(0, TURN_BUTTON_MODE_ON);
-
-    ASSERT(!joypad.is_a_down());
+    joypad.set_key_state(Key::A, true);
+    joypad.set_key_state(Key::Start, true);
+    ASSERT(is_key_down(&joypad, KEY_A_MASK));
+    ASSERT(is_key_down(&joypad, KEY_START_MASK));
+    ASSERT(!is_key_down(&joypad, KEY_B_MASK));
+    ASSERT(!is_key_down(&joypad, KEY_SELECT_MASK));
+    dbg() << "Joypad state: " << joypad;
 }
