@@ -23,3 +23,20 @@ Use the `-Wimplicit-fallthrough` compiler flag to prevent missing `break`'s in s
 
 In general, only put things in header files that need to be exposed to other classes/files. Encapsulate
 as much as possible into .cpp files.
+
+## Const
+
+This says that showName returns a constant int value -- one that is immutable. 
+Of course since the int is returned by value the presence of const here does not play any role.
+
+```c++
+const int MyClass::showName(string id)
+```
+
+And this says that showName does not modify the observable state of MyClass 
+(technically: it does not modify any member that is not declared mutable), 
+and therefore you are allowed to call it on a value of type const MyClass.
+
+```c++
+int MyClass::showName(string id) const
+```
