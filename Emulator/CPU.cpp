@@ -439,6 +439,11 @@ u8 CPU::read(u16 address)
         return m_rom[address];
     } else if (address >= IO_START && address <= IO_END) {
         u16 idx = address - IO_START;
+        // FIXME: Proxy reads to actual IODevice OR a DummyDevice if not yet implemented
+        ASSERT(m_joypad);
+        if (idx == 0)
+            return m_joypad->read(address);
+
         return m_io_registers[idx];
     } else if (address >= HRAM_START && address <= HRAM_END) {
         u16 idx = address - HRAM_START;
@@ -468,6 +473,12 @@ void CPU::write(u16 address, u8 data)
         return;
     } else if (address >= IO_START && address <= IO_END) {
         u16 idx = address - IO_START;
+        // FIXME: Proxy writes to actual IODevice OR a DummyDevice if not yet implemented
+        if (idx == 0) {
+            m_joypad->write(address, data);
+            return;
+        }
+
         m_io_registers[idx] = data;
         return;
     } else if (address >= HRAM_START && address <= HRAM_END) {
@@ -481,7 +492,8 @@ void CPU::write(u16 address, u8 data)
         dbg() << "bad write address: " << address;
     }
 
-    // If we've reached here it means we're trying to write to memory that is not set up yet.
+    // If we've reached here it means we're trying to write to memory
+    // that is not set up yet. Fail hard and implement that memory!
     ASSERT_NOT_REACHED();
 }
 
@@ -545,7 +557,7 @@ void CPU::xor_reg(u8* reg_ptr)
 void CPU::and_with_a(u8 value)
 {
     // FIXME: Implement half carry
-//    set_half_carry_flag(will_half_carry(*reg_ptr, result));
+    //    set_half_carry_flag(will_half_carry(*reg_ptr, result));
     m_registers.a &= value;
     set_zero_flag(m_registers.a == 0);
     set_carry_flag(false);

@@ -109,28 +109,24 @@ Start:
 
 ; Wait for magic key sequence: Right - Left - Up - Down
 .right
-	ld a, [$ff00]
+	call ReadKeys
 	and KEY_RIGHT
 	jp z, .right
-	xor a
 
 .left
-	ld a, [$ff00]
+	call ReadKeys
 	and KEY_LEFT
 	jp z, .left
-	xor a
 
 .up
-	ld a, [$ff00]
+	call ReadKeys
 	and KEY_UP
 	jp z, .up
-	xor a
 
 .down
-	ld a, [$ff00]
+	call ReadKeys
 	and KEY_DOWN
 	jp z, .down
-	xor a
 
 	; Render stripe onto the screen!
 	ld hl, stripebackground_map_data

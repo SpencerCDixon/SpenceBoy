@@ -5,16 +5,17 @@
 #pragma once
 
 #ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wimplicit-fallthrough"
-#include <SDL.h>
-#pragma clang diagnostic pop
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wimplicit-fallthrough"
+#    include <SDL.h>
+#    pragma clang diagnostic pop
 #else
-#include <SDL.h>
+#    include <SDL.h>
 #endif
 
 #include "Buffer.h"
 #include "CPU.h"
+#include "Joypad.h"
 #include "PPU.h"
 
 // FIXME: This is the size that gets displayed. Before getting game rendering working I want to
@@ -37,7 +38,9 @@ public:
               GB_WIN_WIDTH * BITS_PER_PIXEL,
               BITS_PER_PIXEL })
         , m_ppu(m_cpu.v_ram(), &m_frame_buffer)
+        , m_joypad({})
     {
+        m_cpu.set_joypad(&m_joypad);
     }
 
     // Andreas: Is this a good way to be doing memory management? It sort of seems like at this point in the program cleaning up
@@ -59,6 +62,7 @@ private:
     CPU m_cpu;
     OffscreenFrameBuffer m_frame_buffer;
     PPU m_ppu;
+    Joypad m_joypad;
 
     SDL_Window* m_window { nullptr };
     SDL_Renderer* m_renderer { nullptr };

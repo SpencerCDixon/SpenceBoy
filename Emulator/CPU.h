@@ -4,7 +4,9 @@
 
 #pragma once
 
+#include "Joypad.h"
 #include "OpCode.h"
+
 #include <SD/Bytes.h>
 #include <SD/LogStream.h>
 #include <SD/Types.h>
@@ -79,9 +81,9 @@ public:
     }
 
     void load_rom(const char* rom_path);
-    StepResult step(); // TODO(scd): Have this return cycle count instead of bool
+    StepResult step();
     bool interrupts_enabled() { return m_interrupts_enabled; }
-    void set_input_ram(u8 mask) { m_io_registers[0] = mask; }
+    void set_joypad(Joypad* joypad) { m_joypad = joypad; }
 
     //
     // Memory accessors
@@ -219,6 +221,7 @@ private:
     u8* m_vram { nullptr };
     u8* m_hram { nullptr };
     u8* m_io_registers { nullptr };
+    Joypad* m_joypad { nullptr };
     bool m_interrupts_enabled { false };
 };
 

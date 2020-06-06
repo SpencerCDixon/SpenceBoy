@@ -50,8 +50,6 @@ void Emulator::run()
     bool halted = false;
     bool show_input_debug = false;
     InputDebugWindow input_debug(m_renderer);
-    Joypad joypad;
-
     u64 cycle_count = 0;
 
     while (!quit) {
@@ -67,22 +65,22 @@ void Emulator::run()
                     quit = true;
                     break;
                 case SDLK_a:
-                    joypad.set_key_state(Key::Left, is_down);
+                    m_joypad.set_key_state(Key::Left, is_down);
                     break;
                 case SDLK_d:
-                    joypad.set_key_state(Key::Right, is_down);
+                    m_joypad.set_key_state(Key::Right, is_down);
                     break;
                 case SDLK_s:
-                    joypad.set_key_state(Key::Down, is_down);
+                    m_joypad.set_key_state(Key::Down, is_down);
                     break;
                 case SDLK_w:
-                    joypad.set_key_state(Key::Up, is_down);
+                    m_joypad.set_key_state(Key::Up, is_down);
                     break;
                 case SDLK_q:
-                    joypad.set_key_state(Key::A, is_down);
+                    m_joypad.set_key_state(Key::A, is_down);
                     break;
                 case SDLK_e:
-                    joypad.set_key_state(Key::B, is_down);
+                    m_joypad.set_key_state(Key::B, is_down);
                     break;
                 default:
                     break;
@@ -92,9 +90,6 @@ void Emulator::run()
             if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_k && SDL_GetModState() & KMOD_CTRL)
                 show_input_debug = !show_input_debug;
         }
-
-//        auto input_bitmask = input.to_bit_mask();
-//        m_cpu.set_input_ram(input_bitmask);
 
         if (!halted) {
             auto t = Timer("4 megahertz()");
@@ -115,7 +110,7 @@ void Emulator::run()
         }
 
         //        if (halted)
-        //            dbg() << "halted!"
+        //            dbg() << "halted!";
 
         m_ppu.clear({ 255, 255, 255, 255 });
         m_ppu.render();
@@ -126,7 +121,7 @@ void Emulator::run()
 
         // Render Debug:
         if (show_input_debug) {
-            input_debug.render(&joypad);
+            input_debug.render(&m_joypad);
         }
 
         SDL_RenderPresent(m_renderer);
