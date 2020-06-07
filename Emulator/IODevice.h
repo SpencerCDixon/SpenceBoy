@@ -8,6 +8,7 @@
 #include <SD/Types.h>
 
 class IODevice {
+public:
     virtual u8 in(u16 address) = 0;
     virtual void out(u16 address, u8 value) = 0;
 };

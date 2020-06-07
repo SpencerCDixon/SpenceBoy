@@ -7,6 +7,7 @@
 #include "Joypad.h"
 #include "MMU.h"
 #include "OpCode.h"
+#include "IODevice.h"
 
 #include <SD/Bytes.h>
 #include <SD/LogStream.h>
@@ -64,6 +65,7 @@ public:
 
 private:
     void handle_prefix_op_code(const PrefixOpCode& op_code);
+    void initialize_io_devices();
 
     // Memory Access
     u8 read(u16 address);
@@ -176,6 +178,11 @@ private:
 
     u8* m_rom { nullptr };
     u8* m_io_registers { nullptr };
+
+    // ACall: Should these be references and not pointers? Does it not matter?
+    // ACall: Should the IODevices live in the MMU since read()/write() is now proxied to MMU?
+    IODevice* m_io_devices[IO_SIZE];
+    DummyIODevice* m_dummy_io_device { nullptr };
 
     bool m_interrupts_enabled { false };
 };

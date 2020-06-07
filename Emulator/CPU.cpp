@@ -9,7 +9,6 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <sys/stat.h>
-#include <utility>
 
 // Useful to snag when debugging
 //        hex_dump("WRAM", m_wram, WRAM_SIZE, WRAM_START);
@@ -38,12 +37,28 @@ CPU::CPU(Emulator& emulator, bool verbose_logging)
     m_io_registers = (u8*)calloc(IO_SIZE, sizeof(u8));
     m_registers.stack_ptr = 0xfffe;
     m_registers.program_counter = 0x100;
+
+    // ACall: Should this just be a global singleton?
+    m_dummy_io_device = new DummyIODevice;
+    initialize_io_devices();
 }
 
 CPU::~CPU()
 {
     if (m_rom)
         free(m_rom);
+
+    free(m_dummy_io_device);
+}
+
+void CPU::initialize_io_devices()
+{
+    for (size_t i = 0; i < IO_SIZE; ++i) {
+        if (i == 0)
+            m_io_devices[i] = &emulator().joypad();
+        else
+            m_io_devices[i] = m_dummy_io_device;
+    }
 }
 
 // ACall: It makes sense for the CPU to own the ROM and not the MMU, right? Since the ROM
@@ -441,11 +456,8 @@ u8 CPU::read(u16 address)
         return m_rom[address];
     } else if (address >= IO_START && address <= IO_END) {
         u16 idx = address - IO_START;
-        // FIXME: Proxy reads to actual IODevice OR a DummyDevice if not yet implemented
-        if (idx == 0)
-            return emulator().joypad().in(address);
-
-        return m_io_registers[idx];
+        ASSERT(idx >= 0 && idx < IO_SIZE);
+        return m_io_devices[idx]->in(address);
     } else {
         return emulator().mmu().read(address);
     }
@@ -459,14 +471,8 @@ void CPU::write(u16 address, u8 data)
         return;
     } else if (address >= IO_START && address <= IO_END) {
         u16 idx = address - IO_START;
-        // FIXME: Proxy writes to actual IODevice OR a DummyDevice if not yet implemented
-        if (idx == 0) {
-            emulator().joypad().out(address, data);
-            return;
-        }
-
-        m_io_registers[idx] = data;
-        return;
+        ASSERT(idx >= 0 && idx < IO_SIZE);
+        return m_io_devices[idx]->out(address, data);
     } else {
         return emulator().mmu().write(address, data);
     }

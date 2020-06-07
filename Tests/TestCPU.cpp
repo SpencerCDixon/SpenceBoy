@@ -21,10 +21,10 @@ public:
     {
         m_emulator = new Emulator();
         m_emulator->load_rom(rom_path);
-
-//        m_mmu = new MMU;
-//        m_cpu = new CPU(m_mmu, verbose_logging);
-//        m_cpu->load_rom(rom_path);
+    }
+    ~CPUSnapshotTest()
+    {
+        delete m_emulator;
     }
 
     void run()
