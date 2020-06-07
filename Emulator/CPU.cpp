@@ -3,6 +3,7 @@
 //
 
 #include "CPU.h"
+#include "Emulator.h"
 #include <SD/Assertions.h>
 
 #include <inttypes.h>
@@ -27,6 +28,23 @@ constexpr u16 ROM_START = 0x0000;
 constexpr u16 ROM_END = 0x3FFF;
 constexpr u16 IO_START = 0xFF00;
 constexpr u16 IO_END = 0xFF7F;
+
+// ACall: When to use these initializer lists vs initializing things in the constructor?
+CPU::CPU(Emulator& emulator, bool verbose_logging)
+    : m_emulator(emulator)
+    , m_verbose_logging(verbose_logging)
+    , m_registers({ 0 })
+{
+    m_io_registers = (u8*)calloc(IO_SIZE, sizeof(u8));
+    m_registers.stack_ptr = 0xfffe;
+    m_registers.program_counter = 0x100;
+}
+
+CPU::~CPU()
+{
+    if (m_rom)
+        free(m_rom);
+}
 
 // ACall: It makes sense for the CPU to own the ROM and not the MMU, right? Since the ROM
 // can be null or loaded in (i.e a cartridge was put into the gameboy).
@@ -424,13 +442,12 @@ u8 CPU::read(u16 address)
     } else if (address >= IO_START && address <= IO_END) {
         u16 idx = address - IO_START;
         // FIXME: Proxy reads to actual IODevice OR a DummyDevice if not yet implemented
-        ASSERT(m_joypad);
         if (idx == 0)
-            return m_joypad->read(address);
+            return emulator().joypad().in(address);
 
         return m_io_registers[idx];
     } else {
-        return m_mmu->read(address);
+        return emulator().mmu().read(address);
     }
     return 0;
 }
@@ -444,14 +461,14 @@ void CPU::write(u16 address, u8 data)
         u16 idx = address - IO_START;
         // FIXME: Proxy writes to actual IODevice OR a DummyDevice if not yet implemented
         if (idx == 0) {
-            m_joypad->write(address, data);
+            emulator().joypad().out(address, data);
             return;
         }
 
         m_io_registers[idx] = data;
         return;
     } else {
-        return m_mmu->write(address, data);
+        return emulator().mmu().write(address, data);
     }
 }
 
@@ -687,4 +704,14 @@ String to_snapshot(const CPUTestState& state)
     auto str = String(buffer);
     free(buffer);
     return str;
+}
+
+CPUTestState CPU::test_state()
+{
+    CPUTestState result;
+    result.registers = m_registers;
+    result.wram_checksum = checksum((const unsigned char*)emulator().mmu().wram(), WRAM_SIZE);
+    result.vram_checksum = checksum((const unsigned char*)emulator().mmu().vram(), VRAM_SIZE);
+    result.io_checksum = checksum((const unsigned char*)m_io_registers, IO_SIZE);
+    return result;
 }

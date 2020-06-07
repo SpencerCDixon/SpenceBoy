@@ -70,8 +70,8 @@ public:
     Joypad();
 
     // IODevice Interface
-    u8 read(u16 address) override;
-    void write(u16 address, u8 value) override;
+    u8 in(u16 address) override;
+    void out(u16 address, u8 value) override;
 
     // Interface with SDL
     void set_key_state(const Key& key, bool is_down);

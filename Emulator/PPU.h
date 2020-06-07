@@ -10,6 +10,8 @@
 
 #include "Buffer.h"
 
+class Emulator;
+
 class Tile8x8 {
 public:
     Tile8x8();
@@ -42,21 +44,20 @@ private:
 
 class PPU {
 public:
-    PPU(const u8* vram, OffscreenFrameBuffer* buffer)
-        : m_vram(vram)
+    PPU(Emulator& emulator, OffscreenFrameBuffer* buffer)
+        : m_emulator(emulator)
         , m_buffer(buffer)
     {
-
-        dbg() << "using vram address of: " << &m_vram;
-        dbg() << "using buffer address of: " << &m_buffer;
     }
 
     void clear(Color color);
     void render();
     void fill_square(size_t x, size_t y, const Tile8x8& tile);
+private:
+    Emulator& emulator() { return m_emulator; }
 
 private:
-    const u8* m_vram;
+    Emulator& m_emulator;
     OffscreenFrameBuffer* m_buffer;
 };
 

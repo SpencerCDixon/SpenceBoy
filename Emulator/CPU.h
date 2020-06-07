@@ -16,6 +16,8 @@
 
 constexpr size_t IO_SIZE = 112;
 
+class Emulator;
+
 struct Registers {
     u8 a { 0 };
     u8 f { 0 };
@@ -46,47 +48,19 @@ String to_snapshot(const CPUTestState&);
 class CPU {
 
 public:
-    // ACall: When to use these initializer lists vs initializing things in the constructor?
-    CPU(MMU* mmu, bool verbose_logging = false)
-        : m_verbose_logging(verbose_logging)
-        , m_registers({ 0 })
-        , m_mmu(mmu)
-    {
-        m_io_registers = (u8*)calloc(IO_SIZE, sizeof(u8));
-
-        m_registers.stack_ptr = 0xfffe;
-        m_registers.program_counter = 0x100;
-    }
-
-    ~CPU()
-    {
-        if (m_rom)
-            free(m_rom);
-    }
+    explicit CPU(Emulator& emulator, bool verbose_logging = false);
+    ~CPU();
 
     void load_rom(const char* rom_path);
     StepResult step();
     bool interrupts_enabled() { return m_interrupts_enabled; }
-    void set_joypad(Joypad* joypad) { m_joypad = joypad; }
 
-    //
-    // Memory accessors
-    //
-    u8* vram() { return m_mmu->vram(); }
-    u8* wram() { return m_mmu->wram(); }
+    Emulator& emulator() { return m_emulator; }
 
     //
     // Testing Utilities
     //
-    CPUTestState test_state()
-    {
-        CPUTestState result;
-        result.registers = m_registers;
-        result.wram_checksum = checksum((const unsigned char*)wram(), WRAM_SIZE);
-        result.vram_checksum = checksum((const unsigned char*)vram(), VRAM_SIZE);
-        result.io_checksum = checksum((const unsigned char*)m_io_registers, IO_SIZE);
-        return result;
-    }
+    CPUTestState test_state();
 
 private:
     void handle_prefix_op_code(const PrefixOpCode& op_code);
@@ -196,17 +170,13 @@ private:
     }
 
 private:
+    Emulator& m_emulator;
     bool m_verbose_logging;
     Registers m_registers;
 
-    MMU* m_mmu;
-
-    // TODO(scd): MMU / Bus which resolves pointers to the correct address bank.
-    // Memory is very different from CPU and should belong in different places.
     u8* m_rom { nullptr };
-
     u8* m_io_registers { nullptr };
-    Joypad* m_joypad { nullptr };
+
     bool m_interrupts_enabled { false };
 };
 

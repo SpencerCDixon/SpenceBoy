@@ -17,6 +17,7 @@
 #include "CPU.h"
 #include "Joypad.h"
 #include "PPU.h"
+#include "MMU.h"
 
 // FIXME: This is the size that gets displayed. Before getting game rendering working I want to
 // get tile map data showing properly (which uses 32x32 (256x256))
@@ -40,21 +41,29 @@ public:
 
         m_mmu = new MMU;
         m_joypad = new Joypad;
-        m_cpu = new CPU(m_mmu, false);
-        m_cpu->set_joypad(m_joypad);
-        m_ppu = new PPU(m_cpu->vram(), &m_frame_buffer);
-
+        m_cpu = new CPU(*this, false);
+        m_ppu = new PPU(*this, &m_frame_buffer);
     }
 
     ~Emulator()
     {
         if (m_frame_buffer.memory)
             free(m_frame_buffer.memory);
+
+        delete m_mmu;
+        delete m_cpu;
+        delete m_ppu;
+        delete m_joypad;
     }
 
     void init();
     void load_rom(const char* path);
     void run();
+
+    MMU& mmu() { return *m_mmu; }
+    Joypad& joypad() { return *m_joypad; }
+    PPU& ppu() { return *m_ppu; }
+    CPU& cpu() { return *m_cpu; }
 
 private:
     void swap();

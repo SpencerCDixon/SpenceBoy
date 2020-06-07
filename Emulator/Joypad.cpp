@@ -15,7 +15,7 @@ Joypad::Joypad()
         m_keys[i] = false;
 }
 
-u8 Joypad::read([[maybe_unused]] u16 address)
+u8 Joypad::in([[maybe_unused]] u16 address)
 {
     // Note: We only have 1 address (0xff00) being used for Joypad
     // related logic so we don't need to use the address
@@ -57,7 +57,7 @@ u8 Joypad::read([[maybe_unused]] u16 address)
     return result;
 }
 
-void Joypad::write([[maybe_unused]] u16 address, u8 value)
+void Joypad::out([[maybe_unused]] u16 address, u8 value)
 {
     // 0010 0000 - Read DPad
     // 0001 0000 - Read Buttons
@@ -78,7 +78,7 @@ void Joypad::set_key_state(const Key& key, bool is_down)
 
 const LogStream& operator<<(const LogStream& stream, const Joypad& input)
 {
-    stream << "Joypad Bitmask: " << to_bits(const_cast<Joypad&>(input).read(0));
+    stream << "Joypad Bitmask: " << to_bits(const_cast<Joypad&>(input).in(0));
     return stream;
 }
 

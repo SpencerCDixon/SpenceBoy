@@ -12,7 +12,7 @@ constexpr u8 TURN_DPAD_MODE_ON = 0x20;
 bool is_key_down(Joypad* joypad, u8 key_mask)
 {
     // 0: pressed 1: not pressed
-    return !(joypad->read(0) & key_mask);
+    return !(joypad->in(0) & key_mask);
 }
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
@@ -22,7 +22,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     Joypad joypad;
 
     // DPad
-    joypad.write(0, TURN_DPAD_MODE_ON);
+    joypad.out(0, TURN_DPAD_MODE_ON);
     joypad.set_key_state(Key::Down, true);
     joypad.set_key_state(Key::Right, true);
     ASSERT(is_key_down(&joypad, KEY_DOWN_MASK));
@@ -32,7 +32,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     dbg() << "Joypad state: " << joypad;
 
     // Buttons
-    joypad.write(0, TURN_BUTTON_MODE_ON);
+    joypad.out(0, TURN_BUTTON_MODE_ON);
     joypad.set_key_state(Key::A, true);
     joypad.set_key_state(Key::Start, true);
     ASSERT(is_key_down(&joypad, KEY_A_MASK));

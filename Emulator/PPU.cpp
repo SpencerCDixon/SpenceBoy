@@ -3,6 +3,8 @@
 //
 
 #include "PPU.h"
+#include "Emulator.h"
+
 #include <SD/Assertions.h>
 #include <SD/Bytes.h>
 
@@ -67,7 +69,7 @@ void PPU::render()
     Tile8x8 tiles[TOTAL_BG_TILES];
     for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
         size_t idx = tile_start + (i * 16);
-        auto* pointer = &m_vram[idx];
+        auto* pointer = &emulator().mmu().vram()[idx];
         tiles[i].populate_from_palette(pointer);
     }
 
@@ -76,7 +78,7 @@ void PPU::render()
     size_t map_start = 0x9800 - 0x8000; // 0x8000 will be dynamic based on bit flag
 
     for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
-        size_t tile_idx = m_vram[map_start + i];
+        size_t tile_idx = emulator().mmu().vram()[map_start + i];
         size_t x = i % 32;
         size_t y = i / 32;
         fill_square(x, y, tiles[tile_idx]);
