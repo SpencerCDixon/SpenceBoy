@@ -30,6 +30,13 @@ inline String to_bits(u8 value)
     return String(buf);
 }
 
+inline String to_hex(u16 value)
+{
+    char buf[7] = { '0', 'x' };
+    snprintf(buf + 2, 5, "%x", value);
+    return String(buf);
+}
+
 inline u16 to_le_16_bit(u8 byte1, u8 byte2)
 {
     return ((byte2 << 8) | byte1);

@@ -6,6 +6,7 @@
 
 #include <SD/LogStream.h>
 #include <SD/Types.h>
+#include <SD/Bytes.h>
 
 class IODevice {
 public:
@@ -23,13 +24,13 @@ public:
 
     virtual u8 in(u16 address) override
     {
-        dbg() << "DummyIODevice::read(address: " << address << ")";
+        dbg() << "DummyIODevice::read(address: " << to_hex(address) << ")";
         ASSERT_NOT_REACHED();
         return 0;
     }
     virtual void out(u16 address, u8 value) override
     {
-        dbg() << "DummyIODevice::write(address: " << address << ", value: " << value << ")";
+        dbg() << "DummyIODevice::write(address: " << to_hex(address) << ", value: " << value << ")";
         ASSERT_NOT_REACHED();
     }
 };

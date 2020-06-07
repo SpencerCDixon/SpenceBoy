@@ -19,7 +19,7 @@ public:
         , m_verbose_logging(verbose_logging)
         , m_execution_trace(String("Trace:\n------\n"))
     {
-        m_emulator = new Emulator();
+        m_emulator = new Emulator(verbose_logging);
         m_emulator->load_rom(rom_path);
     }
     ~CPUSnapshotTest()
