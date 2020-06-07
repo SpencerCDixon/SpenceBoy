@@ -31,20 +31,20 @@ constexpr u16 BITS_PER_PIXEL = sizeof(u32);
 class Emulator {
 public:
     Emulator()
-        : m_cpu(CPU(false))
-        , m_frame_buffer({ (void*)calloc(GB_WIN_WIDTH * GB_WIN_HEIGHT, BITS_PER_PIXEL),
-              GB_WIN_HEIGHT,
-              GB_WIN_WIDTH,
-              GB_WIN_WIDTH * BITS_PER_PIXEL,
-              BITS_PER_PIXEL })
-        , m_ppu(m_cpu.v_ram(), &m_frame_buffer)
-        , m_joypad({})
+        : m_frame_buffer({ (void*)calloc(GB_WIN_WIDTH * GB_WIN_HEIGHT, BITS_PER_PIXEL),
+            GB_WIN_HEIGHT,
+            GB_WIN_WIDTH,
+            GB_WIN_WIDTH * BITS_PER_PIXEL,
+            BITS_PER_PIXEL })
     {
-        m_cpu.set_joypad(&m_joypad);
+
+        m_joypad = new Joypad;
+        m_cpu = new CPU(false);
+        m_cpu->set_joypad(m_joypad);
+        m_ppu = new PPU(m_cpu->v_ram(), &m_frame_buffer);
+
     }
 
-    // Andreas: Is this a good way to be doing memory management? It sort of seems like at this point in the program cleaning up
-    // memory is kind of redundant. A leak is probably OK since when the process dies it will just be cleaned up
     ~Emulator()
     {
         if (m_frame_buffer.memory)
@@ -59,10 +59,10 @@ private:
     void swap();
 
 private:
-    CPU m_cpu;
     OffscreenFrameBuffer m_frame_buffer;
-    PPU m_ppu;
-    Joypad m_joypad;
+    CPU* m_cpu { nullptr };
+    PPU* m_ppu { nullptr };
+    Joypad* m_joypad { nullptr };
 
     SDL_Window* m_window { nullptr };
     SDL_Renderer* m_renderer { nullptr };

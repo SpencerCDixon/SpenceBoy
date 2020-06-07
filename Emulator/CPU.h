@@ -48,6 +48,7 @@ String to_snapshot(const CPUTestState&);
 class CPU {
 
 public:
+    // ACall: When to use these initializer lists vs initializing things in the constructor?
     CPU(bool verbose_logging = false)
         : m_verbose_logging(verbose_logging)
         , m_registers({ 0 })
@@ -57,15 +58,6 @@ public:
         m_hram = (u8*)calloc(HRAM_SIZE, sizeof(u8));
         m_io_registers = (u8*)calloc(IO_SIZE, sizeof(u8));
 
-        // TOOD(scd): Look into how confident I am these are correct
-        //        m_registers.a = 0x11;
-        //        m_registers.f = 0x80;
-        //        m_registers.b = 0x00;
-        //        m_registers.c = 0x00;
-        //        m_registers.d = 0xff;
-        //        m_registers.e = 0x56;
-        //        m_registers.h = 0x00;
-        //        m_registers.l = 0x0d;
         m_registers.stack_ptr = 0xfffe;
         m_registers.program_counter = 0x100;
     }
