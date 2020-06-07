@@ -12,6 +12,24 @@ Template for daily journal:
 
 ---
 
+**Date: 6/7/2020**
+
+### What did I get done today?
+
+* Proxy all read/writes from IO Reg to IODevices
+
+---
+
+**Date: 6/6/2020**
+
+### What did I get done today?
+
+* IODevice abstraction
+* Joypad tests
+* Refactor how I'm handling input
+
+---
+
 **Date: 6/5/2020**
 
 ### What did I get done today?
