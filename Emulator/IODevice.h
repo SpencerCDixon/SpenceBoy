@@ -4,9 +4,9 @@
 
 #pragma once
 
+#include <SD/Bytes.h>
 #include <SD/LogStream.h>
 #include <SD/Types.h>
-#include <SD/Bytes.h>
 
 class IODevice {
 public:
@@ -30,7 +30,9 @@ public:
     }
     virtual void out(u16 address, u8 value) override
     {
-        dbg() << "DummyIODevice::write(address: " << to_hex(address) << ", value: " << value << ")";
+        dbg() << "DummyIODevice::write(address: " << address << " ["
+              << to_hex(address) << "], value: " << value
+              << " [" << to_hex(value) << "])";
         ASSERT_NOT_REACHED();
     }
 };

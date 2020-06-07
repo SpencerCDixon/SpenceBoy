@@ -41,7 +41,6 @@ struct CPUTestState {
     Registers registers;
     u64 wram_checksum;
     u64 vram_checksum;
-    u64 io_checksum;
 };
 String to_trace_line(const CPUTestState&);
 String to_snapshot(const CPUTestState&);
@@ -177,7 +176,6 @@ private:
     Registers m_registers;
 
     u8* m_rom { nullptr };
-    u8* m_io_registers { nullptr };
 
     // ACall: Should these be references and not pointers? Does it not matter?
     // ACall: Should the IODevices live in the MMU since read()/write() is now proxied to MMU?

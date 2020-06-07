@@ -35,7 +35,6 @@ CPU::CPU(Emulator& emulator, bool verbose_logging)
     , m_verbose_logging(verbose_logging)
     , m_registers({ 0 })
 {
-    m_io_registers = (u8*)calloc(IO_SIZE, sizeof(u8));
     m_registers.stack_ptr = 0xfffe;
     m_registers.program_counter = 0x100;
 
@@ -50,11 +49,21 @@ CPU::~CPU()
 
 void CPU::initialize_io_devices()
 {
+    // FIXME: I probably want some sort of address_to_index which translates the
+    // I/O u16 address into an index into our array of devices and such.
+    constexpr u16 ppu_start = 0xff40 - IO_START;
+    constexpr u16 ppu_end = 0xff4b - IO_START;
+//    constexpr u16 sound_start = 0xff10 - IO_START;
+//    constexpr u16 sound_end = 0xff3f - IO_START;
+
     for (size_t i = 0; i < IO_SIZE; ++i) {
-        if (i == 0)
+        if (i == 0) {
             m_io_devices[i] = &emulator().joypad();
-        else
+        } else if (i >= ppu_start && i < ppu_end) {
+            m_io_devices[i] = &emulator().ppu();
+        } else {
             m_io_devices[i] = &DummyIODevice::the();
+        }
     }
 }
 
@@ -636,7 +645,7 @@ String to_trace_line(const CPUTestState& test_state)
         "B: %03u [0x%02x] C: %03u [0x%02x]  "
         "D: %03u [0x%02x] E: %03u [0x%02x]  "
         "H: %03u [0x%02x] L: %03u [0x%02x] ---"
-        " WRAM: 0x%016" PRIx64 "| VRAM: 0x%016" PRIx64 " | IORAM: 0x%016" PRIx64 " |",
+        " WRAM: 0x%016" PRIx64 "| VRAM: 0x%016" PRIx64 " |",
         test_state.registers.a,
         test_state.registers.a,
         test_state.registers.f,
@@ -654,8 +663,7 @@ String to_trace_line(const CPUTestState& test_state)
         test_state.registers.l,
         test_state.registers.l,
         test_state.wram_checksum,
-        test_state.vram_checksum,
-        test_state.io_checksum);
+        test_state.vram_checksum);
     auto str = String(buffer);
     free(buffer);
     return str;
@@ -678,8 +686,7 @@ String to_snapshot(const CPUTestState& state)
         "Checksums:\n"
         "–---------\n\n"
         "WRAM Checksum: %" PRIu64 "\n"
-        "VRAM Checksum: %" PRIu64 "\n"
-        "IO   Checksum: %" PRIu64 "\n",
+        "VRAM Checksum: %" PRIu64 "\n",
         state.registers.a,
         state.registers.a,
         state.registers.f,
@@ -701,8 +708,7 @@ String to_snapshot(const CPUTestState& state)
         state.registers.program_counter,
         state.registers.program_counter,
         state.wram_checksum,
-        state.vram_checksum,
-        state.io_checksum);
+        state.vram_checksum);
 
     auto str = String(buffer);
     free(buffer);
@@ -715,6 +721,5 @@ CPUTestState CPU::test_state()
     result.registers = m_registers;
     result.wram_checksum = checksum((const unsigned char*)emulator().mmu().wram(), WRAM_SIZE);
     result.vram_checksum = checksum((const unsigned char*)emulator().mmu().vram(), VRAM_SIZE);
-    result.io_checksum = checksum((const unsigned char*)m_io_registers, IO_SIZE);
     return result;
 }

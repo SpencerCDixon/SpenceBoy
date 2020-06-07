@@ -108,6 +108,21 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile)
     }
 }
 
+u8 PPU::in(u16 address)
+{
+    dbg() << "PPU::in() " << to_hex(address);
+    return 0;
+}
+
+void PPU::out(u16 address, [[maybe_unused]] u8 value)
+{
+    // TODO:
+//    PPU::out() 0xff47 - BGP - BG Palette Data (R/W) - Non CGB Mode Only
+//    PPU::out() 0xff40 - LCDC Status Interrupt
+
+    dbg() << "Unhandled PPU::out() " << to_hex(address);
+}
+
 const LogStream& operator<<(const LogStream& stream, const Tile8x8& tile)
 {
     for (size_t row = 0; row < 8; ++row) {

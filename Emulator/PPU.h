@@ -8,6 +8,7 @@
 #include <SD/LogStream.h>
 #include <SD/Types.h>
 
+#include "IODevice.h"
 #include "Buffer.h"
 
 class Emulator;
@@ -42,13 +43,17 @@ private:
     u32 m_pixels[64];
 };
 
-class PPU {
+class PPU final : public IODevice {
 public:
     PPU(Emulator& emulator, OffscreenFrameBuffer* buffer)
         : m_emulator(emulator)
         , m_buffer(buffer)
     {
     }
+
+    // IODevice
+    u8 in(u16 address) override;
+    void out(u16 address, u8 value) override;
 
     void clear(Color color);
     void render();

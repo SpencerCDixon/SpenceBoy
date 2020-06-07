@@ -41,8 +41,8 @@ public:
 
         m_mmu = new MMU;
         m_joypad = new Joypad;
-        m_cpu = new CPU(*this, verbose_logging);
         m_ppu = new PPU(*this, &m_frame_buffer);
+        m_cpu = new CPU(*this, verbose_logging);
     }
 
     ~Emulator()

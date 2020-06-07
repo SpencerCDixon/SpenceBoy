@@ -32,7 +32,7 @@ copy_loop:
 	ld hl, $9800
 	ld [hl], 1
 
-    ; Set the background palette
+	; Set the background palette
 	ld hl, $ff47
 	ld [hl], $e4 ; 1110_0100
 
