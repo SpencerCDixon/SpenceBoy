@@ -12,6 +12,19 @@ Template for daily journal:
 
 ---
 
+**Date: 6/8/2020**
+
+### What did I get done today?
+
+* Created a new MMU for managing memory related tasks
+* Refactored CPU memory operations into the new MMU
+* Proxy I/O calls to the underlying device that handles that I/O
+* Global DummyIODevice singleton for catching I/O not being handled yet so I know to implement it
+* Turn the PPU into an IODevice that can respond to palette and LCDC interrupts
+* Fix failing tests due to refactoring how I/O works
+
+---
+
 **Date: 6/7/2020**
 
 ### What did I get done today?
