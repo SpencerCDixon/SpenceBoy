@@ -182,7 +182,6 @@ private:
     // ACall: Should these be references and not pointers? Does it not matter?
     // ACall: Should the IODevices live in the MMU since read()/write() is now proxied to MMU?
     IODevice* m_io_devices[IO_SIZE];
-    DummyIODevice* m_dummy_io_device { nullptr };
 
     bool m_interrupts_enabled { false };
 };

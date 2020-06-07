@@ -4,6 +4,7 @@
 
 #include "CPU.h"
 #include "Emulator.h"
+#include "IODevice.h"
 #include <SD/Assertions.h>
 
 #include <inttypes.h>
@@ -38,8 +39,6 @@ CPU::CPU(Emulator& emulator, bool verbose_logging)
     m_registers.stack_ptr = 0xfffe;
     m_registers.program_counter = 0x100;
 
-    // ACall: Should this just be a global singleton?
-    m_dummy_io_device = new DummyIODevice;
     initialize_io_devices();
 }
 
@@ -47,8 +46,6 @@ CPU::~CPU()
 {
     if (m_rom)
         free(m_rom);
-
-    free(m_dummy_io_device);
 }
 
 void CPU::initialize_io_devices()
@@ -57,7 +54,7 @@ void CPU::initialize_io_devices()
         if (i == 0)
             m_io_devices[i] = &emulator().joypad();
         else
-            m_io_devices[i] = m_dummy_io_device;
+            m_io_devices[i] = &DummyIODevice::the();
     }
 }
 
