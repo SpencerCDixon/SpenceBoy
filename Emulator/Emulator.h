@@ -38,10 +38,11 @@ public:
             BITS_PER_PIXEL })
     {
 
+        m_mmu = new MMU;
         m_joypad = new Joypad;
-        m_cpu = new CPU(false);
+        m_cpu = new CPU(m_mmu, false);
         m_cpu->set_joypad(m_joypad);
-        m_ppu = new PPU(m_cpu->v_ram(), &m_frame_buffer);
+        m_ppu = new PPU(m_cpu->vram(), &m_frame_buffer);
 
     }
 
@@ -60,6 +61,7 @@ private:
 
 private:
     OffscreenFrameBuffer m_frame_buffer;
+    MMU* m_mmu { nullptr };
     CPU* m_cpu { nullptr };
     PPU* m_ppu { nullptr };
     Joypad* m_joypad { nullptr };

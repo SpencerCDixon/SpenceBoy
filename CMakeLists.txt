@@ -25,14 +25,17 @@ add_executable(gameboy
         SD/Option.h
         SD/String.cpp
         SD/Timer.h
-        Emulator/IODevice.h)
+        Emulator/IODevice.h
+        Emulator/MMU.cpp
+        Emulator/MMU.h
+        )
 target_include_directories(gameboy PUBLIC ".")
 
 #---------
 # Testing
 #---------
 
-add_executable(cpu_test Tests/TestCPU.cpp Emulator/CPU.cpp SD/LogStream.cpp SD/String.cpp SD/File.cpp SD/File.h)
+add_executable(cpu_test Tests/TestCPU.cpp Emulator/CPU.cpp Emulator/MMU.cpp Emulator/Joypad.cpp SD/LogStream.cpp SD/String.cpp SD/File.cpp SD/File.h)
 target_include_directories(cpu_test PUBLIC ".")
 
 add_executable(string_test Tests/TestString.cpp SD/String.cpp SD/LogStream.cpp SD/Utility.h)
@@ -54,6 +57,7 @@ if (APPLE)
     include_directories(${SDL2_INCLUDE_DIR})
     target_link_libraries(gameboy ${SDL2_LIBRARY})
     target_link_libraries(joypad_test ${SDL2_LIBRARY})
+    target_link_libraries(cpu_test ${SDL2_LIBRARY})
 endif()
 
 if (NOT APPLE)
@@ -65,5 +69,6 @@ if (NOT APPLE)
     include_directories(${SDL2_INCLUDE_DIRS})
     target_link_libraries(gameboy ${SDL2_LIBRARIES})
     target_link_libraries(joypad_test ${SDL2_LIBRARIES})
+    target_link_libraries(cpu_test ${SDL2_LIBRARIES})
 endif()
 

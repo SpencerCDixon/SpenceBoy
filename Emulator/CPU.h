@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Joypad.h"
+#include "MMU.h"
 #include "OpCode.h"
 
 #include <SD/Bytes.h>
@@ -13,9 +14,6 @@
 
 #include <stdlib.h>
 
-constexpr size_t WRAM_SIZE = KB * 8;
-constexpr size_t VRAM_SIZE = KB * 16;
-constexpr size_t HRAM_SIZE = 126;
 constexpr size_t IO_SIZE = 112;
 
 struct Registers {
@@ -49,13 +47,11 @@ class CPU {
 
 public:
     // ACall: When to use these initializer lists vs initializing things in the constructor?
-    CPU(bool verbose_logging = false)
+    CPU(MMU* mmu, bool verbose_logging = false)
         : m_verbose_logging(verbose_logging)
         , m_registers({ 0 })
+        , m_mmu(mmu)
     {
-        m_wram = (u8*)calloc(WRAM_SIZE, sizeof(u8));
-        m_vram = (u8*)calloc(VRAM_SIZE, sizeof(u8));
-        m_hram = (u8*)calloc(HRAM_SIZE, sizeof(u8));
         m_io_registers = (u8*)calloc(IO_SIZE, sizeof(u8));
 
         m_registers.stack_ptr = 0xfffe;
@@ -66,10 +62,6 @@ public:
     {
         if (m_rom)
             free(m_rom);
-
-        free(m_wram);
-        free(m_vram);
-        free(m_hram);
     }
 
     void load_rom(const char* rom_path);
@@ -80,7 +72,8 @@ public:
     //
     // Memory accessors
     //
-    u8* v_ram() { return m_vram; }
+    u8* vram() { return m_mmu->vram(); }
+    u8* wram() { return m_mmu->wram(); }
 
     //
     // Testing Utilities
@@ -89,8 +82,8 @@ public:
     {
         CPUTestState result;
         result.registers = m_registers;
-        result.wram_checksum = checksum((const unsigned char*)m_wram, WRAM_SIZE);
-        result.vram_checksum = checksum((const unsigned char*)m_vram, VRAM_SIZE);
+        result.wram_checksum = checksum((const unsigned char*)wram(), WRAM_SIZE);
+        result.vram_checksum = checksum((const unsigned char*)vram(), VRAM_SIZE);
         result.io_checksum = checksum((const unsigned char*)m_io_registers, IO_SIZE);
         return result;
     }
@@ -206,12 +199,12 @@ private:
     bool m_verbose_logging;
     Registers m_registers;
 
+    MMU* m_mmu;
+
     // TODO(scd): MMU / Bus which resolves pointers to the correct address bank.
     // Memory is very different from CPU and should belong in different places.
     u8* m_rom { nullptr };
-    u8* m_wram { nullptr };
-    u8* m_vram { nullptr };
-    u8* m_hram { nullptr };
+
     u8* m_io_registers { nullptr };
     Joypad* m_joypad { nullptr };
     bool m_interrupts_enabled { false };

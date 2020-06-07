@@ -16,11 +16,12 @@ public:
         : m_name(test_name)
         , m_rom_path(rom_path)
         , m_should_update_snapshot(should_update_snapshot)
-        , m_cpu(CPU(verbose_logging))
         , m_verbose_logging(verbose_logging)
         , m_execution_trace(String("Trace:\n------\n"))
     {
-        m_cpu.load_rom(rom_path);
+        m_mmu = new MMU;
+        m_cpu = new CPU(m_mmu, verbose_logging);
+        m_cpu->load_rom(rom_path);
     }
 
     void run()
@@ -28,11 +29,11 @@ public:
         if (m_verbose_logging)
             dbg() << "--> Running test: " << m_name;
 
-        while (!m_cpu.step().should_halt) {
+        while (!m_cpu->step().should_halt) {
             // FIXME: for some reason this results in a crash:
             // Incorrect checksum for freed object 0x7fef1ec02f28: probably modified after being freed.
             //            m_execution_trace += to_trace_line(m_cpu.test_state());
-            m_execution_trace = m_execution_trace + to_trace_line(m_cpu.test_state()) + "\n";
+            m_execution_trace = m_execution_trace + to_trace_line(m_cpu->test_state()) + "\n";
         };
 
         if (m_should_update_snapshot) {
@@ -83,7 +84,7 @@ private:
         auto result = String("");
         result = result + m_execution_trace;
         result = result + "\n";
-        result = result + to_snapshot(m_cpu.test_state());
+        result = result + to_snapshot(m_cpu->test_state());
         return result;
     }
 
@@ -98,9 +99,10 @@ private:
     const char* m_name;
     const char* m_rom_path;
     bool m_should_update_snapshot;
-    CPU m_cpu;
     bool m_verbose_logging;
     String m_execution_trace;
+    MMU* m_mmu { nullptr };
+    CPU* m_cpu { nullptr };
 };
 
 #define TESTCASE_TYPE_NAME(x) TestCase_##x
