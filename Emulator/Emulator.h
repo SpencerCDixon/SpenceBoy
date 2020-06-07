@@ -31,7 +31,7 @@ constexpr u16 BITS_PER_PIXEL = sizeof(u32);
 
 class Emulator {
 public:
-    Emulator()
+    Emulator(bool verbose_logging = false)
         : m_frame_buffer({ (void*)calloc(GB_WIN_WIDTH * GB_WIN_HEIGHT, BITS_PER_PIXEL),
             GB_WIN_HEIGHT,
             GB_WIN_WIDTH,
@@ -41,7 +41,7 @@ public:
 
         m_mmu = new MMU;
         m_joypad = new Joypad;
-        m_cpu = new CPU(*this, false);
+        m_cpu = new CPU(*this, verbose_logging);
         m_ppu = new PPU(*this, &m_frame_buffer);
     }
 
