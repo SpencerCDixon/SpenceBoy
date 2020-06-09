@@ -5,8 +5,11 @@
 #pragma once
 
 #include <SD/Types.h>
+#include <SD/String.h>
 
 #include <stdlib.h>
+
+constexpr u16 MAX_ROM_SIZE = KB * 32;
 
 constexpr size_t WRAM_SIZE = KB * 8;
 constexpr size_t VRAM_SIZE = KB * 16;
@@ -35,8 +38,14 @@ public:
         free(m_hram);
     }
 
+    void load_rom(const char* rom_path);
+
     u8* vram() { return m_vram; }
     u8* wram() { return m_wram; }
+    u8* rom() {
+        ASSERT(m_rom);
+        return m_rom;
+    }
 
     u8 read(u16 address);
     void write(u16 address, u8 data);
@@ -45,4 +54,5 @@ private:
     u8* m_wram { nullptr };
     u8* m_vram { nullptr };
     u8* m_hram { nullptr };
+    u8* m_rom { nullptr };
 };

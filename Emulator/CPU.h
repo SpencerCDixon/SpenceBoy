@@ -52,11 +52,9 @@ public:
     explicit CPU(Emulator& emulator, bool verbose_logging = false);
     ~CPU();
 
-    void load_rom(const char* rom_path);
     StepResult step();
-    bool interrupts_enabled() { return m_interrupts_enabled; }
-
     Emulator& emulator() { return m_emulator; }
+    bool interrupts_enabled() { return m_interrupts_enabled; }
 
     //
     // Testing Utilities
@@ -158,18 +156,8 @@ private:
     }
 
     // Fetch
-    u8 fetch_and_inc_8bit()
-    {
-        u8 next = m_rom[m_registers.program_counter];
-        m_registers.program_counter++;
-        return next;
-    }
-    u16 fetch_and_inc_16bit()
-    {
-        u8 b1 = fetch_and_inc_8bit();
-        u8 b2 = fetch_and_inc_8bit();
-        return to_le_16_bit(b1, b2);
-    }
+    u8 fetch_and_inc_8bit();
+    u16 fetch_and_inc_16bit();
 
 private:
     Emulator& m_emulator;
@@ -177,7 +165,6 @@ private:
     Registers m_registers;
 
     // TODO: move into MMU (m_rom and io devices)
-    u8* m_rom { nullptr };
     IODevice* m_io_devices[IO_SIZE];
 
     bool m_interrupts_enabled { false };

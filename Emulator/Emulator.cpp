@@ -40,7 +40,7 @@ void Emulator::init()
 // lets keep it simple and force a load before run().
 void Emulator::load_rom(const char* path)
 {
-    cpu().load_rom(path);
+    mmu().load_rom(path);
 }
 
 void Emulator::run()

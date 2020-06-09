@@ -10,13 +10,10 @@
 
 #include <inttypes.h>
 #include <stdio.h>
-#include <sys/stat.h>
 
 // Useful to snag when debugging
 //        hex_dump("WRAM", m_wram, WRAM_SIZE, WRAM_START);
 //        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
-
-constexpr u16 MAX_ROM_SIZE = KB * 32;
 
 // Flags
 constexpr u8 FLAG_ZERO = 0b10000000;
@@ -25,8 +22,6 @@ constexpr u8 FLAG_HALF_CARRY = 0b00100000;
 constexpr u8 FLAG_CARRY = 0b00010000;
 
 // Memory Locations
-constexpr u16 ROM_START = 0x0000;
-constexpr u16 ROM_END = 0x3FFF;
 constexpr u16 IO_START = 0xFF00;
 constexpr u16 IO_END = 0xFF7F;
 
@@ -46,8 +41,6 @@ CPU::CPU(Emulator& emulator, bool verbose_logging)
 
 CPU::~CPU()
 {
-    if (m_rom)
-        free(m_rom);
 }
 
 void CPU::initialize_io_devices()
@@ -56,8 +49,8 @@ void CPU::initialize_io_devices()
     // I/O u16 address into an index into our array of devices and such.
     constexpr u16 ppu_start = 0xff40 - IO_START;
     constexpr u16 ppu_end = 0xff4b - IO_START;
-//    constexpr u16 sound_start = 0xff10 - IO_START;
-//    constexpr u16 sound_end = 0xff3f - IO_START;
+    //    constexpr u16 sound_start = 0xff10 - IO_START;
+    //    constexpr u16 sound_end = 0xff3f - IO_START;
 
     for (size_t i = 0; i < IO_SIZE; ++i) {
         if (i == 0) {
@@ -68,24 +61,6 @@ void CPU::initialize_io_devices()
             m_io_devices[i] = &DummyIODevice::the();
         }
     }
-}
-
-// ACall: It makes sense for the CPU to own the ROM and not the MMU, right? Since the ROM
-// can be null or loaded in (i.e a cartridge was put into the gameboy).
-void CPU::load_rom(const char* rom_path)
-{
-    auto file = File::open(rom_path);
-
-    if (m_verbose_logging) {
-        dbg() << "CPU::load_rom() loading rom into memory from path: " << rom_path;
-        dbg() << "size of ROM file is: " << file.size_in_bytes();
-    }
-
-    // For now, ROM sizes should always be a specific size. If not, fail hard and fix the ROM!
-    ASSERT(file.size_in_bytes() == MAX_ROM_SIZE);
-
-    m_rom = (u8*)malloc((size_t)file.size_in_bytes());
-    file.read_into((char*)m_rom);
 }
 
 StepResult CPU::step()
@@ -453,11 +428,23 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
 // Memory Access
 //
 
+u8 CPU::fetch_and_inc_8bit()
+{
+    u8 next = emulator().mmu().rom()[m_registers.program_counter];
+    m_registers.program_counter++;
+    return next;
+}
+
+u16 CPU::fetch_and_inc_16bit()
+{
+    u8 b1 = fetch_and_inc_8bit();
+    u8 b2 = fetch_and_inc_8bit();
+    return to_le_16_bit(b1, b2);
+}
+
 u8 CPU::read(u16 address)
 {
-    if (address >= ROM_START && address <= ROM_END) {
-        return m_rom[address];
-    } else if (address >= IO_START && address <= IO_END) {
+    if (address >= IO_START && address <= IO_END) {
         u16 idx = address - IO_START;
         ASSERT(idx >= 0 && idx < IO_SIZE);
         return m_io_devices[idx]->in(address);
@@ -469,10 +456,7 @@ u8 CPU::read(u16 address)
 
 void CPU::write(u16 address, u8 data)
 {
-    if (address >= ROM_START && address <= ROM_END) {
-        m_rom[address] = data;
-        return;
-    } else if (address >= IO_START && address <= IO_END) {
+    if (address >= IO_START && address <= IO_END) {
         u16 idx = address - IO_START;
         ASSERT(idx >= 0 && idx < IO_SIZE);
         return m_io_devices[idx]->out(address, data);
