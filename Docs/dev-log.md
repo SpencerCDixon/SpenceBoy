@@ -17,7 +17,9 @@ Template for daily journal:
 ### What did I get done today?
 
 * Call with Andreas to do some code review and plan next series of tasks
-* Document some new C++ tips I learned about
+* Document some new C++ tips I learned about in cpp notes
+* Improvements to SD::File APIs
+* Refactor ROM loading to use new and improved SD APIs
 
 ---
 
