@@ -6,6 +6,7 @@
 #include "Emulator.h"
 #include "IODevice.h"
 #include <SD/Assertions.h>
+#include <SD/File.h>
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -73,25 +74,18 @@ void CPU::initialize_io_devices()
 // can be null or loaded in (i.e a cartridge was put into the gameboy).
 void CPU::load_rom(const char* rom_path)
 {
-    // TODO: Use the new File class for this stuff.
-    if (m_verbose_logging)
+    auto file = File::open(rom_path);
+
+    if (m_verbose_logging) {
         dbg() << "CPU::load_rom() loading rom into memory from path: " << rom_path;
-
-    FILE* fp;
-    fp = fopen(rom_path, "rb");
-    perror_exit_if(fp == nullptr, "CPU::load_rom() Error: ");
-
-    struct stat st;
-    perror_exit_if(stat(rom_path, &st), "stat()");
-
-    if (m_verbose_logging)
-        dbg() << "size of ROM file is: " << st.st_size;
+        dbg() << "size of ROM file is: " << file.size_in_bytes();
+    }
 
     // For now, ROM sizes should always be a specific size. If not, fail hard and fix the ROM!
-    ASSERT(st.st_size == MAX_ROM_SIZE);
+    ASSERT(file.size_in_bytes() == MAX_ROM_SIZE);
 
-    m_rom = (u8*)malloc((size_t)st.st_size);
-    fread(m_rom, st.st_size, 1, fp);
+    m_rom = (u8*)malloc((size_t)file.size_in_bytes());
+    file.read_into((char*)m_rom);
 }
 
 StepResult CPU::step()

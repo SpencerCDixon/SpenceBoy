@@ -49,6 +49,7 @@ void Emulator::run()
     bool quit = false;
     bool halted = false;
     bool show_input_debug = false;
+
     InputDebugWindow input_debug(m_renderer);
     u64 cycle_count = 0;
 
