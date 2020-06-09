@@ -36,6 +36,7 @@ void Tile8x8::populate_from_palette(const u8* buffer)
         row_bytes = (row_bytes << 8) | buffer[idx_two];
 
         for (size_t col = 0; col < 8; ++col) {
+            // FIXME: Pick from different colors.
             // 2 bits for pixel. 11 = black anything else = white (for now)
             bool is_black = (row_bytes >> col * 2) & black_mask;
             set_pixel(col, row, is_black ? Color::BLACK_ARGB : Color::WHITE_ARGB);
@@ -61,6 +62,7 @@ void PPU::clear(Color color)
 // * palette matching
 // * layered rendering (background, sprites, window)
 // * remove hard coded smiley tile and make it general purpose
+// * draw_scanline() (helps with V/HBlank)
 
 void PPU::render()
 {

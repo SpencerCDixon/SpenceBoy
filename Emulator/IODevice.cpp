@@ -4,12 +4,9 @@
 
 #include "IODevice.h"
 
-static DummyIODevice* s_the;
+static DummyIODevice s_the;
 
 DummyIODevice& DummyIODevice::the()
 {
-    if (!s_the)
-        s_the = new DummyIODevice;
-
-    return *s_the;
+    return s_the;
 }

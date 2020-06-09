@@ -45,6 +45,7 @@ struct CPUTestState {
 String to_trace_line(const CPUTestState&);
 String to_snapshot(const CPUTestState&);
 
+// Could be an IODevice, or I could create Interrupt abstraction (separately)
 class CPU {
 
 public:
@@ -89,7 +90,7 @@ private:
     bool get_zero_flag();
 
     // Register related utilities
-    // TODO(scd): consider maybe moving into Register class
+    // TODO(scd): consider maybe moving into Register class?
     u16 get_de() { return to_le_16_bit(m_registers.e, m_registers.d); }
     u16 get_hl() { return to_le_16_bit(m_registers.l, m_registers.h); }
     u16 get_bc() { return to_le_16_bit(m_registers.c, m_registers.b); }
@@ -175,10 +176,8 @@ private:
     bool m_verbose_logging;
     Registers m_registers;
 
+    // TODO: move into MMU (m_rom and io devices)
     u8* m_rom { nullptr };
-
-    // ACall: Should these be references and not pointers? Does it not matter?
-    // ACall: Should the IODevices live in the MMU since read()/write() is now proxied to MMU?
     IODevice* m_io_devices[IO_SIZE];
 
     bool m_interrupts_enabled { false };

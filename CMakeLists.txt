@@ -28,7 +28,7 @@ add_executable(gameboy
         Emulator/IODevice.h
         Emulator/MMU.cpp
         Emulator/MMU.h
-        Emulator/IODevice.cpp)
+        Emulator/IODevice.cpp Emulator/InternalSDL.h)
 target_include_directories(gameboy PUBLIC ".")
 
 #---------

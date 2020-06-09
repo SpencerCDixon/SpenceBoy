@@ -43,6 +43,7 @@ private:
     u32 m_pixels[64];
 };
 
+// VRAM is never going to move, cache that pointer in the PPU.
 class PPU final : public IODevice {
 public:
     PPU(Emulator& emulator, OffscreenFrameBuffer* buffer)
@@ -63,6 +64,7 @@ private:
 
 private:
     Emulator& m_emulator;
+    // m_vram
     OffscreenFrameBuffer* m_buffer;
 };
 

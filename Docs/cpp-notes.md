@@ -40,3 +40,54 @@ and therefore you are allowed to call it on a value of type const MyClass.
 ```c++
 int MyClass::showName(string id) const
 ```
+
+## Constructor Init Lists
+
+Question: When to use these initializer lists vs initializing things in the constructor?
+
+Answer: Always preferable to use the init lists. That way members will never be in an in-between state. Some things
+MUST be inited (like ref members, which must always be assigned to something and can't be rebound).
+
+## Third Party Headers
+
+Sometimes headers can get out of control with #ifdefs to manage certain platform or compiler specific functionality. 
+For example:
+
+```c++
+#ifdef __clang__
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wimplicit-fallthrough"
+#    include <SDL.h>
+#    pragma clang diagnostic pop
+#else
+#    include <SDL.h>
+#endif
+```
+
+A useful tip for handling these is to create a single project specific header (ie. `MyProjectSDL.h`) which
+can contain all this sillyness and other call sites can import that clean looking header.
+
+## Disk IO
+
+Files in `/tmp` will be significantly faster than inside other directories.
+These are backed by RAM so it won't do disk I/O thus speeding things up a LOT.
+
+## References vs. Pointers
+
+When trying to decide between these two one thing to think about is nullability. If an entity can be
+null than by definition it cannot be a reference since references are always non-null. When something
+can start as a `nullptr` and then be defined look to use some sort of smart pointer or raw pointer.
+
+When returning a reference from a pointer you must first dereference the pointer in order to return
+a reference to the actual value and not the pointer. For example:
+
+```c++
+class Widget {
+public:
+    MyThing& thing() { return *m_my_thing; }    // Needs to be dereferenced to then return a ref
+    OtherItem& item() { return m_other_item; }  // Already a real item and not a pointer so can return directly
+private:
+    MyThing* m_my_thing;
+    OtherItem m_other_item;
+};
+```

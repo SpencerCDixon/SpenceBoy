@@ -29,12 +29,14 @@ constexpr u16 ROM_END = 0x3FFF;
 constexpr u16 IO_START = 0xFF00;
 constexpr u16 IO_END = 0xFF7F;
 
-// ACall: When to use these initializer lists vs initializing things in the constructor?
 CPU::CPU(Emulator& emulator, bool verbose_logging)
     : m_emulator(emulator)
     , m_verbose_logging(verbose_logging)
     , m_registers({ 0 })
 {
+    // TODO: Some boot process that I can define however I like. This could be done in SDL
+    // land and doesn't need to use normal GB rendering techniques. It must result in the program
+    // counter being set at the proper location of 0x100.
     m_registers.stack_ptr = 0xfffe;
     m_registers.program_counter = 0x100;
 
@@ -71,6 +73,7 @@ void CPU::initialize_io_devices()
 // can be null or loaded in (i.e a cartridge was put into the gameboy).
 void CPU::load_rom(const char* rom_path)
 {
+    // TODO: Use the new File class for this stuff.
     if (m_verbose_logging)
         dbg() << "CPU::load_rom() loading rom into memory from path: " << rom_path;
 

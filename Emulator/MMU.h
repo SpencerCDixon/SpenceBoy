@@ -12,6 +12,15 @@ constexpr size_t WRAM_SIZE = KB * 8;
 constexpr size_t VRAM_SIZE = KB * 16;
 constexpr size_t HRAM_SIZE = 126;
 
+// ACall: Other responsibilities of MMU?
+// ROM
+// IODevices could live here
+// Init IODevices (the ranges)
+
+// 0xff00 - input
+// 0xff10 - 0xff1e - all sound card related
+// 0xff47
+
 class MMU {
 public:
     MMU() {

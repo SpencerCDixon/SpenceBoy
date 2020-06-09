@@ -4,20 +4,11 @@
 
 #pragma once
 
-#include "IODevice.h"
-
-// ACall: What's best way to handle this sort of thing?
-#ifdef __clang__
-#    pragma clang diagnostic push
-#    pragma clang diagnostic ignored "-Wimplicit-fallthrough"
-#    include <SDL.h>
-#    pragma clang diagnostic pop
-#else
-#    include <SDL.h>
-#endif
-
 #include <SD/LogStream.h>
 #include <SD/Types.h>
+
+#include "InternalSDL.h"
+#include "IODevice.h"
 
 // Overview of how Joypad I/O Works:
 //
@@ -29,6 +20,12 @@
 // Bit 2 - P12 Input Up    or Select   (0=Pressed) (Read Only)
 // Bit 1 - P11 Input Left  or Button B (0=Pressed) (Read Only)
 // Bit 0 - P10 Input Right or Button A (0=Pressed) (Read Only)
+
+// NOTE: The _very strange_ but important thing to remember when working
+// on this Input I/O code is that 0's mean on and 1's mean off. This is
+// counter intuitive to basically all programming and was probably some
+// limitation of the hardware which allowed them to use one less component
+// or something.
 
 enum class Key : u8 {
     Right,
@@ -69,7 +66,7 @@ public:
     friend InputDebugWindow;
     Joypad();
 
-    // IODevice Interface
+    // IODevice Impl
     u8 in(u16 address) override;
     void out(u16 address, u8 value) override;
 
@@ -105,6 +102,7 @@ private:
     SDL_Renderer* m_renderer { nullptr };
 
     // Textures
+    // TODO: Create OwnPtr for these textures, will need a custom dealloc method
     SDL_Texture* m_left_tex { nullptr };
     SDL_Texture* m_right_tex { nullptr };
     SDL_Texture* m_up_tex { nullptr };

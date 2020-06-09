@@ -2,7 +2,6 @@
 // Created by Spencer Dixon on 5/6/20.
 //
 
-#include <SD/Assertions.h>
 #include <SD/Bytes.h>
 #include <SD/File.h>
 #include <SD/LogStream.h>

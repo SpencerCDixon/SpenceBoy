@@ -6,8 +6,6 @@
 #include <SD/Assertions.h>
 #include <SD/Bytes.h>
 
-#include <stdio.h>
-
 Joypad::Joypad()
     : m_mode(JoypadReadMode::None)
 {
@@ -15,7 +13,7 @@ Joypad::Joypad()
         m_keys[i] = false;
 }
 
-u8 Joypad::in([[maybe_unused]] u16 address)
+u8 Joypad::in(u16)
 {
     // Note: We only have 1 address (0xff00) being used for Joypad
     // related logic so we don't need to use the address
@@ -23,7 +21,6 @@ u8 Joypad::in([[maybe_unused]] u16 address)
 
     // Remember this weirdness:
     // 0 -> pressed   1 -> not pressed
-
     u8 result = 0x0f; // Assume none pressed
 
     if (m_mode == JoypadReadMode::DPad) {
@@ -57,11 +54,12 @@ u8 Joypad::in([[maybe_unused]] u16 address)
     return result;
 }
 
-void Joypad::out([[maybe_unused]] u16 address, u8 value)
+void Joypad::out(u16, u8 value)
 {
     // 0010 0000 - Read DPad
     // 0001 0000 - Read Buttons
     // 0011 0000 - None
+    // 0000 1010 - what happens here? TODO: Write test program which determines how other emulators deal with this write (both 00 or 11)
     if ((value & 0x20) && !(value & 0x10)) {
         set_mode(JoypadReadMode::DPad);
     } else if ((value & 0x10) && !(value & 0x20)) {
@@ -139,18 +137,8 @@ InputDebugWindow::~InputDebugWindow()
 
 void InputDebugWindow::render(Joypad* joypad)
 {
-    SDL_Rect SrcR;
-    SDL_Rect DestR;
-
-    SrcR.x = 0;
-    SrcR.y = 0;
-    SrcR.w = 15;
-    SrcR.h = 15;
-
-    DestR.x = 0;
-    DestR.y = 0;
-    DestR.w = 15;
-    DestR.h = 15;
+    SDL_Rect SrcR { 0, 0, 15, 15};
+    SDL_Rect DestR { 0, 0, 15, 15 };
 
     // Up/down = 8x13
     // Left/right = 14x8
