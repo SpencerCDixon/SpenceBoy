@@ -95,7 +95,7 @@ void Emulator::run()
             auto t = Timer("4 megahertz()");
 
             for (;;) {
-                auto result = m_cpu->step();
+                auto result = m_cpu.step();
                 if (result.should_halt) {
                     halted = true;
                     break;
@@ -121,7 +121,7 @@ void Emulator::run()
 
         // Render Debug:
         if (show_input_debug) {
-            input_debug.render(m_joypad);
+            input_debug.render(&m_joypad);
         }
 
         SDL_RenderPresent(m_renderer);
