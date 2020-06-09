@@ -51,6 +51,14 @@ public:
         return result;
     }
 
+    bool read_into(char* buffer)
+    {
+        ASSERT(m_file_ptr);
+        u64 size = size_in_bytes();
+        int result = fread(buffer, size, 1, m_file_ptr);
+        return result == 1;
+    }
+
     u64 write(const String& string)
     {
         ASSERT(m_file_ptr);
