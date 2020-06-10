@@ -7,12 +7,17 @@
 #include <SD/LogStream.h>
 
 // TODO: Get these dynamically from window settings.
-constexpr u16 WIN_HEIGHT = 600;
-constexpr u16 WIN_WIDTH = 400;
+constexpr u16 WIN_HEIGHT = 500;
+constexpr u16 WIN_WIDTH = 600;
+
+static SDLRenderer s_the;
+SDLRenderer& SDLRenderer::the()
+{
+    return s_the;
+}
 
 SDLRenderer::SDLRenderer()
 {
-
 }
 
 SDLRenderer::~SDLRenderer()
@@ -26,7 +31,7 @@ void SDLRenderer::init()
         error("unable to initialize SDL video subsystem");
     }
 
-    if (SDL_CreateWindowAndRenderer(WIN_HEIGHT, WIN_WIDTH, 0, &m_window, &m_renderer)) {
+    if (SDL_CreateWindowAndRenderer(WIN_WIDTH, WIN_HEIGHT, 0, &m_window, &m_renderer)) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window and renderer: %s", SDL_GetError());
         error("creating window and renderer");
     }
@@ -34,8 +39,8 @@ void SDLRenderer::init()
     // TODO: Get title dynamically from window settings.
     // TODO: Add API for setting title which can be used by ROMParser
     SDL_SetWindowTitle(m_window, "SpenceBoy");
-    SDL_SetWindowResizable(m_window, SDL_bool::SDL_TRUE);
-    SDL_RenderSetLogicalSize(m_renderer, WIN_HEIGHT, WIN_WIDTH);
+    //    SDL_SetWindowResizable(m_window, SDL_bool::SDL_TRUE);
+    //    SDL_RenderSetLogicalSize(m_renderer, WIN_HEIGHT, WIN_WIDTH);
 
     m_gb_screen = SDL_CreateTexture(
         m_renderer,
@@ -43,12 +48,16 @@ void SDLRenderer::init()
         SDL_TEXTUREACCESS_STREAMING,
         GB_WIN_WIDTH,
         GB_WIN_HEIGHT);
+
+    // Image dimensions: 286x468
+    // TODO: Definitely don't have this hardcoded path... get path dynamically on boot.
+    // TODO: SDL_QueryTexture(img, NULL, NULL, &w, &h); // get the width and height of the texture
+    m_hardware_background = IMG_LoadTexture(m_renderer, "/Users/spence/Code/learn/cpp/gameboy/Assets/SpenceBoy.png");
 }
 
-void SDLRenderer::clear()
+void SDLRenderer::clear(const Color& color)
 {
-    // TODO: Add color back to the clear func?
-//    SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255);
+    SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, 255);
     SDL_RenderClear(m_renderer);
 }
 
@@ -57,11 +66,21 @@ void SDLRenderer::present()
     SDL_RenderPresent(m_renderer);
 }
 
-void SDLRenderer::draw_bitmap(const Bitmap& bitmap, const Rect&)
+void SDLRenderer::draw_bitmap(const Bitmap& bitmap, const Rect& rect)
 {
-    // TODO: For now to ease in refactor this will just draw into the gameboy texture.
-    // In the future, this will become more generic!
-    SDL_Rect rect = { 0, 0, 256, 256 };
-    SDL_UpdateTexture(m_gb_screen, &rect, bitmap.data(), bitmap.pitch());
-    SDL_RenderCopy(m_renderer, m_gb_screen, &rect, &rect);
+    auto dest = rect.to_sdl();
+    SDL_UpdateTexture(m_gb_screen, NULL, bitmap.data(), bitmap.pitch());
+    SDL_RenderCopy(m_renderer, m_gb_screen, NULL, &dest);
 }
+
+void SDLRenderer::draw_hardware()
+{
+    SDL_Rect dest = { 20, 20, 286, 468 };
+    SDL_RenderCopy(m_renderer, m_hardware_background, NULL, &dest);
+}
+
+// TODO:
+// 1. Create a new Texture class
+// 2. Allow textures to be updated from Bitmaps
+// 3. Let draw commands draw textures and not bitmaps
+// 4. Maybe a temporary texture could be created for bitmap draws?

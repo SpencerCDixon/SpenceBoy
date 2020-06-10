@@ -17,7 +17,7 @@ struct Color {
     u8 b;
     u8 a;
 
-    constexpr u32 to_argb()
+    constexpr u32 to_argb() const
     {
         return this->a << 24 | this->r << 16 | this->g << 8 | this->b;
     }

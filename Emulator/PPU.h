@@ -63,7 +63,7 @@ public:
     void out(u16 address, u8 value) override;
 
     Bitmap& bitmap() { return m_bitmap; }
-    void clear(Color color);
+    void clear(const Color& color);
     void render();
     void fill_square(size_t x, size_t y, const Tile8x8& tile);
 

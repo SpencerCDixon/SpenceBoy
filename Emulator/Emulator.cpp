@@ -89,20 +89,22 @@ void Emulator::run()
 
         //        if (halted)
         //            dbg() << "halted!";
+        local_persist Color bg_clear { 255, 255, 255, 255};
+        local_persist Color gb_clear { 125, 130, 255, 255};
+        renderer().clear(bg_clear);
 
-        m_renderer->clear();
-
-        ppu().clear({ 255, 255, 255, 255 });
+        ppu().clear(gb_clear);
         ppu().render();
 
-        m_renderer->draw_bitmap(ppu().bitmap(), {});
+        renderer().draw_bitmap(ppu().bitmap(), {324, 20, 256, 256});
+        renderer().draw_hardware();
 
         // Render Debug:
         if (show_input_debug) {
 //            input_debug.render(&m_joypad);
         }
 
-        m_renderer->present();
+        renderer().present();
         // TODO: Timing to determine how much I should sleep to hit 60 FPS.
     }
 }

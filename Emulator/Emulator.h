@@ -20,19 +20,15 @@ public:
         , m_cpu(*this, verbose_logging)
         , m_ppu(*this)
     {
-        m_renderer = new SDLRenderer;
-        m_renderer->init();
+       SDLRenderer::the().init();
         // TODO: 2 step init process
         // mmu->init_io_devices
     }
 
     ~Emulator()
     {
-        // Unable to delete. Leak for now until I learn C++ better.
-        delete m_renderer;
     }
 
-//    void init();
     void load_rom(const char* path);
     void run();
 
@@ -40,11 +36,11 @@ public:
     Joypad& joypad() { return m_joypad; }
     PPU& ppu() { return m_ppu; }
     CPU& cpu() { return m_cpu; }
+    Renderer& renderer() { return SDLRenderer::the(); }
 
 private:
     MMU m_mmu;
     Joypad m_joypad;
     CPU m_cpu;
     PPU m_ppu;
-    Renderer* m_renderer { nullptr };
 };

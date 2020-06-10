@@ -15,4 +15,5 @@ struct RuntimeSettings {
     RenderingBackend backend;
     bool in_test_mode;
     String test_dir;
+    String assets_dir;
 };

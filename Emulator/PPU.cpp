@@ -44,7 +44,7 @@ void Tile8x8::populate_from_palette(const u8* buffer)
     }
 }
 
-void PPU::clear(Color color)
+void PPU::clear(const Color& color)
 {
     u32 argb_color = color.to_argb();
     u8* row = (u8*)m_bitmap.data();
