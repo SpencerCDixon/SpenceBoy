@@ -4,6 +4,7 @@
 
 #include <SD/String.h>
 #include <SD/Types.h>
+#include <SD/Color.h>
 
 struct WindowSettings {
     u16 width;
@@ -15,6 +16,11 @@ struct WindowSettings {
 struct Rect {
     int x;
     int y;
+    int width;
+    int height;
+};
+
+struct Size {
     int width;
     int height;
 };

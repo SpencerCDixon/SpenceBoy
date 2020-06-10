@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "Buffer.h"
 #include "CPU.h"
+#include "Emulator/GUI/Bitmap.h"
 #include "InternalSDL.h"
 #include "Joypad.h"
 #include "MMU.h"

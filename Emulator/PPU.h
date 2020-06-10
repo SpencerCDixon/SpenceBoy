@@ -8,7 +8,7 @@
 #include <SD/LogStream.h>
 #include <SD/Types.h>
 
-#include "Buffer.h"
+#include "Emulator/GUI/Bitmap.h"
 #include "IODevice.h"
 
 class Emulator;
@@ -19,8 +19,6 @@ class Emulator;
 //constexpr u16 WIN_WIDTH = 160;
 constexpr u16 GB_WIN_HEIGHT = 256;
 constexpr u16 GB_WIN_WIDTH = 256;
-
-constexpr u16 BITS_PER_PIXEL = sizeof(u32);
 
 class Tile8x8 {
 public:
@@ -56,11 +54,7 @@ class PPU final : public IODevice {
 public:
     PPU(Emulator& emulator)
         : m_emulator(emulator)
-        , m_bitmap({ (void*)calloc(GB_WIN_WIDTH * GB_WIN_HEIGHT, BITS_PER_PIXEL),
-              GB_WIN_HEIGHT,
-              GB_WIN_WIDTH,
-              GB_WIN_WIDTH * BITS_PER_PIXEL,
-              BITS_PER_PIXEL })
+        , m_bitmap({ GB_WIN_HEIGHT, GB_WIN_WIDTH }, GB_WIN_WIDTH * BITS_PER_PIXEL)
     {
     }
 
@@ -68,7 +62,7 @@ public:
     u8 in(u16 address) override;
     void out(u16 address, u8 value) override;
 
-    OffscreenFrameBuffer& bitmap() { return m_bitmap; }
+    Bitmap& bitmap() { return m_bitmap; }
     void clear(Color color);
     void render();
     void fill_square(size_t x, size_t y, const Tile8x8& tile);
@@ -78,7 +72,7 @@ private:
 
 private:
     Emulator& m_emulator;
-    OffscreenFrameBuffer m_bitmap;
+    Bitmap m_bitmap;
 };
 
 const LogStream& operator<<(const LogStream&, const Tile8x8&);

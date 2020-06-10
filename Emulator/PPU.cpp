@@ -47,14 +47,14 @@ void Tile8x8::populate_from_palette(const u8* buffer)
 void PPU::clear(Color color)
 {
     u32 argb_color = color.to_argb();
-    u8* row = (u8*)m_bitmap.memory;
-    for (int y = 0; y < m_bitmap.height; ++y) {
+    u8* row = (u8*)m_bitmap.data();
+    for (int y = 0; y < m_bitmap.height(); ++y) {
         u32* pixel = (u32*)row;
 
-        for (int x = 0; x < m_bitmap.width; ++x)
+        for (int x = 0; x < m_bitmap.width(); ++x)
             *pixel++ = argb_color;
 
-        row += m_bitmap.pitch;
+        row += m_bitmap.pitch();
     }
 }
 
@@ -93,11 +93,11 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile)
     ASSERT(y < 32);
 
     // Y-Offset
-    auto offset = m_bitmap.pitch * (y * 8);
+    auto offset = m_bitmap.pitch() * (y * 8);
     // X-Offset
     offset += sizeof(u32) * 8 * x;
 
-    u8* start = (u8*)m_bitmap.memory;
+    u8* start = (u8*)m_bitmap.data();
     start += offset;
 
     for (size_t y = 0; y < 8; y++) {
@@ -106,7 +106,7 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile)
             *pixel++ = tile.pixel(x, y);
         }
 
-        start += m_bitmap.pitch;
+        start += m_bitmap.pitch();
     }
 }
 

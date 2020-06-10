@@ -133,5 +133,5 @@ void Emulator::run()
 
 void Emulator::swap()
 {
-    SDL_UpdateTexture(m_gb_screen, NULL, ppu().bitmap().memory, ppu().bitmap().pitch);
+    SDL_UpdateTexture(m_gb_screen, NULL, ppu().bitmap().data(), ppu().bitmap().pitch());
 }
