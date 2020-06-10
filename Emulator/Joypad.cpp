@@ -105,6 +105,7 @@ InputDebugWindow::InputDebugWindow(SDL_Renderer* renderer)
 
 {
     // FIXME: Does SDL have rotation? Seems silly to duplicate all these textures.
+    // Yes it does: https://wiki.libsdl.org/SDL_RenderCopyEx
     m_right_tex = load_texture_from_bmp(renderer, "../Assets/input-bmps/right.bmp");
     m_left_tex = load_texture_from_bmp(renderer, "../Assets/input-bmps/left.bmp");
     m_down_tex = load_texture_from_bmp(renderer, "../Assets/input-bmps/down.bmp");
