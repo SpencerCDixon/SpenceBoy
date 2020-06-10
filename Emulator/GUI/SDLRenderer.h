@@ -10,7 +10,7 @@
 class SDLRenderer final : public Renderer {
 public:
     SDLRenderer();
-    virtual ~SDLRenderer();
+    virtual ~SDLRenderer() ;
     virtual void init() override;
     virtual void clear() override;
     virtual void present() override;

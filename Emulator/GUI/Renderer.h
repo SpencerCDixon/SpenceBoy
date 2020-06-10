@@ -11,17 +11,16 @@
 #include "Emulator/GUI/Bitmap.h"
 #include "Emulator/GUI/Rect.h"
 
-struct WindowSettings {
-    u16 width;
-    u16 height;
-    bool resizeable;
-    String title;
-};
+//struct WindowSettings {
+//    u16 width;
+//    u16 height;
+//    bool resizeable;
+//    String title;
+//};
 
 class Renderer {
 public:
-//    virtual static Renderer& the();
-
+    virtual ~Renderer() {};
     virtual void init() = 0;
     virtual void clear() = 0;
     virtual void present() = 0;

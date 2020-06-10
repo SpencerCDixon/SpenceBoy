@@ -4,6 +4,7 @@
 
 #include "SDLRenderer.h"
 #include "Emulator/PPU.h"
+#include <SD/LogStream.h>
 
 // TODO: Get these dynamically from window settings.
 constexpr u16 WIN_HEIGHT = 600;
@@ -16,6 +17,7 @@ SDLRenderer::SDLRenderer()
 
 SDLRenderer::~SDLRenderer()
 {
+    dbg() << "~SDLRenderer";
 }
 
 void SDLRenderer::init()

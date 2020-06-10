@@ -29,7 +29,7 @@ public:
     ~Emulator()
     {
         // Unable to delete. Leak for now until I learn C++ better.
-//        delete m_renderer;
+        delete m_renderer;
     }
 
 //    void init();
