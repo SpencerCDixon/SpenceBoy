@@ -6,7 +6,7 @@
 
 #include <SD/Assertions.h>
 
-#include "Renderer.h"
+#include "Emulator/GUI/Rect.h"
 
 // TODO: pixel formats?
 
@@ -29,9 +29,11 @@ public:
     }
 
     void* data() { return m_data; }
+    const void* data() const { return m_data; }
     int height() { return m_height; }
     int width() { return m_width; }
     int pitch() { return m_pitch; }
+    int pitch() const { return m_pitch; }
 
 private:
     int m_height;

@@ -6,6 +6,7 @@
 
 #include "CPU.h"
 #include "Emulator/GUI/Bitmap.h"
+#include "Emulator/GUI/SDLRenderer.h"
 #include "InternalSDL.h"
 #include "Joypad.h"
 #include "MMU.h"
@@ -18,17 +19,20 @@ public:
         , m_joypad({})
         , m_cpu(*this, verbose_logging)
         , m_ppu(*this)
-
     {
+        m_renderer = new SDLRenderer;
+        m_renderer->init();
         // TODO: 2 step init process
         // mmu->init_io_devices
     }
 
     ~Emulator()
     {
+        // Unable to delete. Leak for now until I learn C++ better.
+//        delete m_renderer;
     }
 
-    void init();
+//    void init();
     void load_rom(const char* path);
     void run();
 
@@ -38,15 +42,9 @@ public:
     CPU& cpu() { return m_cpu; }
 
 private:
-    void swap();
-
-private:
     MMU m_mmu;
     Joypad m_joypad;
     CPU m_cpu;
     PPU m_ppu;
-
-    SDL_Window* m_window { nullptr };
-    SDL_Renderer* m_renderer { nullptr };
-    SDL_Texture* m_gb_screen { nullptr };
+    Renderer* m_renderer { nullptr };
 };

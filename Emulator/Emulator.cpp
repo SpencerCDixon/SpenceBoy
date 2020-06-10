@@ -13,29 +13,6 @@
 // rendering. 4,000,000 / 60 = 66k cycles worth of work a frame.
 constexpr u64 CYCLES_PER_SECOND = 4000000;
 
-void Emulator::init()
-{
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        error("unable to initialize SDL video subsystem");
-    }
-
-    if (SDL_CreateWindowAndRenderer(GB_WIN_HEIGHT, GB_WIN_WIDTH, 0, &m_window, &m_renderer)) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window and renderer: %s", SDL_GetError());
-        error("creating window and renderer");
-    }
-
-    SDL_SetWindowTitle(m_window, "SpenceBoy");
-    SDL_SetWindowResizable(m_window, SDL_bool::SDL_TRUE);
-    SDL_RenderSetLogicalSize(m_renderer, GB_WIN_HEIGHT, GB_WIN_WIDTH);
-
-    m_gb_screen = SDL_CreateTexture(
-        m_renderer,
-        SDL_PIXELFORMAT_ARGB8888,
-        SDL_TEXTUREACCESS_STREAMING,
-        GB_WIN_WIDTH,
-        GB_WIN_HEIGHT);
-}
-
 // TODO(scd): Decide if I want to be able to load a new rom once the emulator is running. For now,
 // lets keep it simple and force a load before run().
 void Emulator::load_rom(const char* path)
@@ -50,7 +27,7 @@ void Emulator::run()
     bool halted = false;
     bool show_input_debug = false;
 
-    InputDebugWindow input_debug(m_renderer);
+//    InputDebugWindow input_debug(m_renderer);
     u64 cycle_count = 0;
 
     while (!quit) {
@@ -113,25 +90,20 @@ void Emulator::run()
         //        if (halted)
         //            dbg() << "halted!";
 
+        m_renderer->clear();
+
         ppu().clear({ 255, 255, 255, 255 });
         ppu().render();
-        swap();
 
-        SDL_RenderClear(m_renderer);
-        SDL_RenderCopy(m_renderer, m_gb_screen, NULL, NULL);
+        m_renderer->draw_bitmap(ppu().bitmap(), {});
 
         // Render Debug:
         if (show_input_debug) {
-            input_debug.render(&m_joypad);
+//            input_debug.render(&m_joypad);
         }
 
-        SDL_RenderPresent(m_renderer);
-
+        m_renderer->present();
         // TODO: Timing to determine how much I should sleep to hit 60 FPS.
     }
 }
 
-void Emulator::swap()
-{
-    SDL_UpdateTexture(m_gb_screen, NULL, ppu().bitmap().data(), ppu().bitmap().pitch());
-}

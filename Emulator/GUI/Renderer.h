@@ -2,9 +2,14 @@
 // Created by Spencer Dixon on 6/9/20.
 //
 
+#pragma once
+
 #include <SD/String.h>
 #include <SD/Types.h>
 #include <SD/Color.h>
+
+#include "Emulator/GUI/Bitmap.h"
+#include "Emulator/GUI/Rect.h"
 
 struct WindowSettings {
     u16 width;
@@ -13,36 +18,17 @@ struct WindowSettings {
     String title;
 };
 
-struct Rect {
-    int x;
-    int y;
-    int width;
-    int height;
-};
-
-struct Size {
-    int width;
-    int height;
-};
-
 class Renderer {
 public:
 //    virtual static Renderer& the();
 
     virtual void init() = 0;
-    virtual void clear(const Color&) = 0;
-    virtual void swap() = 0;
+    virtual void clear() = 0;
+    virtual void present() = 0;
 
     // API Ideas:
     // void draw(Texture);
     // void fill_rect(Rect rect, Color color);
+    virtual void draw_bitmap(const Bitmap& bitmap, const Rect& rect) = 0;
 private:
 };
-
-//class SDLRenderer final : public Renderer {
-//    static SDLRenderer& the();
-//    SDLRenderer();
-//
-//    virtual void clear(const Color&) override;
-//    virtual void swap() override;
-//};

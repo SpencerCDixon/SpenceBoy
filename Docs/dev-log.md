@@ -12,6 +12,17 @@ Template for daily journal:
 
 ---
 
+**Date: 6/9/2020**
+
+### What did I get done today?
+
+* Refactor ROM loading into the MMU with all the other memory management code
+* Start scoping out custom rendering interface
+* Refactor PPU to ownership of screen bitmap from emulator to ppu
+* Refactor general rendering to use the new SDLRenderer 
+
+---
+
 **Date: 6/8/2020**
 
 ### What did I get done today?
