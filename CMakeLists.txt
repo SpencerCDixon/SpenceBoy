@@ -48,6 +48,10 @@ add_executable(cpu_test
         Emulator/MMU.cpp
         Emulator/Joypad.cpp
         Emulator/IODevice.cpp
+        Emulator/GUI/Bitmap.h
+        Emulator/GUI/Rect.h
+        Emulator/GUI/SDLRenderer.cpp
+        Emulator/GUI/SDLRenderer.h
         SD/LogStream.cpp
         SD/String.cpp
         SD/File.cpp
@@ -66,25 +70,29 @@ target_include_directories(joypad_test PUBLIC ".")
 
 if (APPLE)
     message("Configuring SDL2 for windowing on OSX")
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
     find_library(SDL2_LIBRARY sdl2)
+    find_package(SDL2_image REQUIRED)
     set(SDL2_INCLUDE_DIR "/usr/local/include/SDL2")
     message("  sdl2 lib path     : ${SDL2_LIBRARY}")
     message("  sdl2 include path : ${SDL2_INCLUDE_DIR}")
-    include_directories(${SDL2_INCLUDE_DIR})
-    target_link_libraries(gameboy ${SDL2_LIBRARY})
-    target_link_libraries(joypad_test ${SDL2_LIBRARY})
-    target_link_libraries(cpu_test ${SDL2_LIBRARY})
+    include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS})
+    target_link_libraries(gameboy ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES})
+    target_link_libraries(joypad_test ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES})
+    target_link_libraries(cpu_test ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES})
 endif()
 
 if (NOT APPLE)
     message("Configuring SDL2 for windowing on Linux")
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
     find_package(SDL2 REQUIRED)
+    find_package(SDL2_image REQUIRED)
     message("  sdl2 lib path     : ${SDL2_LIBRARY}")
     message("  sdl2 include path : ${SDL2_INCLUDE_DIR}")
-    include_directories(${SDL2_INCLUDE_DIRS})
-    target_link_libraries(gameboy ${SDL2_LIBRARIES})
-    target_link_libraries(joypad_test ${SDL2_LIBRARIES})
-    target_link_libraries(cpu_test ${SDL2_LIBRARIES})
+    include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
+    target_link_libraries(gameboy ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
+    target_link_libraries(joypad_test ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
+    target_link_libraries(cpu_test ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 endif()
 
