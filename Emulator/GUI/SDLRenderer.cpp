@@ -22,11 +22,12 @@ SDLRenderer::SDLRenderer()
 
 SDLRenderer::~SDLRenderer()
 {
-    dbg() << "~SDLRenderer";
 }
 
-void SDLRenderer::init()
+void SDLRenderer::init(RuntimeSettings settings)
 {
+    m_settings = settings;
+
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         error("unable to initialize SDL video subsystem");
     }
@@ -50,9 +51,9 @@ void SDLRenderer::init()
         GB_WIN_HEIGHT);
 
     // Image dimensions: 286x468
-    // TODO: Definitely don't have this hardcoded path... get path dynamically on boot.
     // TODO: SDL_QueryTexture(img, NULL, NULL, &w, &h); // get the width and height of the texture
-    m_hardware_background = IMG_LoadTexture(m_renderer, "/Users/spence/Code/learn/cpp/gameboy/Assets/SpenceBoy.png");
+    auto hardware_background_path = m_settings.assets_dir + "/SpenceBoy.png";
+    m_hardware_background = IMG_LoadTexture(m_renderer, hardware_background_path.characters());
 }
 
 void SDLRenderer::clear(const Color& color)

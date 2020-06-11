@@ -39,7 +39,7 @@ void Tile8x8::populate_from_palette(const u8* buffer)
             // FIXME: Pick from different colors.
             // 2 bits for pixel. 11 = black anything else = white (for now)
             bool is_black = (row_bytes >> col * 2) & black_mask;
-            set_pixel(col, row, is_black ? Color::BLACK_ARGB : Color::WHITE_ARGB);
+            set_pixel(col, row, is_black ? Color::BLACK_ARGB : Color::TAN_ARGB);
         }
     }
 }

@@ -10,6 +10,7 @@
 
 #include "Emulator/GUI/Bitmap.h"
 #include "Emulator/GUI/Rect.h"
+#include "Emulator/RuntimeSettings.h"
 
 //struct WindowSettings {
 //    u16 width;
@@ -25,7 +26,7 @@
 class Renderer {
 public:
     virtual ~Renderer() {};
-    virtual void init() = 0;
+    virtual void init(RuntimeSettings) = 0;
     virtual void clear(const Color&) = 0;
     virtual void present() = 0;
 

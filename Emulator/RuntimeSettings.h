@@ -14,6 +14,7 @@ enum class RenderingBackend {
 struct RuntimeSettings {
     RenderingBackend backend;
     bool in_test_mode;
+    bool verbose_logging;
     String test_dir;
     String assets_dir;
 };

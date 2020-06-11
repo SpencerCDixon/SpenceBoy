@@ -11,22 +11,20 @@
 #include "Joypad.h"
 #include "MMU.h"
 #include "PPU.h"
+#include "RuntimeSettings.h"
 
 class Emulator {
 public:
-    Emulator(bool verbose_logging = false)
-        : m_mmu({})
+    Emulator(RuntimeSettings settings)
+        : m_settings(settings)
+        , m_mmu({})
         , m_joypad({})
-        , m_cpu(*this, verbose_logging)
+        , m_cpu(*this, settings.verbose_logging)
         , m_ppu(*this)
     {
-       SDLRenderer::the().init();
+        SDLRenderer::the().init(settings);
         // TODO: 2 step init process
         // mmu->init_io_devices
-    }
-
-    ~Emulator()
-    {
     }
 
     void load_rom(const char* path);
@@ -37,8 +35,10 @@ public:
     PPU& ppu() { return m_ppu; }
     CPU& cpu() { return m_cpu; }
     Renderer& renderer() { return SDLRenderer::the(); }
+    String& assets_dir() { return m_settings.assets_dir; }
 
 private:
+    RuntimeSettings m_settings;
     MMU m_mmu;
     Joypad m_joypad;
     CPU m_cpu;

@@ -5,7 +5,7 @@
 #pragma once
 
 #include "Emulator/InternalSDL.h"
-#include "Renderer.h"
+#include "Emulator/GUI/Renderer.h"
 
 class SDLRenderer final : public Renderer {
 public:
@@ -13,7 +13,7 @@ public:
 
     SDLRenderer();
     virtual ~SDLRenderer() ;
-    virtual void init() override;
+    virtual void init(RuntimeSettings) override;
     virtual void clear(const Color&) override;
     virtual void present() override;
 
@@ -31,4 +31,6 @@ private:
     SDL_Texture* m_gb_screen { nullptr };
     // Hardware background
     SDL_Texture* m_hardware_background { nullptr };
+
+    RuntimeSettings m_settings;
 };
