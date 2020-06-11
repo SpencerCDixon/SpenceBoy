@@ -4,9 +4,12 @@
 
 #pragma once
 
+#include <SD/Utility.h>
+
 #include "CPU.h"
 #include "Emulator/GUI/Bitmap.h"
 #include "Emulator/GUI/SDLRenderer.h"
+#include "Emulator/GUI/Texture.h"
 #include "InternalSDL.h"
 #include "Joypad.h"
 #include "MMU.h"
@@ -23,6 +26,11 @@ public:
         , m_ppu(*this)
     {
         SDLRenderer::the().init(settings);
+
+        auto path = m_settings.assets_dir + "/SpenceBoy.png";
+        m_gb_background = Texture::from_image(path);
+        m_gb_frame = { 20, 20, m_gb_background.width(), m_gb_background.height() };
+
         // TODO: 2 step init process
         // mmu->init_io_devices
     }
@@ -43,4 +51,8 @@ private:
     Joypad m_joypad;
     CPU m_cpu;
     PPU m_ppu;
+
+    // Maybe this belongs elsewhere. But where?
+    Texture m_gb_background;
+    Rect m_gb_frame;
 };

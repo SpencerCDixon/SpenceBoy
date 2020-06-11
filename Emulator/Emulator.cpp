@@ -97,7 +97,7 @@ void Emulator::run()
         ppu().render();
 
         renderer().draw_bitmap(ppu().bitmap(), {324, 20, 256, 256});
-        renderer().draw_hardware();
+        renderer().draw_texture(m_gb_background, m_gb_frame);
 
         // Render Debug:
         if (show_input_debug) {

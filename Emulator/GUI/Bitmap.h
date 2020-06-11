@@ -5,6 +5,7 @@
 #pragma once
 
 #include <SD/Assertions.h>
+#include <SD/Types.h>
 
 #include "Emulator/GUI/Rect.h"
 

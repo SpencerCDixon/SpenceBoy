@@ -52,8 +52,8 @@ void SDLRenderer::init(RuntimeSettings settings)
 
     // Image dimensions: 286x468
     // TODO: SDL_QueryTexture(img, NULL, NULL, &w, &h); // get the width and height of the texture
-    auto hardware_background_path = m_settings.assets_dir + "/SpenceBoy.png";
-    m_hardware_background = IMG_LoadTexture(m_renderer, hardware_background_path.characters());
+//    auto hardware_background_path = m_settings.assets_dir + "/SpenceBoy.png";
+//    m_hardware_background = IMG_LoadTexture(m_renderer, hardware_background_path.characters());
 }
 
 void SDLRenderer::clear(const Color& color)
@@ -74,14 +74,14 @@ void SDLRenderer::draw_bitmap(const Bitmap& bitmap, const Rect& rect)
     SDL_RenderCopy(m_renderer, m_gb_screen, NULL, &dest);
 }
 
-void SDLRenderer::draw_hardware()
-{
-    SDL_Rect dest = { 20, 20, 286, 468 };
-    SDL_RenderCopy(m_renderer, m_hardware_background, NULL, &dest);
-}
+//void SDLRenderer::draw_hardware()
+//{
+//    SDL_Rect dest = { 20, 20, 286, 468 };
+//    SDL_RenderCopy(m_renderer, m_hardware_background, NULL, &dest);
+//}
 
-// TODO:
-// 1. Create a new Texture class
-// 2. Allow textures to be updated from Bitmaps
-// 3. Let draw commands draw textures and not bitmaps
-// 4. Maybe a temporary texture could be created for bitmap draws?
+void SDLRenderer::draw_texture(const Texture& tex, const Rect& rect)
+{
+    auto dest = rect.to_sdl();
+    SDL_RenderCopy(m_renderer, static_cast<SDL_Texture*>(tex.data()), NULL, &dest);
+}

@@ -10,6 +10,7 @@
 
 #include "Emulator/GUI/Bitmap.h"
 #include "Emulator/GUI/Rect.h"
+#include "Emulator/GUI/Texture.h"
 #include "Emulator/RuntimeSettings.h"
 
 //struct WindowSettings {
@@ -33,7 +34,8 @@ public:
     // API Ideas:
     // void draw(Texture);
     // void fill_rect(Rect rect, Color color);
-    virtual void draw_hardware() = 0;
+//    virtual void draw_hardware() = 0;
     virtual void draw_bitmap(const Bitmap& bitmap, const Rect& rect) = 0;
+    virtual void draw_texture(const Texture& tex, const Rect& rect) = 0;
 private:
 };
