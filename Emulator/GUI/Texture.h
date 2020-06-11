@@ -9,18 +9,31 @@
 #include <SD/Utility.h>
 
 // TODO:
-// 1. Create a new Texture class
 // 2. Allow textures to be updated from Bitmaps
 // 3. Let draw commands draw textures and not bitmaps (with rects)
 // 4. Maybe a temporary texture could be created for bitmap draws?
 // 5. Let PPU own it's own texture and the emulator will draw it where we want.
 
+/*
+  m_gb_screen = SDL_CreateTexture(
+        m_renderer,
+        SDL_PIXELFORMAT_ARGB8888,
+        SDL_TEXTUREACCESS_STREAMING,
+        GB_WIN_WIDTH,
+        GB_WIN_HEIGHT);
+ */
+
+enum class TextureUsage {
+    Static,
+    Streaming,
+};
+
 class Texture {
     SD_MAKE_NONCOPYABLE(Texture)
 public:
-    // TODO: This should not need to return a pointer but I couldn't figure out how to
-    // avoid calling the copy-ctor which would then dtor the texture and remove from GPU.
     static Texture from_image(const String& image_path);
+    static Texture from_size(const Size&, TextureUsage usage);
+
     Texture();
     ~Texture();
     Texture(const Texture&& tex);

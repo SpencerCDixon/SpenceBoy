@@ -5,9 +5,9 @@
 #include <SD/Assertions.h>
 #include <SD/LogStream.h>
 
-#include "Texture.h"
-#include "Emulator/InternalSDL.h"
 #include "Emulator/GUI/SDLRenderer.h"
+#include "Emulator/InternalSDL.h"
+#include "Texture.h"
 
 Texture Texture::from_image(const String& image_path)
 {
@@ -17,6 +17,25 @@ Texture Texture::from_image(const String& image_path)
     ASSERT(sdl_tex);
     SDL_QueryTexture(sdl_tex, NULL, NULL, &tex.m_height, &tex.m_width);
     tex.m_texture = sdl_tex;
+
+    return tex;
+}
+
+Texture Texture::from_size(const Size& size, TextureUsage usage)
+{
+    Texture tex;
+
+    auto sdl_tex = SDL_CreateTexture(
+        SDLRenderer::the().renderer(),
+        SDL_PIXELFORMAT_ARGB8888,
+        usage == TextureUsage::Static ? SDL_TEXTUREACCESS_STREAMING : SDL_TEXTUREACCESS_STREAMING,
+        size.width,
+        size.height);
+    ASSERT(sdl_tex);
+
+    tex.m_texture = sdl_tex;
+    tex.m_height = size.height;
+    tex.m_width = size.width;
 
     return tex;
 }
@@ -58,4 +77,3 @@ void Texture::update_data(const Bitmap& bitmap)
 {
     SDL_UpdateTexture(m_texture, NULL, bitmap.data(), bitmap.pitch());
 }
-

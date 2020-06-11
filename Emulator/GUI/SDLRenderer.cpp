@@ -6,7 +6,6 @@
 #include "Emulator/PPU.h"
 #include <SD/LogStream.h>
 
-// TODO: Get these dynamically from window settings.
 constexpr u16 WIN_HEIGHT = 500;
 constexpr u16 WIN_WIDTH = 600;
 
@@ -37,11 +36,8 @@ void SDLRenderer::init(RuntimeSettings settings)
         error("creating window and renderer");
     }
 
-    // TODO: Get title dynamically from window settings.
     // TODO: Add API for setting title which can be used by ROMParser
     SDL_SetWindowTitle(m_window, "SpenceBoy");
-    //    SDL_SetWindowResizable(m_window, SDL_bool::SDL_TRUE);
-    //    SDL_RenderSetLogicalSize(m_renderer, WIN_HEIGHT, WIN_WIDTH);
 
     m_gb_screen = SDL_CreateTexture(
         m_renderer,
@@ -49,11 +45,6 @@ void SDLRenderer::init(RuntimeSettings settings)
         SDL_TEXTUREACCESS_STREAMING,
         GB_WIN_WIDTH,
         GB_WIN_HEIGHT);
-
-    // Image dimensions: 286x468
-    // TODO: SDL_QueryTexture(img, NULL, NULL, &w, &h); // get the width and height of the texture
-//    auto hardware_background_path = m_settings.assets_dir + "/SpenceBoy.png";
-//    m_hardware_background = IMG_LoadTexture(m_renderer, hardware_background_path.characters());
 }
 
 void SDLRenderer::clear(const Color& color)
@@ -73,12 +64,6 @@ void SDLRenderer::draw_bitmap(const Bitmap& bitmap, const Rect& rect)
     SDL_UpdateTexture(m_gb_screen, NULL, bitmap.data(), bitmap.pitch());
     SDL_RenderCopy(m_renderer, m_gb_screen, NULL, &dest);
 }
-
-//void SDLRenderer::draw_hardware()
-//{
-//    SDL_Rect dest = { 20, 20, 286, 468 };
-//    SDL_RenderCopy(m_renderer, m_hardware_background, NULL, &dest);
-//}
 
 void SDLRenderer::draw_texture(const Texture& tex, const Rect& rect)
 {
