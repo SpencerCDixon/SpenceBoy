@@ -37,5 +37,6 @@ public:
 //    virtual void draw_hardware() = 0;
     virtual void draw_bitmap(const Bitmap& bitmap, const Rect& rect) = 0;
     virtual void draw_texture(const Texture& tex, const Rect& rect) = 0;
+    virtual void draw_partial_texture(const Texture& tex, const Rect& src, const Rect& dest) = 0;
 private:
 };

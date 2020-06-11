@@ -29,7 +29,9 @@ public:
 
         auto path = m_settings.assets_dir + "/SpenceBoy.png";
         m_gb_background = Texture::from_image(path);
+
         m_gb_frame = { 20, 20, m_gb_background.width(), m_gb_background.height() };
+
 
         // TODO: 2 step init process
         // mmu->init_io_devices

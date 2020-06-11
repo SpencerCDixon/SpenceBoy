@@ -14,7 +14,7 @@ struct Rect {
 
     inline SDL_Rect to_sdl() const
     {
-        return SDL_Rect { this->x, this->y, this->height, this->width };
+        return SDL_Rect { this->x, this->y, this->width, this->height };
     }
 };
 

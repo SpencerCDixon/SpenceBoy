@@ -15,7 +15,7 @@ Texture Texture::from_image(const String& image_path)
 
     auto sdl_tex = IMG_LoadTexture(SDLRenderer::the().renderer(), image_path.characters());
     ASSERT(sdl_tex);
-    SDL_QueryTexture(sdl_tex, NULL, NULL, &tex.m_height, &tex.m_width);
+    SDL_QueryTexture(sdl_tex, NULL, NULL, &tex.m_width, &tex.m_height);
     tex.m_texture = sdl_tex;
 
     return tex;

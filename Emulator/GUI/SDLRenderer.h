@@ -24,6 +24,7 @@ public:
     void draw_bitmap(const Bitmap& bitmap, const Rect& rect) override;
 //    void draw_hardware() override;
     void draw_texture(const Texture& tex, const Rect& rect) override;
+    void draw_partial_texture(const Texture& tex, const Rect& src, const Rect& dest) override;
 
     // Texture Creation
     SDL_Renderer* renderer()

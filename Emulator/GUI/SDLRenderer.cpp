@@ -68,5 +68,13 @@ void SDLRenderer::draw_bitmap(const Bitmap& bitmap, const Rect& rect)
 void SDLRenderer::draw_texture(const Texture& tex, const Rect& rect)
 {
     auto dest = rect.to_sdl();
+
     SDL_RenderCopy(m_renderer, static_cast<SDL_Texture*>(tex.data()), NULL, &dest);
+}
+
+void SDLRenderer::draw_partial_texture(const Texture& tex, const Rect& src, const Rect& dest)
+{
+    auto src_rect = src.to_sdl();
+    auto dest_rect = dest.to_sdl();
+    SDL_RenderCopy(m_renderer, static_cast<SDL_Texture*>(tex.data()), &src_rect, &dest_rect);
 }
