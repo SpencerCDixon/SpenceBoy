@@ -28,7 +28,7 @@ Texture Texture::from_size(const Size& size, TextureUsage usage)
     auto sdl_tex = SDL_CreateTexture(
         SDLRenderer::the().renderer(),
         SDL_PIXELFORMAT_ARGB8888,
-        usage == TextureUsage::Static ? SDL_TEXTUREACCESS_STREAMING : SDL_TEXTUREACCESS_STREAMING,
+        usage == TextureUsage::Static ? SDL_TEXTUREACCESS_STATIC : SDL_TEXTUREACCESS_STREAMING,
         size.width,
         size.height);
     ASSERT(sdl_tex);

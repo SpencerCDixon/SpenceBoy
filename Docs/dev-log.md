@@ -17,6 +17,7 @@ Template for daily journal:
 ### What did I get done today?
 
 * Create a movable Texture abstraction
+* Use new Texture in the PPU
 
 ---
 

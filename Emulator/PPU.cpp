@@ -85,6 +85,8 @@ void PPU::render()
         size_t y = i / 32;
         fill_square(x, y, tiles[tile_idx]);
     }
+
+    m_fullscreen_texture.update_data(m_bitmap);
 }
 
 void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile)

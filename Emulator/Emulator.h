@@ -33,6 +33,7 @@ public:
 
         // TODO: 2 step init process
         // mmu->init_io_devices
+        ppu().init_textures();
     }
 
     void load_rom(const char* path);

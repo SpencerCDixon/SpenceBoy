@@ -8,21 +8,6 @@
 #include <SD/String.h>
 #include <SD/Utility.h>
 
-// TODO:
-// 2. Allow textures to be updated from Bitmaps
-// 3. Let draw commands draw textures and not bitmaps (with rects)
-// 4. Maybe a temporary texture could be created for bitmap draws?
-// 5. Let PPU own it's own texture and the emulator will draw it where we want.
-
-/*
-  m_gb_screen = SDL_CreateTexture(
-        m_renderer,
-        SDL_PIXELFORMAT_ARGB8888,
-        SDL_TEXTUREACCESS_STREAMING,
-        GB_WIN_WIDTH,
-        GB_WIN_HEIGHT);
- */
-
 enum class TextureUsage {
     Static,
     Streaming,

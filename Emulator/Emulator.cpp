@@ -4,7 +4,6 @@
 
 #include "Emulator.h"
 #include "Joypad.h"
-#include <SD/Assertions.h>
 #include <SD/Timer.h>
 #include <SD/Types.h>
 
@@ -89,6 +88,7 @@ void Emulator::run()
 
         //        if (halted)
         //            dbg() << "halted!";
+        
         local_persist Color bg_clear { 255, 255, 255, 255};
         local_persist Color gb_clear { 125, 130, 255, 255};
         renderer().clear(bg_clear);
@@ -96,7 +96,7 @@ void Emulator::run()
         ppu().clear(gb_clear);
         ppu().render();
 
-        renderer().draw_bitmap(ppu().bitmap(), {324, 20, 256, 256});
+        renderer().draw_texture(ppu().fullscreen(), {324, 20, 256, 256});
         renderer().draw_texture(m_gb_background, m_gb_frame);
 
         // Render Debug:

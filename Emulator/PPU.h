@@ -7,8 +7,10 @@
 #include <SD/Color.h>
 #include <SD/LogStream.h>
 #include <SD/Types.h>
+#include <SD/Utility.h>
 
 #include "Emulator/GUI/Bitmap.h"
+#include "Emulator/GUI/Texture.h"
 #include "IODevice.h"
 
 class Emulator;
@@ -54,15 +56,20 @@ class PPU final : public IODevice {
 public:
     PPU(Emulator& emulator)
         : m_emulator(emulator)
-        , m_bitmap({ GB_WIN_HEIGHT, GB_WIN_WIDTH }, GB_WIN_WIDTH * BITS_PER_PIXEL)
+        , m_bitmap({ GB_WIN_WIDTH, GB_WIN_HEIGHT }, GB_WIN_WIDTH * BITS_PER_PIXEL)
     {
+    }
+
+    void init_textures() {
+        m_fullscreen_texture = Texture::from_size({ GB_WIN_WIDTH, GB_WIN_HEIGHT }, TextureUsage::Streaming);
     }
 
     // IODevice
     u8 in(u16 address) override;
     void out(u16 address, u8 value) override;
 
-    Bitmap& bitmap() { return m_bitmap; }
+    Texture& fullscreen() { return m_fullscreen_texture; }
+
     void clear(const Color& color);
     void render();
     void fill_square(size_t x, size_t y, const Tile8x8& tile);
@@ -73,6 +80,7 @@ private:
 private:
     Emulator& m_emulator;
     Bitmap m_bitmap;
+    Texture m_fullscreen_texture;
 };
 
 const LogStream& operator<<(const LogStream&, const Tile8x8&);
