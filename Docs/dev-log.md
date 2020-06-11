@@ -8,7 +8,27 @@ Template for daily journal:
 
 ### What did I get done today?
 
-### Any questions for Andreas?
+### Any questions for Andreas? 
+
+---
+
+**Date: 6/11/2020**
+
+### What did I get done today?
+
+* Create a movable Texture abstraction
+
+---
+
+**Date: 6/10/2020**
+
+### What did I get done today?
+
+* Memory leak fix with the new Renderer
+* Add SDL2_image for rendering a png background I created
+* Started doing some design work of what a nicer looking emulator interface might look like
+* Adds a RuntimeSettings abstraction to make setting directories for assets/tests easier to grok
+* Adds argument parsing to the main binary with useful help/usage info/runtime settings
 
 ---
 
