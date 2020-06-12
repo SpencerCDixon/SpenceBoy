@@ -20,7 +20,7 @@ class Emulator {
 public:
     Emulator(RuntimeSettings settings)
         : m_settings(settings)
-        , m_mmu({})
+        , m_mmu(*this)
         , m_joypad({})
         , m_cpu(*this, settings.verbose_logging)
         , m_ppu(*this)
@@ -32,6 +32,7 @@ public:
 
         // TODO: 2 step init process
         // mmu->init_io_devices
+        mmu().init_devices();
         ppu().init_textures();
     }
 

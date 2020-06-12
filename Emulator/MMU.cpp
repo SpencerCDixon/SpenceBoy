@@ -3,23 +3,37 @@
 //
 
 #include "MMU.h"
+#include "Emulator.h"
+#include "MemoryMap.h"
 
 #include <SD/Assertions.h>
 #include <SD/LogStream.h>
 
 #define MMU_DEBUG 0
 
-constexpr u16 ROM_START = 0x0000;
-constexpr u16 ROM_END = 0x3FFF;
-constexpr u16 WRAM_START = 0xC000;
-constexpr u16 WRAM_END = 0xDFFF;
-constexpr u16 VRAM_START = 0x8000;
-constexpr u16 VRAM_END = 0xA000; // Isn't GBC supposed to have 16k VRAM? Look into this...
-constexpr u16 HRAM_START = 0xFF80;
-constexpr u16 HRAM_END = 0xFFFE;
-// Echo ram is apparently not used by anything. We'll see how that holds up...
-constexpr u16 ERAM_START = 0xE000;
-constexpr u16 ERAM_END = 0xFDFF;
+void MMU::init_devices()
+{
+    // FIXME: I probably want some sort of address_to_index which translates the
+    // I/O u16 address into an index into our array of devices and such.
+    constexpr u16 ppu_start = 0xff40 - IO_START;
+    constexpr u16 ppu_end = 0xff4b - IO_START;
+    //    constexpr u16 sound_start = 0xff10 - IO_START;
+    //    constexpr u16 sound_end = 0xff3f - IO_START;
+
+    constexpr u16 interrupt_flag = 0xff0f - IO_START;
+
+    for (size_t i = 0; i < IO_SIZE; ++i) {
+        if (i == 0) {
+            m_io_devices[i] = &emulator().joypad();
+        } else if (i >= ppu_start && i < ppu_end) {
+            m_io_devices[i] = &emulator().ppu();
+        } else if (i == interrupt_flag) {
+            m_io_devices[i] = &emulator().cpu();
+        } else {
+            m_io_devices[i] = &DummyIODevice::the();
+        }
+    }
+}
 
 void MMU::load_rom(const char* rom_path)
 {
@@ -50,6 +64,10 @@ u8 MMU::read(u16 address)
     } else if (address >= HRAM_START && address <= HRAM_END) {
         u16 idx = address - HRAM_START;
         return m_hram[idx];
+    } else if (address >= IO_START && address <= IO_END) {
+        u16 idx = address - IO_START;
+        ASSERT(idx >= 0 && idx < IO_SIZE);
+        return m_io_devices[idx]->in(address);
     } else {
         dbg() << "bad read address: " << address;
     }
@@ -77,14 +95,22 @@ void MMU::write(u16 address, u8 data)
         u16 idx = address - HRAM_START;
         m_hram[idx] = data;
         return;
+    } else if (address >= IO_START && address <= IO_END) {
+        u16 idx = address - IO_START;
+        ASSERT(idx >= 0 && idx < IO_SIZE);
+        return m_io_devices[idx]->out(address, data);
     } else if (address >= ERAM_START && address <= ERAM_END) {
         dbg() << "echo ram write at: " << address << " treating as no-op";
         return;
+    } else if (address == IE_LOCATION) {
+        emulator().cpu().out(address, data);
     } else {
         dbg() << "bad write address: " << address;
     }
 
     // If we've reached here it means we're trying to write to memory
     // that is not set up yet. Fail hard and implement that memory!
-//    ASSERT_NOT_REACHED();
+    //
+    // When working on new ROM's uncomment out the assert so I can diagnose.
+    ASSERT_NOT_REACHED();
 }

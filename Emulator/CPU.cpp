@@ -5,6 +5,8 @@
 #include "CPU.h"
 #include "Emulator.h"
 #include "IODevice.h"
+#include "MemoryMap.h"
+
 #include <SD/Assertions.h>
 #include <SD/File.h>
 
@@ -16,14 +18,12 @@
 //        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
 
 // Flags
-constexpr u8 FLAG_ZERO = 0b10000000;
-constexpr u8 FLAG_SUBTRACT = 0b01000000;
+// clang-format off
+constexpr u8 FLAG_ZERO       = 0b10000000;
+constexpr u8 FLAG_SUBTRACT   = 0b01000000;
 constexpr u8 FLAG_HALF_CARRY = 0b00100000;
-constexpr u8 FLAG_CARRY = 0b00010000;
-
-// Memory Locations
-constexpr u16 IO_START = 0xFF00;
-constexpr u16 IO_END = 0xFF7F;
+constexpr u8 FLAG_CARRY      = 0b00010000;
+// clang-format on
 
 CPU::CPU(Emulator& emulator, bool verbose_logging)
     : m_emulator(emulator)
@@ -35,36 +35,10 @@ CPU::CPU(Emulator& emulator, bool verbose_logging)
     // counter being set at the proper location of 0x100.
     m_registers.stack_ptr = 0xfffe;
     m_registers.program_counter = 0x100;
-
-    initialize_io_devices();
 }
 
 CPU::~CPU()
 {
-}
-
-void CPU::initialize_io_devices()
-{
-    // FIXME: I probably want some sort of address_to_index which translates the
-    // I/O u16 address into an index into our array of devices and such.
-    constexpr u16 ppu_start = 0xff40 - IO_START;
-    constexpr u16 ppu_end = 0xff4b - IO_START;
-    //    constexpr u16 sound_start = 0xff10 - IO_START;
-    //    constexpr u16 sound_end = 0xff3f - IO_START;
-
-    constexpr u16 interrupt_flag = 0xff0f - IO_START;
-
-    for (size_t i = 0; i < IO_SIZE; ++i) {
-        if (i == 0) {
-            m_io_devices[i] = &emulator().joypad();
-        } else if (i >= ppu_start && i < ppu_end) {
-            m_io_devices[i] = &emulator().ppu();
-        } else if (i == interrupt_flag) {
-            m_io_devices[i] = this;
-        } else {
-            m_io_devices[i] = &DummyIODevice::the();
-        }
-    }
 }
 
 StepResult CPU::step()
@@ -448,27 +422,12 @@ u16 CPU::fetch_and_inc_16bit()
 
 u8 CPU::read(u16 address)
 {
-    if (address >= IO_START && address <= IO_END) {
-        u16 idx = address - IO_START;
-        ASSERT(idx >= 0 && idx < IO_SIZE);
-        return m_io_devices[idx]->in(address);
-    } else {
-        return emulator().mmu().read(address);
-    }
-    return 0;
+    return emulator().mmu().read(address);
 }
 
 void CPU::write(u16 address, u8 data)
 {
-    if (address >= IO_START && address <= IO_END) {
-        u16 idx = address - IO_START;
-        ASSERT(idx >= 0 && idx < IO_SIZE);
-        return m_io_devices[idx]->out(address, data);
-    } else if (address == 0xffff) {
-        return out(address, data);
-    } else {
-        return emulator().mmu().write(address, data);
-    }
+    return emulator().mmu().write(address, data);
 }
 
 u8 CPU::in(u16 address)

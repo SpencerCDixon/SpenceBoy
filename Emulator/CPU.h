@@ -15,8 +15,6 @@
 
 #include <stdlib.h>
 
-constexpr size_t IO_SIZE = 112;
-
 class Emulator;
 
 struct Registers {
@@ -66,7 +64,6 @@ public:
 
 private:
     void handle_prefix_op_code(const PrefixOpCode& op_code);
-    void initialize_io_devices();
 
     // Memory Access
     u8 read(u16 address);
@@ -166,10 +163,6 @@ private:
     Emulator& m_emulator;
     bool m_verbose_logging;
     Registers m_registers;
-
-    // TODO: move into MMU (m_rom and io devices)
-    IODevice* m_io_devices[IO_SIZE];
-
     bool m_interrupts_enabled { false };
 };
 

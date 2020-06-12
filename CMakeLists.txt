@@ -33,7 +33,7 @@ add_executable(gameboy
         SD/LogStream.h
         SD/Option.h
         SD/String.cpp
-        SD/Timer.h Emulator/GUI/Texture.cpp Emulator/GUI/Texture.h)
+        SD/Timer.h Emulator/GUI/Texture.cpp Emulator/GUI/Texture.h Emulator/MemoryMap.h)
 target_include_directories(gameboy PUBLIC ".")
 
 #---------
