@@ -86,5 +86,5 @@ void MMU::write(u16 address, u8 data)
 
     // If we've reached here it means we're trying to write to memory
     // that is not set up yet. Fail hard and implement that memory!
-    ASSERT_NOT_REACHED();
+//    ASSERT_NOT_REACHED();
 }

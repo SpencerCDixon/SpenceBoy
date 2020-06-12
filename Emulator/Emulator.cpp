@@ -95,16 +95,16 @@ void Emulator::run()
         //        if (halted)
         //            dbg() << "halted!";
 
-        local_persist Color bg_clear { 255, 255, 255, 255};
-        local_persist Color gb_clear { 125, 130, 255, 255};
+        local_persist Color bg_clear { 255, 255, 255, 255 };
+        local_persist Color gb_clear { 125, 130, 255, 255 };
         renderer().clear(bg_clear);
 
         ppu().clear(gb_clear);
         ppu().render();
 
         renderer().draw_texture(m_gb_background, Point { 20, 20 });
-        renderer().draw_texture(ppu().fullscreen(), Point {324, 20});
-        renderer().draw_partial_texture(ppu().fullscreen(), {0, 0, 159, 143}, {85, 67, 159, 143});
+        renderer().draw_texture(ppu().fullscreen(), Point { 324, 20 });
+        renderer().draw_partial_texture(ppu().fullscreen(), { 0, 0, 159, 143 }, { 85, 67, 159, 143 });
 
         // Render Debug:
         if (show_input_debug) {
@@ -115,4 +115,3 @@ void Emulator::run()
         // TODO: Timing to determine how much I should sleep to hit 60 FPS.
     }
 }
-

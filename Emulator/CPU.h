@@ -45,8 +45,7 @@ struct CPUTestState {
 String to_trace_line(const CPUTestState&);
 String to_snapshot(const CPUTestState&);
 
-// Could be an IODevice, or I could create Interrupt abstraction (separately)
-class CPU {
+class CPU final : public IODevice {
 
 public:
     explicit CPU(Emulator& emulator, bool verbose_logging = false);
@@ -55,6 +54,10 @@ public:
     StepResult step();
     Emulator& emulator() { return m_emulator; }
     bool interrupts_enabled() { return m_interrupts_enabled; }
+
+    // IODevice
+    u8 in(u16 address) override ;
+    void out(u16 address, u8 value) override ;
 
     //
     // Testing Utilities

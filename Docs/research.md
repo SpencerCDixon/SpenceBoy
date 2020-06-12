@@ -198,7 +198,6 @@ Z: Zero - set if the instructions result was zero
 1. Set scrolling (SCY, SCX)
 1. Set palette
 
-
 ## Stack
 
 * Stack pointer is set to $FFFE when game boy first loads

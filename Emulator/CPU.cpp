@@ -52,11 +52,15 @@ void CPU::initialize_io_devices()
     //    constexpr u16 sound_start = 0xff10 - IO_START;
     //    constexpr u16 sound_end = 0xff3f - IO_START;
 
+    constexpr u16 interrupt_flag = 0xff0f - IO_START;
+
     for (size_t i = 0; i < IO_SIZE; ++i) {
         if (i == 0) {
             m_io_devices[i] = &emulator().joypad();
         } else if (i >= ppu_start && i < ppu_end) {
             m_io_devices[i] = &emulator().ppu();
+        } else if (i == interrupt_flag) {
+            m_io_devices[i] = this;
         } else {
             m_io_devices[i] = &DummyIODevice::the();
         }
@@ -460,9 +464,22 @@ void CPU::write(u16 address, u8 data)
         u16 idx = address - IO_START;
         ASSERT(idx >= 0 && idx < IO_SIZE);
         return m_io_devices[idx]->out(address, data);
+    } else if (address == 0xffff) {
+        return out(address, data);
     } else {
         return emulator().mmu().write(address, data);
     }
+}
+
+u8 CPU::in(u16 address)
+{
+    dbg() << "CPU::in(" << to_hex(address) << ")";
+    return 0;
+}
+
+void CPU::out(u16 address, u8 value)
+{
+    dbg() << "CPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
 }
 
 void CPU::push(u8* reg_one, u8* reg_two)
