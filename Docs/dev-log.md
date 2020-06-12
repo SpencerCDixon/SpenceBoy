@@ -8,7 +8,16 @@ Template for daily journal:
 
 ### What did I get done today?
 
-### Any questions for Andreas? 
+### Any questions for Andreas?
+ 
+---
+
+**Date: 6/12/2020**
+
+### What did I get done today?
+
+* Create MemoryMap header to store all important locations with descriptions
+* Move reading/writing of IODevices into the MMU
 
 ---
 
