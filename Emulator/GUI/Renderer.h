@@ -32,7 +32,7 @@ public:
 
     virtual void draw_texture(const Texture& tex, const Rect& rect) = 0;
     virtual void draw_texture(const Texture& tex, const Point& point) = 0;
-    virtual void draw_texture_rotated(const Texture& tex, const Point& rect, int angle) = 0;
+    virtual void draw_texture_rotated(const Texture& tex, const Point& rect, f64 angle) = 0;
     virtual void draw_partial_texture(const Texture& tex, const Rect& src, const Rect& dest) = 0;
 private:
 };

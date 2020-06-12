@@ -2,8 +2,8 @@
 // Created by Spencer Dixon on 6/1/20.
 //
 
-#include "Emulator.h"
 #include "Joypad.h"
+#include "Emulator.h"
 #include <SD/Assertions.h>
 #include <SD/Bytes.h>
 
@@ -90,16 +90,12 @@ InputDebugWindow::InputDebugWindow(Emulator& emulator)
 {
     auto a_path = emulator.assets_dir() + "/A.png";
     m_a_tex = Texture::from_image(a_path);
-
     auto b_path = emulator.assets_dir() + "/B.png";
     m_b_tex = Texture::from_image(b_path);
-
     auto start_path = emulator.assets_dir() + "/Start.png";
     m_start_tex = Texture::from_image(start_path);
-
     auto select_path = emulator.assets_dir() + "/Select.png";
     m_select_tex = Texture::from_image(select_path);
-
     auto arrow_path = emulator.assets_dir() + "/Arrow.png";
     m_arrow_tex = Texture::from_image(arrow_path);
 }
@@ -110,11 +106,30 @@ InputDebugWindow::~InputDebugWindow()
 
 void InputDebugWindow::render()
 {
-    constexpr Color DOWN_COLOR = { 255, 0, 0, 255};
-    constexpr Color UP_COLOR = { 255, 255, 255, 255};
+    constexpr Color DOWN_COLOR = { 220, 10, 10, 255 };
+    constexpr Color UP_COLOR = { 255, 255, 255, 255 };
 
-    // FIXME: Should
-    m_b_tex.color(emulator().joypad().is_right_down() ? DOWN_COLOR : UP_COLOR);
-    m_emulator.renderer().draw_texture(m_b_tex, Point {205, 330});
+    m_a_tex.color(emulator().joypad().is_a_down() ? DOWN_COLOR : UP_COLOR);
+    m_emulator.renderer().draw_texture(m_a_tex, Point { 254, 315 });
 
+    m_b_tex.color(emulator().joypad().is_b_down() ? DOWN_COLOR : UP_COLOR);
+    m_emulator.renderer().draw_texture(m_b_tex, Point { 205, 330 });
+
+    m_arrow_tex.color(emulator().joypad().is_up_down() ? DOWN_COLOR : UP_COLOR);
+    m_emulator.renderer().draw_texture_rotated(m_arrow_tex, Point { 76, 303 }, 0);   // up
+
+    m_arrow_tex.color(emulator().joypad().is_right_down() ? DOWN_COLOR : UP_COLOR);
+    m_emulator.renderer().draw_texture_rotated(m_arrow_tex, Point { 97, 324 }, 90);  // right
+
+    m_arrow_tex.color(emulator().joypad().is_down_down() ? DOWN_COLOR : UP_COLOR);
+    m_emulator.renderer().draw_texture_rotated(m_arrow_tex, Point { 76, 345 }, 180); // down
+
+    m_arrow_tex.color(emulator().joypad().is_left_down() ? DOWN_COLOR : UP_COLOR);
+    m_emulator.renderer().draw_texture_rotated(m_arrow_tex, Point { 55, 324 }, 270); // left
+
+    m_start_tex.color(emulator().joypad().is_start_down() ? DOWN_COLOR : UP_COLOR);
+    m_emulator.renderer().draw_texture(m_start_tex, Point { 169, 421 });
+
+    m_select_tex.color(emulator().joypad().is_select_down() ? DOWN_COLOR : UP_COLOR);
+    m_emulator.renderer().draw_texture(m_select_tex, Point { 112, 421 });
 }

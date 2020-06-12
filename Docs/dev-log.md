@@ -18,6 +18,8 @@ Template for daily journal:
 
 * Create a movable Texture abstraction
 * Use new Texture in the PPU
+* Finish the rest of the inputs (start/select)
+* Refactor the InputDebug window to use the new renderer
 
 ---
 

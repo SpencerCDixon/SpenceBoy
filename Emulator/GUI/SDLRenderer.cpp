@@ -75,9 +75,10 @@ void SDLRenderer::draw_texture(const Texture& tex, const Point& point)
     SDL_RenderCopy(m_renderer, static_cast<SDL_Texture*>(tex.data()), NULL, &rect);
 }
 
-void SDLRenderer::draw_texture_rotated(const Texture&, const Point&, int)
+void SDLRenderer::draw_texture_rotated(const Texture& tex, const Point& point, f64 angle)
 {
-    ASSERT_NOT_REACHED();
+    SDL_Rect rect { point.x, point.y, tex.width(), tex.height() };
+    SDL_RenderCopyEx(m_renderer, static_cast<SDL_Texture*>(tex.data()), NULL, &rect, angle, NULL, SDL_FLIP_NONE);
 }
 
 void SDLRenderer::draw_partial_texture(const Texture& tex, const Rect& src, const Rect& dest)

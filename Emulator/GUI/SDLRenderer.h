@@ -20,7 +20,7 @@ public:
 
     void draw_texture(const Texture& tex, const Rect& rect) override;
     void draw_texture(const Texture& tex, const Point& point) override;
-    void draw_texture_rotated(const Texture& tex, const Point& rect, int angle) override;
+    void draw_texture_rotated(const Texture& tex, const Point& rect, f64 angle) override;
     void draw_partial_texture(const Texture& tex, const Rect& src, const Rect& dest) override;
 
     SDL_Renderer* renderer()

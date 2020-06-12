@@ -54,10 +54,16 @@ void Emulator::run()
                     joypad().set_key_state(Key::Up, is_down);
                     break;
                 case SDLK_q:
-                    joypad().set_key_state(Key::A, is_down);
+                    joypad().set_key_state(Key::B, is_down);
                     break;
                 case SDLK_e:
-                    joypad().set_key_state(Key::B, is_down);
+                    joypad().set_key_state(Key::A, is_down);
+                    break;
+                case SDLK_SPACE:
+                    joypad().set_key_state(Key::Start, is_down);
+                    break;
+                case SDLK_r:
+                    joypad().set_key_state(Key::Select, is_down);
                     break;
                 default:
                     break;
