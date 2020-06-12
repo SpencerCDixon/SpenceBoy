@@ -7,8 +7,9 @@
 #include <SD/LogStream.h>
 #include <SD/Types.h>
 
-#include "InternalSDL.h"
+#include "Emulator/GUI/Texture.h"
 #include "IODevice.h"
+#include "InternalSDL.h"
 
 // Overview of how Joypad I/O Works:
 //
@@ -26,6 +27,8 @@
 // counter intuitive to basically all programming and was probably some
 // limitation of the hardware which allowed them to use one less component
 // or something.
+
+class Emulator;
 
 enum class Key : u8 {
     Right,
@@ -73,7 +76,7 @@ public:
     // Interface with SDL
     void set_key_state(const Key& key, bool is_down);
 
-protected:
+private:
     void set_mode(JoypadReadMode mode) { m_mode = mode; }
 
     bool is_right_down() const { return m_keys[static_cast<int>(Key::Right)]; }
@@ -91,26 +94,24 @@ private:
 };
 
 class InputDebugWindow {
-
 public:
-    InputDebugWindow(SDL_Renderer* renderer);
+    InputDebugWindow(Emulator& emulator);
     ~InputDebugWindow();
 
-    void render(Joypad*);
+    void render();
 
 private:
-    SDL_Renderer* m_renderer { nullptr };
+    Emulator& emulator() { return m_emulator; }
 
-    // Textures
-    // TODO: Create OwnPtr for these textures, will need a custom dealloc method
-    SDL_Texture* m_left_tex { nullptr };
-    SDL_Texture* m_right_tex { nullptr };
-    SDL_Texture* m_up_tex { nullptr };
-    SDL_Texture* m_down_tex { nullptr };
-    SDL_Texture* m_a_tex { nullptr };
-    SDL_Texture* m_b_tex { nullptr };
-    SDL_Texture* m_start_tex { nullptr };
-    SDL_Texture* m_select_tex { nullptr };
+private:
+    Emulator& m_emulator;
+
+    // FIXME: This is a lot of textures, we may want to make a spritesheet and index into it
+    Texture m_a_tex;
+    Texture m_b_tex;
+    Texture m_start_tex;
+    Texture m_select_tex;
+    Texture m_arrow_tex;
 };
 
 const LogStream& operator<<(const LogStream& stream, const Joypad& input);

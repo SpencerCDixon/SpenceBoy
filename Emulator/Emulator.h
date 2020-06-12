@@ -25,13 +25,10 @@ public:
         , m_cpu(*this, settings.verbose_logging)
         , m_ppu(*this)
     {
-        SDLRenderer::the().init(settings);
+        SDLRenderer::the().init();
 
         auto path = m_settings.assets_dir + "/SpenceBoy.png";
         m_gb_background = Texture::from_image(path);
-
-        m_gb_frame = { 20, 20, m_gb_background.width(), m_gb_background.height() };
-
 
         // TODO: 2 step init process
         // mmu->init_io_devices
@@ -57,5 +54,4 @@ private:
 
     // Maybe this belongs elsewhere. But where?
     Texture m_gb_background;
-    Rect m_gb_frame;
 };

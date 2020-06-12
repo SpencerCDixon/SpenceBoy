@@ -73,7 +73,12 @@ Texture::~Texture()
         SDL_DestroyTexture(m_texture);
 }
 
-void Texture::update_data(const Bitmap& bitmap)
+void Texture::set_data(const Bitmap& bitmap)
 {
     SDL_UpdateTexture(m_texture, NULL, bitmap.data(), bitmap.pitch());
+}
+
+void Texture::color(const Color& color)
+{
+    SDL_SetTextureColorMod(m_texture, color.r, color.g, color.b);
 }

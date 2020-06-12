@@ -10,6 +10,7 @@ constexpr u16 WIN_HEIGHT = 500;
 constexpr u16 WIN_WIDTH = 600;
 
 static SDLRenderer s_the;
+
 SDLRenderer& SDLRenderer::the()
 {
     return s_the;
@@ -23,10 +24,8 @@ SDLRenderer::~SDLRenderer()
 {
 }
 
-void SDLRenderer::init(RuntimeSettings settings)
+void SDLRenderer::init()
 {
-    m_settings = settings;
-
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         error("unable to initialize SDL video subsystem");
     }
@@ -36,9 +35,15 @@ void SDLRenderer::init(RuntimeSettings settings)
         error("creating window and renderer");
     }
 
+    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize PNG loading: %s", SDL_GetError());
+        error("initializing png loading");
+    }
+
     // TODO: Add API for setting title which can be used by ROMParser
     SDL_SetWindowTitle(m_window, "SpenceBoy");
 
+    // TODO: Move background out of the renderer and into a Background class
     m_gb_screen = SDL_CreateTexture(
         m_renderer,
         SDL_PIXELFORMAT_ARGB8888,
@@ -58,18 +63,21 @@ void SDLRenderer::present()
     SDL_RenderPresent(m_renderer);
 }
 
-void SDLRenderer::draw_bitmap(const Bitmap& bitmap, const Rect& rect)
-{
-    auto dest = rect.to_sdl();
-    SDL_UpdateTexture(m_gb_screen, NULL, bitmap.data(), bitmap.pitch());
-    SDL_RenderCopy(m_renderer, m_gb_screen, NULL, &dest);
-}
-
 void SDLRenderer::draw_texture(const Texture& tex, const Rect& rect)
 {
     auto dest = rect.to_sdl();
-
     SDL_RenderCopy(m_renderer, static_cast<SDL_Texture*>(tex.data()), NULL, &dest);
+}
+
+void SDLRenderer::draw_texture(const Texture& tex, const Point& point)
+{
+    SDL_Rect rect { point.x, point.y, tex.width(), tex.height() };
+    SDL_RenderCopy(m_renderer, static_cast<SDL_Texture*>(tex.data()), NULL, &rect);
+}
+
+void SDLRenderer::draw_texture_rotated(const Texture&, const Point&, int)
+{
+    ASSERT_NOT_REACHED();
 }
 
 void SDLRenderer::draw_partial_texture(const Texture& tex, const Rect& src, const Rect& dest)

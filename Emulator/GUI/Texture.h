@@ -7,6 +7,7 @@
 #include "Emulator/GUI/Bitmap.h"
 #include <SD/String.h>
 #include <SD/Utility.h>
+#include <SD/Color.h>
 
 enum class TextureUsage {
     Static,
@@ -24,7 +25,9 @@ public:
     Texture(const Texture&& tex);
     Texture& operator=(Texture&& other);
 
-    void update_data(const Bitmap&);
+    void set_data(const Bitmap&);
+
+    void color(const Color&);
 
     int width() { return m_width; }
     int width() const { return m_width; }
@@ -33,6 +36,9 @@ public:
 
     void* data() { return m_texture; }
     void* data() const { return m_texture; }
+
+    // FIXME: Does SDL have rotation?
+    // Yes it does: https://wiki.libsdl.org/SDL_RenderCopyEx
 
 private:
     int m_height { 0 };

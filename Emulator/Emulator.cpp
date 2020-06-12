@@ -24,9 +24,9 @@ void Emulator::run()
     SDL_Event e;
     bool quit = false;
     bool halted = false;
-    bool show_input_debug = false;
+    bool show_input_debug = true;
 
-//    InputDebugWindow input_debug(m_renderer);
+    InputDebugWindow input_debug(*this);
     u64 cycle_count = 0;
 
     while (!quit) {
@@ -96,13 +96,13 @@ void Emulator::run()
         ppu().clear(gb_clear);
         ppu().render();
 
-        renderer().draw_texture(m_gb_background, m_gb_frame);
-        renderer().draw_texture(ppu().fullscreen(), {324, 20, 256, 256});
+        renderer().draw_texture(m_gb_background, Point { 20, 20 });
+        renderer().draw_texture(ppu().fullscreen(), Point {324, 20});
         renderer().draw_partial_texture(ppu().fullscreen(), {0, 0, 159, 143}, {85, 67, 159, 143});
 
         // Render Debug:
         if (show_input_debug) {
-//            input_debug.render(&m_joypad);
+            input_debug.render();
         }
 
         renderer().present();

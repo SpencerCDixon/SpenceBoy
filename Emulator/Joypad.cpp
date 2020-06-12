@@ -2,6 +2,7 @@
 // Created by Spencer Dixon on 6/1/20.
 //
 
+#include "Emulator.h"
 #include "Joypad.h"
 #include <SD/Assertions.h>
 #include <SD/Bytes.h>
@@ -84,95 +85,36 @@ const LogStream& operator<<(const LogStream& stream, const Joypad& input)
 // InputDebugWindow
 //
 
-static SDL_Texture* load_texture_from_bmp(SDL_Renderer* renderer, const char* file_path)
+InputDebugWindow::InputDebugWindow(Emulator& emulator)
+    : m_emulator(emulator)
 {
-    auto surface = SDL_LoadBMP(file_path);
-    if (!surface) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_LoadBMP() failed: %s", SDL_GetError());
-        error("loading bitmap");
-    }
-    auto tex = SDL_CreateTextureFromSurface(renderer, surface);
-    if (!tex) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface() failed: %s", SDL_GetError());
-        error("creating texture from bitmap");
-    }
-    SDL_FreeSurface(surface);
-    return tex;
-}
+    auto a_path = emulator.assets_dir() + "/A.png";
+    m_a_tex = Texture::from_image(a_path);
 
-InputDebugWindow::InputDebugWindow(SDL_Renderer* renderer)
-    : m_renderer(renderer)
+    auto b_path = emulator.assets_dir() + "/B.png";
+    m_b_tex = Texture::from_image(b_path);
 
-{
-    // FIXME: Does SDL have rotation? Seems silly to duplicate all these textures.
-    // Yes it does: https://wiki.libsdl.org/SDL_RenderCopyEx
-    m_right_tex = load_texture_from_bmp(renderer, "../Assets/input-bmps/right.bmp");
-    m_left_tex = load_texture_from_bmp(renderer, "../Assets/input-bmps/left.bmp");
-    m_down_tex = load_texture_from_bmp(renderer, "../Assets/input-bmps/down.bmp");
-    m_up_tex = load_texture_from_bmp(renderer, "../Assets/input-bmps/up.bmp");
-    m_a_tex = load_texture_from_bmp(renderer, "../Assets/input-bmps/a.bmp");
-    m_b_tex = load_texture_from_bmp(renderer, "../Assets/input-bmps/b.bmp");
-    m_start_tex = load_texture_from_bmp(renderer, "../Assets/input-bmps/start.bmp");
-    m_select_tex = load_texture_from_bmp(renderer, "../Assets/input-bmps/select.bmp");
+    auto start_path = emulator.assets_dir() + "/Start.png";
+    m_start_tex = Texture::from_image(start_path);
+
+    auto select_path = emulator.assets_dir() + "/Select.png";
+    m_select_tex = Texture::from_image(select_path);
+
+    auto arrow_path = emulator.assets_dir() + "/Arrow.png";
+    m_arrow_tex = Texture::from_image(arrow_path);
 }
 
 InputDebugWindow::~InputDebugWindow()
 {
-    if (m_right_tex)
-        SDL_DestroyTexture(m_right_tex);
-    if (m_left_tex)
-        SDL_DestroyTexture(m_left_tex);
-    if (m_down_tex)
-        SDL_DestroyTexture(m_down_tex);
-    if (m_up_tex)
-        SDL_DestroyTexture(m_up_tex);
-    if (m_a_tex)
-        SDL_DestroyTexture(m_a_tex);
-    if (m_b_tex)
-        SDL_DestroyTexture(m_b_tex);
-    if (m_start_tex)
-        SDL_DestroyTexture(m_start_tex);
-    if (m_select_tex)
-        SDL_DestroyTexture(m_select_tex);
 }
 
-void InputDebugWindow::render(Joypad* joypad)
+void InputDebugWindow::render()
 {
-    SDL_Rect SrcR { 0, 0, 15, 15};
-    SDL_Rect DestR { 0, 0, 15, 15 };
+    constexpr Color DOWN_COLOR = { 255, 0, 0, 255};
+    constexpr Color UP_COLOR = { 255, 255, 255, 255};
 
-    // Up/down = 8x13
-    // Left/right = 14x8
+    // FIXME: Should
+    m_b_tex.color(emulator().joypad().is_right_down() ? DOWN_COLOR : UP_COLOR);
+    m_emulator.renderer().draw_texture(m_b_tex, Point {205, 330});
 
-    if (joypad->is_down_down()) {
-        SDL_SetTextureColorMod(m_down_tex, 255, 0, 0);
-    } else {
-        SDL_SetTextureColorMod(m_down_tex, 0, 0, 0);
-    }
-
-    if (joypad->is_up_down()) {
-        SDL_SetTextureColorMod(m_up_tex, 255, 0, 0);
-    } else {
-        SDL_SetTextureColorMod(m_up_tex, 0, 0, 0);
-    }
-
-    if (joypad->is_left_down()) {
-        SDL_SetTextureColorMod(m_left_tex, 255, 0, 0);
-    } else {
-        SDL_SetTextureColorMod(m_left_tex, 0, 0, 0);
-    }
-
-    if (joypad->is_right_down()) {
-        SDL_SetTextureColorMod(m_right_tex, 255, 0, 0);
-    } else {
-        SDL_SetTextureColorMod(m_right_tex, 0, 0, 0);
-    }
-
-    SDL_RenderCopy(m_renderer, m_down_tex, &SrcR, &DestR);
-    DestR.x += 15;
-    SDL_RenderCopy(m_renderer, m_up_tex, &SrcR, &DestR);
-    DestR.x += 15;
-    SDL_RenderCopy(m_renderer, m_left_tex, &SrcR, &DestR);
-    DestR.x += 15;
-    SDL_RenderCopy(m_renderer, m_right_tex, &SrcR, &DestR);
 }
