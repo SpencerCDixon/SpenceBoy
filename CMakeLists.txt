@@ -52,6 +52,7 @@ add_executable(cpu_test
         Emulator/GUI/Rect.h
         Emulator/GUI/SDLRenderer.cpp
         Emulator/GUI/SDLRenderer.h
+        Emulator/GUI/Texture.cpp
         SD/LogStream.cpp
         SD/String.cpp
         SD/File.cpp
@@ -61,7 +62,7 @@ target_include_directories(cpu_test PUBLIC ".")
 add_executable(string_test Tests/TestString.cpp SD/String.cpp SD/LogStream.cpp SD/Utility.h)
 target_include_directories(string_test PUBLIC ".")
 
-add_executable(joypad_test Tests/TestJoypadDevice.cpp SD/LogStream.cpp Emulator/Joypad.cpp)
+add_executable(joypad_test Tests/TestJoypadDevice.cpp SD/LogStream.cpp Emulator/Joypad.cpp Emulator/GUI/SDLRenderer.cpp Emulator/GUI/Texture.cpp SD/String.cpp)
 target_include_directories(joypad_test PUBLIC ".")
 
 #-------------
