@@ -56,6 +56,17 @@ void PPU::clear(const Color& color)
 
         row += m_bitmap.pitch();
     }
+
+    row = (u8*)m_tileset_bitmap.data();
+
+    for (int y = 0; y < m_tileset_bitmap.height(); ++y) {
+        u32* pixel = (u32*)row;
+
+        for (int x = 0; x < m_tileset_bitmap.width(); ++x)
+            *pixel++ = argb_color;
+
+        row += m_tileset_bitmap.pitch();
+    }
 }
 
 // TODO:
@@ -86,7 +97,8 @@ void PPU::render()
         fill_square(x, y, tiles[tile_idx]);
     }
 
-    m_fullscreen_texture.set_data(m_bitmap);
+    m_tilemap.set_data(m_bitmap);
+    m_tileset.set_data(m_tileset_bitmap);
 }
 
 void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile)

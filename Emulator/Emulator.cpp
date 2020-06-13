@@ -104,8 +104,9 @@ void Emulator::run()
         ppu().render();
 
         renderer().draw_texture(m_gb_background, Point { 20, 20 });
-        renderer().draw_texture(ppu().fullscreen(), Point { 324, 20 });
-        renderer().draw_partial_texture(ppu().fullscreen(), { 0, 0, 159, 143 }, { 85, 67, 159, 143 });
+        renderer().draw_texture(ppu().tilemap(), Point { 324, 20 });
+        renderer().draw_texture(ppu().tileset(), Point { 324, 286 });
+        renderer().draw_partial_texture(ppu().tilemap(), { 0, 0, 159, 143 }, { 85, 67, 159, 143 });
 
         // Render Debug:
         if (show_input_debug) {

@@ -21,6 +21,8 @@ class Emulator;
 //constexpr u16 WIN_WIDTH = 160;
 constexpr u16 GB_WIN_HEIGHT = 256;
 constexpr u16 GB_WIN_WIDTH = 256;
+constexpr u16 TILESET_HEIGHT = 192;
+constexpr u16 TILESET_WIDTH = 256;
 
 class Tile8x8 {
 public:
@@ -57,18 +59,22 @@ public:
     PPU(Emulator& emulator)
         : m_emulator(emulator)
         , m_bitmap({ GB_WIN_WIDTH, GB_WIN_HEIGHT }, GB_WIN_WIDTH * BITS_PER_PIXEL)
+        , m_tileset_bitmap({ TILESET_WIDTH, TILESET_HEIGHT }, TILESET_WIDTH * BITS_PER_PIXEL)
     {
     }
 
-    void init_textures() {
-        m_fullscreen_texture = Texture::from_size({ GB_WIN_WIDTH, GB_WIN_HEIGHT }, TextureUsage::Streaming);
+    void init_textures()
+    {
+        m_tilemap = Texture::from_size({ GB_WIN_WIDTH, GB_WIN_HEIGHT }, TextureUsage::Streaming);
+        m_tileset = Texture::from_size({ TILESET_WIDTH, TILESET_HEIGHT }, TextureUsage::Streaming);
     }
 
     // IODevice
     u8 in(u16 address) override;
     void out(u16 address, u8 value) override;
 
-    Texture& fullscreen() { return m_fullscreen_texture; }
+    Texture& tilemap() { return m_tilemap; }
+    Texture& tileset() { return m_tileset; }
 
     void clear(const Color& color);
     void render();
@@ -80,7 +86,10 @@ private:
 private:
     Emulator& m_emulator;
     Bitmap m_bitmap;
-    Texture m_fullscreen_texture;
+    Bitmap m_tileset_bitmap;
+
+    Texture m_tilemap;
+    Texture m_tileset;
 };
 
 const LogStream& operator<<(const LogStream&, const Tile8x8&);
