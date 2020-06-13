@@ -73,6 +73,9 @@ private:
     void pop(u8* reg_one, u8* reg_two);
     void pop_return();
 
+    // Arithmetic
+    void cp_a(u8* value_ptr);
+
     // Bit Twiddling
     void shift_left(u8* reg_ptr);
     void xor_reg(u8* reg_ptr);

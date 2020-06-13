@@ -151,6 +151,7 @@ int main(int argc, char* argv[])
         TEST_CASE(stack, stack.gb)
         TEST_CASE(pushing_and_popping, push-pop.gb)
         TEST_CASE(complex_subroutine, complex-routine.gb)
+        TEST_CASE(cp, cp.gb)
     }
 
     // Not ready for prime time yet

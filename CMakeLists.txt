@@ -48,6 +48,7 @@ add_executable(cpu_test
         Emulator/MMU.cpp
         Emulator/Joypad.cpp
         Emulator/IODevice.cpp
+        Emulator/SoundCard.cpp
         Emulator/GUI/Bitmap.h
         Emulator/GUI/Rect.h
         Emulator/GUI/SDLRenderer.cpp

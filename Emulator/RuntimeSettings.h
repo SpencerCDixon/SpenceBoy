@@ -11,6 +11,10 @@ enum class RenderingBackend {
     Serenity,
 };
 
+// TODO:
+// * --no-gui
+// * --run
+// * --backend <serenity|sdl|gtk|metal>
 struct RuntimeSettings {
     RenderingBackend backend;
     bool in_test_mode;

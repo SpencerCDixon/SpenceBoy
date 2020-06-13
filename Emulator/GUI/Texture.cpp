@@ -68,7 +68,6 @@ Texture& Texture::operator=(Texture&& other)
 
 Texture::~Texture()
 {
-    dbg() << "~Texture()";
     if (m_texture)
         SDL_DestroyTexture(m_texture);
 }

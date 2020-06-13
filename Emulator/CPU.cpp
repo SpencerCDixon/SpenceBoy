@@ -208,6 +208,32 @@ StepResult CPU::step()
             m_registers.program_counter += offset;
         break;
     }
+    case OpCode::CP_A:
+        cp_a(&m_registers.a);
+        break;
+    case OpCode::CP_B:
+        cp_a(&m_registers.b);
+        break;
+    case OpCode::CP_C:
+        cp_a(&m_registers.c);
+        break;
+    case OpCode::CP_D:
+        cp_a(&m_registers.d);
+        break;
+    case OpCode::CP_E:
+        cp_a(&m_registers.e);
+        break;
+    case OpCode::CP_H:
+        cp_a(&m_registers.h);
+        break;
+    case OpCode::CP_L:
+        cp_a(&m_registers.l);
+        break;
+    case OpCode::CP_d8: {
+        u8 value = fetch_and_inc_8bit();
+        cp_a(&value);
+        break;
+    }
     case OpCode::SUB_d8:
         m_registers.a -= fetch_and_inc_8bit();
         break;
@@ -477,6 +503,18 @@ void CPU::pop_return()
     u8 b2 = read(get_sp());
     inc_sp();
     m_registers.program_counter = to_le_16_bit(b1, b2);
+}
+
+//
+// Arithmetic
+//
+
+void CPU::cp_a(u8* value_ptr)
+{
+    // TODO: half carry
+    set_subtract_flag(true);
+    set_zero_flag(m_registers.a == *value_ptr);
+    set_carry_flag(m_registers.a < *value_ptr);
 }
 
 //
