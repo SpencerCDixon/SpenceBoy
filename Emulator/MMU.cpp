@@ -21,12 +21,16 @@ void MMU::init_devices()
     //    constexpr u16 sound_end = 0xff3f - IO_START;
 
     constexpr u16 interrupt_flag = 0xff0f - IO_START;
+    constexpr u16 sound_start = 0xff10 - IO_START;
+    constexpr u16 sound_end = 0xff3f - IO_START;
 
     for (size_t i = 0; i < IO_SIZE; ++i) {
         if (i == 0) {
             m_io_devices[i] = &emulator().joypad();
         } else if (i >= ppu_start && i < ppu_end) {
             m_io_devices[i] = &emulator().ppu();
+        } else if (i >= sound_start && i < sound_end) {
+            m_io_devices[i] = &emulator().sound();
         } else if (i == interrupt_flag) {
             m_io_devices[i] = &emulator().cpu();
         } else {
@@ -112,5 +116,5 @@ void MMU::write(u16 address, u8 data)
     // that is not set up yet. Fail hard and implement that memory!
     //
     // When working on new ROM's uncomment out the assert so I can diagnose.
-    ASSERT_NOT_REACHED();
+//    ASSERT_NOT_REACHED();
 }

@@ -10,7 +10,8 @@
 // FIXME: Look into correct clock speed info. For now, going to hard code 4 Megahertz
 // FIXME: Of course I need to device by the frame rate to calculate how many cycles to execute before
 // rendering. 4,000,000 / 60 = 66k cycles worth of work a frame.
-constexpr u64 CYCLES_PER_SECOND = 4000000;
+//constexpr u64 CYCLES_PER_SECOND = 4000000;
+constexpr u64 CYCLES_PER_SECOND = 66000;
 
 // TODO(scd): Decide if I want to be able to load a new rom once the emulator is running. For now,
 // lets keep it simple and force a load before run().
