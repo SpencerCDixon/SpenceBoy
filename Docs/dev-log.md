@@ -19,7 +19,8 @@ Template for daily journal:
 * Created SoundCard
 * Script for quickly building a bunch of ASM files
 * Implemented CP_X op codes 
-* Implemented OR_X op codes needed for the hello world ROM
+* Implemented more OR_X op codes needed for the hello world ROM
+* Implemented more AND_X op codes needed for the hello world ROM
  
 ---
 

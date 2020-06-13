@@ -123,6 +123,9 @@ void PPU::out(u16 address, u8 value)
     // TODO:
     //    PPU::out() 0xff47 - BGP - BG Palette Data (R/W) - Non CGB Mode Only
     //    PPU::out() 0xff40 - LCDC Status Interrupt
+    //    PPU::out(0xff42, 0x0)
+    //    PPU::out(0xff43, 0x0)
+    //    PPU::out(0xff26, 0x0)
 
     dbg() << "PPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
 }
