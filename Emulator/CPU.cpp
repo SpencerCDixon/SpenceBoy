@@ -296,9 +296,32 @@ StepResult CPU::step()
     case OpCode::AND_d8:
         and_with_a(fetch_and_inc_8bit());
         break;
+    case OpCode::OR_A:
+        or_with_a(m_registers.a);
+        break;
     case OpCode::OR_B:
         or_with_a(m_registers.b);
         break;
+    case OpCode::OR_C:
+        or_with_a(m_registers.c);
+        break;
+    case OpCode::OR_D:
+        or_with_a(m_registers.d);
+        break;
+    case OpCode::OR_E:
+        or_with_a(m_registers.e);
+        break;
+    case OpCode::OR_H:
+        or_with_a(m_registers.h);
+        break;
+    case OpCode::OR_L:
+        or_with_a(m_registers.l);
+        break;
+    case OpCode::OR_d8: {
+        u8 value = fetch_and_inc_8bit();
+        or_with_a(value);
+        break;
+    }
     case OpCode::XOR_A:
         xor_reg(&m_registers.a);
         break;
