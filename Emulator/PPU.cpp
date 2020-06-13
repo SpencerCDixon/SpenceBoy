@@ -118,13 +118,13 @@ u8 PPU::in(u16 address)
     return 0;
 }
 
-void PPU::out(u16 address, [[maybe_unused]] u8 value)
+void PPU::out(u16 address, u8 value)
 {
     // TODO:
-//    PPU::out() 0xff47 - BGP - BG Palette Data (R/W) - Non CGB Mode Only
-//    PPU::out() 0xff40 - LCDC Status Interrupt
+    //    PPU::out() 0xff47 - BGP - BG Palette Data (R/W) - Non CGB Mode Only
+    //    PPU::out() 0xff40 - LCDC Status Interrupt
 
-    dbg() << "Unhandled PPU::out() " << to_hex(address);
+    dbg() << "PPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
 }
 
 const LogStream& operator<<(const LogStream& stream, const Tile8x8& tile)
