@@ -9,6 +9,16 @@ Template for daily journal:
 ### What did I get done today?
 
 ### Any questions for Andreas?
+
+---
+ 
+**Date: 6/12/2020**
+ 
+### What did I get done today?
+
+* Created SoundCard
+* Script for quickly building a bunch of ASM files
+* Implemented CP_X op codes 
  
 ---
 
