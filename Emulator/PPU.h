@@ -55,10 +55,6 @@ public:
         , m_bitmap({ GB_WIN_WIDTH, GB_WIN_HEIGHT }, GB_WIN_WIDTH * BITS_PER_PIXEL)
         , m_tileset_bitmap({ TILESET_WIN_WIDTH, TILESET_WIN_HEIGHT }, TILESET_WIN_WIDTH * BITS_PER_PIXEL)
     {
-        m_palette[0] = Color::TAN_ARGB;
-        m_palette[1] = Color::LIGHT_GRAY_ARGB;
-        m_palette[2] = Color::DARK_GRAY_ARGB;
-        m_palette[3] = Color::BLACK_ARGB;
     }
 
     void init_textures()
@@ -89,7 +85,12 @@ private:
     Texture m_tilemap;
     Texture m_tileset;
 
-    u32 m_palette[4];
+    u32 m_palette[4] = {
+        Color::TAN_ARGB,
+        Color::LIGHT_GRAY_ARGB,
+        Color::DARK_GRAY_ARGB,
+        Color::BLACK_ARGB
+    };
 };
 
 const LogStream& operator<<(const LogStream&, const Tile8x8&);
