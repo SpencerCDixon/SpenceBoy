@@ -18,28 +18,32 @@ constexpr size_t TILE_WIDTH = 32;
 constexpr size_t TILE_HEIGHT = 32;
 constexpr size_t TOTAL_BG_TILES = TILE_HEIGHT * TILE_WIDTH;
 
+//constexpr size_t TILESET_WIDTH = 32;
+//constexpr size_t TILESET_HEIGHT = 24;
+//constexpr size_t TOTAL_TILESET_TILES = TILESET_HEIGHT * TILESET_WIDTH;
+
 Tile8x8::Tile8x8()
 {
     memset(m_pixels, 0, sizeof(m_pixels));
 }
 
-void Tile8x8::populate_from_palette(const u8* buffer)
+void Tile8x8::populate_from_palette(const u8* buffer, const u32* palette)
 {
-    local_persist u8 black_mask = 0x3;
-
-    // Andreas: Maybe there is a better way to do this? I need to iterate in pairs of two bytes
     for (size_t row = 0; row < 8; row++) {
-        size_t idx_one = row * 2;
-        size_t idx_two = idx_one + 1;
+        // 0 1, 2 3, etc.
+        size_t lower_byte_idx = row * 2;
+        size_t higher_byte_idx = lower_byte_idx + 1;
 
-        u16 row_bytes = buffer[idx_one];
-        row_bytes = (row_bytes << 8) | buffer[idx_two];
+        u8 lower_byte = buffer[lower_byte_idx];
+        u8 higher_byte = buffer[higher_byte_idx];
 
         for (size_t col = 0; col < 8; ++col) {
             // FIXME: Pick from different colors.
-            // 2 bits for pixel. 11 = black anything else = white (for now)
-            bool is_black = (row_bytes >> col * 2) & black_mask;
-            set_pixel(col, row, is_black ? Color::BLACK_ARGB : Color::TAN_ARGB);
+            // 2 bits for pixel. 11 = black anything else = white (for now
+            u8 hi_bit = (higher_byte >> (7 - col)) & 1;
+            u8 low_bit = (lower_byte >> (7 - col)) & 1;
+            u8 idx_into_palette = (hi_bit << 1) | low_bit;
+            set_pixel(col, row, palette[idx_into_palette]);
         }
     }
 }
@@ -75,43 +79,17 @@ void PPU::clear(const Color& color)
 // * remove hard coded smiley tile and make it general purpose
 // * draw_scanline() (helps with V/HBlank)
 
-void PPU::render()
+void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
 {
-    // TODO: Tile start can change based on a bit flag. Will need to adjust accordingly.
-    size_t tile_start = 0;
-    Tile8x8 tiles[TOTAL_BG_TILES];
-    for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
-        size_t idx = tile_start + (i * 16);
-        auto* pointer = &emulator().mmu().vram()[idx];
-        tiles[i].populate_from_palette(pointer);
-    }
-
-    // A special chunk of memory starting at 0x9800 is used to map which tile index
-    // should be used to render. Each byte represents the index into the tile map.
-    size_t map_start = 0x9800 - 0x8000; // 0x8000 will be dynamic based on bit flag
-
-    for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
-        size_t tile_idx = emulator().mmu().vram()[map_start + i];
-        size_t x = i % 32;
-        size_t y = i / 32;
-        fill_square(x, y, tiles[tile_idx]);
-    }
-
-    m_tilemap.set_data(m_bitmap);
-    m_tileset.set_data(m_tileset_bitmap);
-}
-
-void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile)
-{
-    ASSERT(x < 32);
-    ASSERT(y < 32);
+        ASSERT(x < 32);
+        ASSERT(y < 32);
 
     // Y-Offset
-    auto offset = m_bitmap.pitch() * (y * 8);
+    auto offset = bitmap.pitch() * (y * 8);
     // X-Offset
     offset += sizeof(u32) * 8 * x;
 
-    u8* start = (u8*)m_bitmap.data();
+    u8* start = (u8*)bitmap.data();
     start += offset;
 
     for (size_t y = 0; y < 8; y++) {
@@ -120,8 +98,51 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile)
             *pixel++ = tile.pixel(x, y);
         }
 
-        start += m_bitmap.pitch();
+        start += bitmap.pitch();
     }
+}
+
+void PPU::render()
+{
+    // TODO: Tile start can change based on a bit flag. Will need to adjust accordingly.
+    size_t tile_start = 0;
+    Tile8x8 tiles[TOTAL_BG_TILES];
+    for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
+        size_t idx = tile_start + (i * 16);
+        auto* pointer = &emulator().mmu().vram()[idx];
+        tiles[i].populate_from_palette(pointer, &m_palette[0]);
+    }
+
+    // A special chunk of memory starting at 0x9800 is used to map which tile index
+    // should be used to render. Each byte represents the index into the tile map.
+    size_t map_start = 0x9800 - 0x8000; // 0x8000 will be dynamic based on bit flag
+
+    for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
+        size_t tile_idx = emulator().mmu().vram()[map_start + i];
+//        dbg() << "tile_idx: " << (u16)tile_idx;
+        size_t x = i % 32;
+        size_t y = i / 32;
+        fill_square(x, y, tiles[tile_idx], m_bitmap);
+    }
+
+    Tile8x8 tileset[384];
+    for (size_t i = 0; i < 384; ++i) {
+        size_t idx = i * 16; // 16 bytes (8 x 8 x 2 bpp)
+        auto* pointer = &emulator().mmu().vram()[idx];
+        tileset[i].populate_from_palette(pointer, &m_palette[0]);
+    }
+    for (size_t i = 0; i < 384; ++i) {
+        size_t x = i % 32;
+        size_t y = i / 32;
+        fill_square(x, y, tileset[i], m_tileset_bitmap);
+    }
+
+    // TOTAL TILES:
+    // (0x9800 - 0x8000) / 0x10
+    // Smiley is at index 257 somehow?
+
+    m_tilemap.set_data(m_bitmap);
+    m_tileset.set_data(m_tileset_bitmap);
 }
 
 u8 PPU::in(u16 address)

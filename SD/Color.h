@@ -8,10 +8,14 @@
 #include <stdint.h>
 
 struct Color {
-    static constexpr u32 TAN_ARGB =  0xffDCDFD1;
-    static constexpr u32 BLACK_ARGB = 0xff000000;
-    static constexpr u32 WHITE_ARGB =  0xffffffff;
-    static constexpr u32 RED_ARGB = 0xffff0000;
+    // clang-format off
+    static constexpr u32 TAN_ARGB        = 0xffDCDFD1;
+    static constexpr u32 BLACK_ARGB      = 0xff000000;
+    static constexpr u32 DARK_GRAY_ARGB  = 0xff646464;
+    static constexpr u32 LIGHT_GRAY_ARGB = 0xffD8D8D8;
+    static constexpr u32 WHITE_ARGB      = 0xffffffff;
+    static constexpr u32 RED_ARGB        = 0xffff0000;
+    // clang-format on
 
     u8 r;
     u8 g;

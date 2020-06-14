@@ -402,7 +402,7 @@ StepResult CPU::step()
     case OpCode::TEST_COMPLETE:
     case OpCode::HALT:
         //        hex_dump("WRAM", m_wram, 5200, WRAM_START);
-        //        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
+        //        hex_dump("VRAM", emulator().mmu().vram(), VRAM_SIZE, VRAM_START);
         result.should_halt = true;
         break;
     case OpCode::PREFIX: {

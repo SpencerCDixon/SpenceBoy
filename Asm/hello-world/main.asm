@@ -58,8 +58,10 @@ Start:
 	ld a, %10000001
 	ld [rLCDC], a
 
-.lockup
-	jr .lockup
+; .lockup
+	nop
+	halt
+	; jr .lockup
 
 SECTION "Font", ROM0
 
