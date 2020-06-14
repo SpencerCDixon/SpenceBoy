@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>GB 2bpp Render Example</title>
+    <script charset="utf-8" src="./gb2bpp.js"> </script>
+    <style type="text/css" media="screen">
+      body { background: #eeeeee }
+    </style>
+  </head>
+  <body>
+
+    <h1>Example Bpp Rendering</h1>
+
+    <input id="data_text" type="text" name="data" size="51" value="FF 00 7E FF 85 81 89 83 93 85 A5 8B C9 97 7E FF">
+    <input id="submit_button" type="button" value="Click to Update Gameboy Tile"><br/><br/>
+    <canvas id="demo_canvas" width="240" height="240">Your browser doesn't support the HTML5 canvas. No marching squares demo for you. :(</canvas>
+  </body>
+</html>
