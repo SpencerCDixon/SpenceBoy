@@ -18,6 +18,8 @@ Template for daily journal:
 
 * Fix pixel rendering after studying the spec more (smiley test example now working properly!)
 * Add a tileset VRAM viewer so I can see all available tiles that can be used
+* Improve CLion flows by marking directories to not be indexed
+* Added a pixel rendering tool I can refer back to in order to quickly test tiles
 
 ---
  
