@@ -22,7 +22,7 @@ public:
 
     Texture();
     ~Texture();
-    Texture(const Texture&& tex);
+    Texture(Texture&& tex);
     Texture& operator=(Texture&& other);
 
     void set_data(const Bitmap&);

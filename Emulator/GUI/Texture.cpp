@@ -44,11 +44,12 @@ Texture::Texture()
 {
 }
 
-Texture::Texture(const Texture&& other)
+Texture::Texture(Texture&& other)
 {
     m_texture = other.m_texture;
     m_height = other.m_height;
     m_width = other.m_width;
+    other.m_texture = nullptr;
 }
 
 Texture& Texture::operator=(Texture&& other)

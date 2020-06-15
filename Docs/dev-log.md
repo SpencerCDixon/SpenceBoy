@@ -12,6 +12,14 @@ Template for daily journal:
 
 ---
  
+**Date: 6/14/2020**
+ 
+### What did I get done today?
+
+* Fix bug with move constructor in Texture
+
+---
+ 
 **Date: 6/13/2020**
  
 ### What did I get done today?
