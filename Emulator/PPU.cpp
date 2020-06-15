@@ -22,8 +22,9 @@ constexpr size_t TOTAL_BG_TILES = TILE_HEIGHT * TILE_WIDTH;
 //constexpr size_t TILESET_HEIGHT = 24;
 //constexpr size_t TOTAL_TILESET_TILES = TILESET_HEIGHT * TILESET_WIDTH;
 
-constexpr u16 SCY = 0xff42;
-constexpr u16 SCX = 0xff43;
+constexpr u16 R_LCDC = 0xff40;
+constexpr u16 R_SCY = 0xff42;
+constexpr u16 R_SCX = 0xff43;
 
 Tile8x8::Tile8x8()
 {
@@ -150,19 +151,26 @@ void PPU::render()
 
 u8 PPU::in(u16 address)
 {
-    if (address == SCX) {
+    dbg() << "PPU::in() " << to_hex(address);
+
+    if (address == R_SCX) {
+        dbg() << "  handled!";
         return m_bg_scroll_x;
     }
 
-    if (address == SCY) {
+    if (address == R_SCY) {
+        dbg() << "  handled!";
         return m_bg_scroll_y;
     }
 
+    if (address == R_LCDC)
+        return m_lcd_control;
+
+    // TODO: LCD Stat
     if (address == 0xff44) {
-        return 153;
+        return 145;
     }
 
-    dbg() << "PPU::in() " << to_hex(address);
     return 0;
 }
 
@@ -174,16 +182,23 @@ void PPU::out(u16 address, u8 value)
     //    PPU::out(0xff42, 0x0)
     //    PPU::out(0xff43, 0x0)
     //    PPU::out(0xff26, 0x0)
+    dbg() << "PPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
 
     switch (address) {
-    case SCX:
+    case R_SCX:
+        dbg() << "  scx written";
         m_bg_scroll_x = value;
         break;
-    case SCY:
+    case R_SCY:
+        dbg() << "  scy written";
         m_bg_scroll_y = value;
         break;
+    case R_LCDC:
+        dbg() << "  lcd control written";
+        m_lcd_control = value;
+        break;
     default:
-        dbg() << "PPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
+        break;
     }
 }
 

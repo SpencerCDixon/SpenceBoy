@@ -17,6 +17,8 @@ Template for daily journal:
 ### What did I get done today?
 
 * Fix bug with move constructor in Texture
+* Add support for SCX and SCY read/write
+* Start work on LCD control/stat functionality inside the PPU
 
 ---
  
