@@ -54,3 +54,7 @@ copy_loop:
 
 smiley_sprite: 
 	db $00, $00, $00, $00, $24, $24, $00, $00, $81, $81, $7e, $7e, $00, $00, $00, $00
+
+	; Window from house in Pokemon Red
+	; db $FF, $00, $7E, $FF, $85, $81, $89, $83, $93, $85, $A5, $8B, $C9, $97, $7E, $FF 
+
