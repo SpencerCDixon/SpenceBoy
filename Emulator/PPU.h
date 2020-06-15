@@ -91,6 +91,9 @@ private:
         Color::DARK_GRAY_ARGB,
         Color::BLACK_ARGB
     };
+
+    u8 m_bg_scroll_y { 0 };
+    u8 m_bg_scroll_x { 0 };
 };
 
 const LogStream& operator<<(const LogStream&, const Tile8x8&);

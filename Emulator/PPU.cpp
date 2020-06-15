@@ -22,6 +22,9 @@ constexpr size_t TOTAL_BG_TILES = TILE_HEIGHT * TILE_WIDTH;
 //constexpr size_t TILESET_HEIGHT = 24;
 //constexpr size_t TOTAL_TILESET_TILES = TILESET_HEIGHT * TILESET_WIDTH;
 
+constexpr u16 SCY = 0xff42;
+constexpr u16 SCX = 0xff43;
+
 Tile8x8::Tile8x8()
 {
     memset(m_pixels, 0, sizeof(m_pixels));
@@ -81,8 +84,8 @@ void PPU::clear(const Color& color)
 
 void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
 {
-        ASSERT(x < 32);
-        ASSERT(y < 32);
+    ASSERT(x < 32);
+    ASSERT(y < 32);
 
     // Y-Offset
     auto offset = bitmap.pitch() * (y * 8);
@@ -119,7 +122,7 @@ void PPU::render()
 
     for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
         size_t tile_idx = emulator().mmu().vram()[map_start + i];
-//        dbg() << "tile_idx: " << (u16)tile_idx;
+        //        dbg() << "tile_idx: " << (u16)tile_idx;
         size_t x = i % 32;
         size_t y = i / 32;
         fill_square(x, y, tiles[tile_idx], m_bitmap);
@@ -147,6 +150,18 @@ void PPU::render()
 
 u8 PPU::in(u16 address)
 {
+    if (address == SCX) {
+        return m_bg_scroll_x;
+    }
+
+    if (address == SCY) {
+        return m_bg_scroll_y;
+    }
+
+    if (address == 0xff44) {
+        return 153;
+    }
+
     dbg() << "PPU::in() " << to_hex(address);
     return 0;
 }
@@ -160,7 +175,16 @@ void PPU::out(u16 address, u8 value)
     //    PPU::out(0xff43, 0x0)
     //    PPU::out(0xff26, 0x0)
 
-    dbg() << "PPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
+    switch (address) {
+    case SCX:
+        m_bg_scroll_x = value;
+        break;
+    case SCY:
+        m_bg_scroll_y = value;
+        break;
+    default:
+        dbg() << "PPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
+    }
 }
 
 const LogStream& operator<<(const LogStream& stream, const Tile8x8& tile)
