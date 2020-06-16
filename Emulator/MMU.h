@@ -14,15 +14,10 @@
 // clang-format off
 constexpr u16 MAX_ROM_SIZE = KB * 32;
 constexpr size_t WRAM_SIZE = KB * 8;
-constexpr size_t VRAM_SIZE = KB * 16;
+constexpr size_t VRAM_SIZE = KB * 8; // TODO: CGB is 16k but regular GB is 8k
 constexpr size_t HRAM_SIZE = 126;
 constexpr size_t IO_SIZE   = 112;
 // clang-format on
-
-
-// 0xff00 - input
-// 0xff10 - 0xff1e - all sound card related
-// 0xff47
 
 class Emulator;
 

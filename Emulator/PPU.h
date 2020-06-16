@@ -21,7 +21,7 @@ class Emulator;
 //constexpr u16 WIN_WIDTH = 160;
 constexpr u16 GB_WIN_HEIGHT = 256;
 constexpr u16 GB_WIN_WIDTH = 256;
-constexpr u16 TILESET_WIN_HEIGHT = 192;
+constexpr u16 TILESET_WIN_HEIGHT = 96;
 constexpr u16 TILESET_WIN_WIDTH = 256;
 
 class Tile8x8 {
@@ -78,6 +78,7 @@ public:
 private:
     Emulator& emulator() { return m_emulator; }
 
+    // LCD Controls
     bool lcd_display_enabled() { return m_lcd_control & 0x80; }
     u16 bg_window_tile_data_select() { return m_lcd_control & 0x10 ? 0x8000 : 0x8800; }
     u16 bg_tilemap_display_select()
@@ -85,6 +86,8 @@ private:
         return m_lcd_control & 0x08 ? 0x9c00 : 0x9800;
     }
     u16 window_tilemap_display_select() { return m_lcd_control & 0x40 ? 0x9c00 : 0x9800; }
+
+    size_t index_into_tileset(size_t);
 
 private:
     Emulator& m_emulator;

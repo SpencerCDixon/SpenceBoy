@@ -16,12 +16,12 @@
 
 constexpr size_t TILE_WIDTH = 32;
 constexpr size_t TILE_HEIGHT = 32;
-constexpr size_t TOTAL_BG_TILES = TILE_HEIGHT * TILE_WIDTH;
+constexpr size_t TOTAL_BG_TILES = TILE_WIDTH * TILE_HEIGHT;
 
-//constexpr size_t TILESET_WIDTH = 32;
-//constexpr size_t TILESET_HEIGHT = 24;
-//constexpr size_t TOTAL_TILESET_TILES = TILESET_HEIGHT * TILESET_WIDTH;
+// Three blocks of 128 each
+constexpr size_t TOTAL_TILESET_TILES = 384;
 
+// PPU-related Registers
 constexpr u16 R_LCDC = 0xff40;
 constexpr u16 R_SCY = 0xff42;
 constexpr u16 R_SCX = 0xff43;
@@ -107,12 +107,11 @@ void PPU::render()
         return;
     }
 
-    size_t tile_start = 0;
-    Tile8x8 tiles[TOTAL_BG_TILES];
-    for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
-        size_t idx = tile_start + (i * 16);
+    Tile8x8 tileset[TOTAL_TILESET_TILES];
+    for (size_t i = 0; i < TOTAL_TILESET_TILES; ++i) {
+        size_t idx = i * 16; // 16 bytes (8 x 8 x 2 bpp)
         auto* pointer = &emulator().mmu().vram()[idx];
-        tiles[i].populate_from_palette(pointer, &m_palette[0]);
+        tileset[i].populate_from_palette(pointer, &m_palette[0]);
     }
 
     // A special chunk of memory starting at 0x9800 or 0x9c00 is used to map which tile index
@@ -120,19 +119,12 @@ void PPU::render()
     size_t map_start = bg_tilemap_display_select() - 0x8000;
     for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
         size_t tile_idx = emulator().mmu().vram()[map_start + i];
-        //        dbg() << "tile_idx: " << (u16)tile_idx;
         size_t x = i % 32;
         size_t y = i / 32;
-        fill_square(x, y, tiles[tile_idx], m_bitmap);
+        fill_square(x, y, tileset[index_into_tileset(tile_idx)], m_bitmap);
     }
 
-    Tile8x8 tileset[384];
-    for (size_t i = 0; i < 384; ++i) {
-        size_t idx = i * 16; // 16 bytes (8 x 8 x 2 bpp)
-        auto* pointer = &emulator().mmu().vram()[idx];
-        tileset[i].populate_from_palette(pointer, &m_palette[0]);
-    }
-    for (size_t i = 0; i < 384; ++i) {
+    for (size_t i = 0; i < TOTAL_TILESET_TILES; ++i) {
         size_t x = i % 32;
         size_t y = i / 32;
         fill_square(x, y, tileset[i], m_tileset_bitmap);
@@ -140,6 +132,29 @@ void PPU::render()
 
     m_tilemap.set_data(m_bitmap);
     m_tileset.set_data(m_tileset_bitmap);
+}
+
+size_t PPU::index_into_tileset(size_t original_index)
+{
+    // * Block 0 is $8000-87FF
+    // * Block 1 is $8800-8FFF
+    // * Block 2 is $9000-97FF
+    // When in 8000 mode:
+    //   0-127 are in block 0
+    //   128-255 are in block 1
+    // When in 8800 mode:
+    //   0-127 from block 2
+    //   128-255 from block 1
+    if (bg_window_tile_data_select() == 0x8000) {
+        return original_index;
+    } else if (bg_window_tile_data_select() == 0x8800) {
+        if (original_index < 128)
+            return original_index + 128;
+        else
+            return original_index;
+    } else {
+        ASSERT_NOT_REACHED();
+    }
 }
 
 u8 PPU::in(u16 address)

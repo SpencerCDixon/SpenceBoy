@@ -98,7 +98,7 @@ ReadKeys:
 Start:
 	; Set LCDC 
 	ld hl, $ff40
-	ld [hl], $84 ; 1000_0100
+	ld [hl], $94 ; 1001_0100
 
 	; Load our tiles into the tile map
 	ld hl, $8000

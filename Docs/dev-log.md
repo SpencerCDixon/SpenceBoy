@@ -18,6 +18,7 @@ Template for daily journal:
 
 * Allow programs to write to the LCDC to switch which banks to look for tile set and tile map data
 * Handle turning LCD/PPU on and off
+* Implement 'BG & Window Tile Data Select' to properly switch indexing modes into the tilesets
 
 ---
  
