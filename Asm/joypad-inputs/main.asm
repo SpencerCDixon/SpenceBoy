@@ -111,6 +111,16 @@ Start:
 	ld b, 16
 	call copyData
 
+	; Put tiles in opposite order at the higher locations
+	ld hl, $8800
+	ld de, black_stripe
+	ld b, 16
+	call copyData
+
+	ld hl, $8810 
+	ld de, white_stripe
+	ld b, 16
+	call copyData
 ; Wait for magic key sequence: Right - Left - Up - Down
 .right
 	call ReadKeys
@@ -138,6 +148,24 @@ Start:
 	ld bc, stripebackground_tile_map_size
 	nop
 	call mCopy
+
+.a
+	call ReadKeys
+	and KEY_A
+	jp z, .a
+
+	; Set LCDC 
+	ld hl, $ff40
+	ld [hl], $84 ; 1000_0100
+
+.b
+	call ReadKeys
+	and KEY_B
+	jp z, .b
+
+	; Set LCDC 
+	ld hl, $ff40
+	ld [hl], $94 ; 1000_0100
 
 	nop
 	halt 

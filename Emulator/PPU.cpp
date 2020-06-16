@@ -18,7 +18,7 @@ constexpr size_t TILE_WIDTH = 32;
 constexpr size_t TILE_HEIGHT = 32;
 constexpr size_t TOTAL_BG_TILES = TILE_WIDTH * TILE_HEIGHT;
 
-// Three blocks of 128 each
+// Three blocks of 128 each 
 constexpr size_t TOTAL_TILESET_TILES = 384;
 
 // PPU-related Registers
