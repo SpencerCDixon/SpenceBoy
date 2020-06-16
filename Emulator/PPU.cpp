@@ -34,7 +34,7 @@ Tile8x8::Tile8x8()
 void Tile8x8::populate_from_palette(const u8* buffer, const u32* palette)
 {
     for (size_t row = 0; row < 8; row++) {
-        // 0 1, 2 3, etc.
+        // 0 1 | 2 3 | 4 5 | 6 7
         size_t lower_byte_idx = row * 2;
         size_t higher_byte_idx = lower_byte_idx + 1;
 
@@ -42,10 +42,9 @@ void Tile8x8::populate_from_palette(const u8* buffer, const u32* palette)
         u8 higher_byte = buffer[higher_byte_idx];
 
         for (size_t col = 0; col < 8; ++col) {
-            // FIXME: Pick from different colors.
-            // 2 bits for pixel. 11 = black anything else = white (for now
             u8 hi_bit = (higher_byte >> (7 - col)) & 1;
             u8 low_bit = (lower_byte >> (7 - col)) & 1;
+            // 00 01 10 11
             u8 idx_into_palette = (hi_bit << 1) | low_bit;
             set_pixel(col, row, palette[idx_into_palette]);
         }
@@ -66,7 +65,6 @@ void PPU::clear(const Color& color)
     }
 
     row = (u8*)m_tileset_bitmap.data();
-
     for (int y = 0; y < m_tileset_bitmap.height(); ++y) {
         u32* pixel = (u32*)row;
 
@@ -78,9 +76,7 @@ void PPU::clear(const Color& color)
 }
 
 // TODO:
-// * palette matching
 // * layered rendering (background, sprites, window)
-// * remove hard coded smiley tile and make it general purpose
 // * draw_scanline() (helps with V/HBlank)
 
 void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
@@ -88,10 +84,8 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
     ASSERT(x < 32);
     ASSERT(y < 32);
 
-    // Y-Offset
-    auto offset = bitmap.pitch() * (y * 8);
-    // X-Offset
-    offset += sizeof(u32) * 8 * x;
+    auto offset = bitmap.pitch() * (y * 8); // y-offset
+    offset += sizeof(u32) * 8 * x;          // x-offset
 
     u8* start = (u8*)bitmap.data();
     start += offset;
@@ -108,7 +102,6 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
 
 void PPU::render()
 {
-    // TODO: Tile start can change based on a bit flag. Will need to adjust accordingly.
     size_t tile_start = 0;
     Tile8x8 tiles[TOTAL_BG_TILES];
     for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
@@ -117,9 +110,9 @@ void PPU::render()
         tiles[i].populate_from_palette(pointer, &m_palette[0]);
     }
 
-    // A special chunk of memory starting at 0x9800 is used to map which tile index
+    // A special chunk of memory starting at 0x9800 or 0x9c00 is used to map which tile index
     // should be used to render. Each byte represents the index into the tile map.
-    size_t map_start = 0x9800 - 0x8000; // 0x8000 will be dynamic based on bit flag
+    size_t map_start = bg_tilemap_display_select() - 0x8000;
 
     for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
         size_t tile_idx = emulator().mmu().vram()[map_start + i];
@@ -140,10 +133,6 @@ void PPU::render()
         size_t y = i / 32;
         fill_square(x, y, tileset[i], m_tileset_bitmap);
     }
-
-    // TOTAL TILES:
-    // (0x9800 - 0x8000) / 0x10
-    // Smiley is at index 257 somehow?
 
     m_tilemap.set_data(m_bitmap);
     m_tileset.set_data(m_tileset_bitmap);

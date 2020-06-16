@@ -106,6 +106,8 @@ void Emulator::run()
         renderer().draw_texture(m_gb_background, Point { 20, 20 });
         renderer().draw_texture(ppu().tilemap(), Point { 324, 20 });
         renderer().draw_texture(ppu().tileset(), Point { 324, 286 });
+
+        // TODO: This should really include the SCX, SCY in the src rect
         renderer().draw_partial_texture(ppu().tilemap(), { 0, 0, 159, 143 }, { 85, 67, 159, 143 });
 
         // Render Debug:

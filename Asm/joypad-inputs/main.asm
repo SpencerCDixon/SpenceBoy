@@ -96,6 +96,10 @@ ReadKeys:
 	ret
 
 Start:
+	; Set LCDC 
+	ld hl, $ff40
+	ld [hl], $f4 ; 1111_0100
+
 	; Load our tiles into the tile map
 	ld hl, $8000
 	ld de, white_stripe

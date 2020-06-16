@@ -12,6 +12,14 @@ Template for daily journal:
 
 ---
  
+**Date: 6/15/2020**
+ 
+### What did I get done today?
+
+* Allow programs to write to the LCDC to switch which banks to look for tile set and tile map data
+
+---
+ 
 **Date: 6/14/2020**
  
 ### What did I get done today?
