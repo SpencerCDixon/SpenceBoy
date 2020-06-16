@@ -78,7 +78,8 @@ public:
 private:
     Emulator& emulator() { return m_emulator; }
 
-    u16 bg_window_tile_select() { return m_lcd_control & 0x10 ? 0x8000 : 0x8800; }
+    bool lcd_display_enabled() { return m_lcd_control & 0x80; }
+    u16 bg_window_tile_data_select() { return m_lcd_control & 0x10 ? 0x8000 : 0x8800; }
     u16 bg_tilemap_display_select()
     {
         return m_lcd_control & 0x08 ? 0x9c00 : 0x9800;

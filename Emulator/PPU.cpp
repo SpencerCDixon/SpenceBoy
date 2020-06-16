@@ -102,6 +102,11 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
 
 void PPU::render()
 {
+    if (!lcd_display_enabled()) {
+        dbg() << "LCD/PPU are disabled, returning early";
+        return;
+    }
+
     size_t tile_start = 0;
     Tile8x8 tiles[TOTAL_BG_TILES];
     for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
@@ -113,7 +118,6 @@ void PPU::render()
     // A special chunk of memory starting at 0x9800 or 0x9c00 is used to map which tile index
     // should be used to render. Each byte represents the index into the tile map.
     size_t map_start = bg_tilemap_display_select() - 0x8000;
-
     for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
         size_t tile_idx = emulator().mmu().vram()[map_start + i];
         //        dbg() << "tile_idx: " << (u16)tile_idx;
