@@ -4,10 +4,10 @@
 
 #pragma once
 
+#include "IODevice.h"
 #include "Joypad.h"
 #include "MMU.h"
 #include "OpCode.h"
-#include "IODevice.h"
 
 #include <SD/Bytes.h>
 #include <SD/LogStream.h>
@@ -54,8 +54,8 @@ public:
     bool interrupts_enabled() { return m_interrupts_enabled; }
 
     // IODevice
-    u8 in(u16 address) override ;
-    void out(u16 address, u8 value) override ;
+    u8 in(u16 address) override;
+    void out(u16 address, u8 value) override;
 
     //
     // Testing Utilities
@@ -156,6 +156,14 @@ private:
         set_half_carry_flag(will_half_carry(*reg_ptr, 1));
         *reg_ptr -= 1;
         set_zero_flag(*reg_ptr == 0);
+    }
+    void add_a(u8 value)
+    {
+        set_subtract_flag(false);
+        set_half_carry_flag(will_half_carry(m_registers.a, value));
+        set_carry_flag(will_carry(m_registers.a, value));
+        m_registers.a += value;
+        set_zero_flag(m_registers.a == 0);
     }
 
     // Fetch

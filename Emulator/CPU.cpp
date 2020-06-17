@@ -184,6 +184,33 @@ StepResult CPU::step()
     case OpCode::DEC_DE:
         dec_de();
         break;
+    case OpCode::ADD_A_d8:
+        add_a(fetch_and_inc_8bit());
+        break;
+    case OpCode::ADD_A_A:
+        add_a(m_registers.a);
+        break;
+    case OpCode::ADD_A_B:
+        add_a(m_registers.b);
+        break;
+    case OpCode::ADD_A_C:
+        add_a(m_registers.c);
+        break;
+    case OpCode::ADD_A_D:
+        add_a(m_registers.d);
+        break;
+    case OpCode::ADD_A_E:
+        add_a(m_registers.e);
+        break;
+    case OpCode::ADD_A_H:
+        add_a(m_registers.h);
+        break;
+    case OpCode::ADD_A_L:
+        add_a(m_registers.l);
+        break;
+    case OpCode::ADD_A_HL_ADDR:
+        add_a(read(get_hl()));
+        break;
     case OpCode::JP_NZ_a16: {
         u16 new_address = fetch_and_inc_16bit();
         if (!get_zero_flag())

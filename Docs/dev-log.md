@@ -12,7 +12,15 @@ Template for daily journal:
 
 ---
  
-**Date: 6/15/2020**
+**Date: 6/17/2020**
+ 
+### What did I get done today?
+
+* Added support for ADD_A_XX op codes
+
+---
+ 
+**Date: 6/16/2020**
  
 ### What did I get done today?
 
@@ -22,7 +30,7 @@ Template for daily journal:
 
 ---
  
-**Date: 6/14/2020**
+**Date: 6/15/2020**
  
 ### What did I get done today?
 
@@ -32,7 +40,7 @@ Template for daily journal:
 
 ---
  
-**Date: 6/13/2020**
+**Date: 6/14/2020**
  
 ### What did I get done today?
 
@@ -43,7 +51,7 @@ Template for daily journal:
 
 ---
  
-**Date: 6/12/2020**
+**Date: 6/13/2020**
  
 ### What did I get done today?
 
