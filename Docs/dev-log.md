@@ -17,6 +17,7 @@ Template for daily journal:
 ### What did I get done today?
 
 * Added support for ADD_A_XX op codes
+* Use scx and scy for moving the background frame
 
 ---
  

@@ -70,6 +70,8 @@ public:
 
     Texture& tilemap() { return m_tilemap; }
     Texture& tileset() { return m_tileset; }
+    u8 scx() { return m_bg_scroll_x; }
+    u8 scy() { return m_bg_scroll_y; }
 
     void clear(const Color& color);
     void render();
