@@ -7,8 +7,13 @@
 #include <SD/Types.h>
 
 // clang-format off
+
+// TODO: ROM's can have different sizes. We need to properly account for this with Bank switching.
+// 0x0000 - 0x3fff - BANK 0
+// 0x4000 - 0x7fff - BANK 1
 constexpr u16 ROM_START   = 0x0000;
-constexpr u16 ROM_END     = 0x3FFF;
+constexpr u16 ROM_END     = 0x7FFF;
+
 constexpr u16 WRAM_START  = 0xC000;
 constexpr u16 WRAM_END    = 0xDFFF;
 constexpr u16 VRAM_START  = 0x8000;

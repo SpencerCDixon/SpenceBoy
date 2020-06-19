@@ -26,6 +26,9 @@ INCLUDE "stripe.inc"
 
 SECTION "StartOfGameCode",ROM0    
 begin: 
+	ld hl, $ff40
+	ld [hl], $81
+
 	ld hl, stripebackground_tile_data
 	ld de, TILEDATA_START
 	ld bc, stripebackground_tile_data_size
@@ -45,10 +48,5 @@ begin:
 	ld [SCROLL_Y], a 
 
 	call StartLCD
+	nop
 	halt
-    
-main:
-    halt 
-    nop 
-    
-    jr main
