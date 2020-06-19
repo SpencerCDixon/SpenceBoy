@@ -89,6 +89,7 @@ private:
     void set_half_carry_flag(bool should_set);
     void set_subtract_flag(bool should_set);
     bool get_zero_flag();
+    bool get_carry_flag();
 
     // Register related utilities
     // TODO(scd): consider maybe moving into Register class?

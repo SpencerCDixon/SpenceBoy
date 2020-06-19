@@ -4,6 +4,14 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 6/19/2020**
+ 
+### What did I get done today?
+
+* Implement op codes for RET_XX
+
+---
+ 
 **Date: 6/18/2020**
  
 ### What did I get done today?

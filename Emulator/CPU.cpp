@@ -445,6 +445,22 @@ StepResult CPU::step()
         push(m_registers.program_counter + 2);
         m_registers.program_counter = fetch_and_inc_16bit();
         break;
+    case OpCode::RET_C:
+        if (get_carry_flag())
+            pop_return();
+        break;
+    case OpCode::RET_NC:
+        if (!get_carry_flag())
+            pop_return();
+        break;
+    case OpCode::RET_NZ:
+        if (!get_zero_flag())
+            pop_return();
+        break;
+    case OpCode::RET_Z:
+        if (get_zero_flag())
+            pop_return();
+        break;
     case OpCode::RET:
         pop_return();
         break;
@@ -513,7 +529,7 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
                    "Missing implementation for the following prefix op code: ");
             print_prefix_opcode(op_code);
         } else {
-            printf("missing prefix op code: %x", (u8)op_code);
+            printf("missing prefix op code: %x\n", (u8)op_code);
         }
         ASSERT_NOT_REACHED();
     }
@@ -694,6 +710,11 @@ void CPU::set_subtract_flag(bool should_set)
 bool CPU::get_zero_flag()
 {
     return m_registers.f & FLAG_ZERO;
+}
+
+bool CPU::get_carry_flag()
+{
+    return m_registers.f & FLAG_CARRY;
 }
 
 // TODO: Abstract the address checking into a method which tells me two things:
