@@ -1,14 +1,14 @@
 # Daily Development Log
 
 A place to store my daily progress in building a GameBoy Color Emulator.
-Template for daily journal:
 
-**Date: X/X/XXXX**
-### What did I learn today?
-
+---
+ 
+**Date: 6/18/2020**
+ 
 ### What did I get done today?
 
-### Any questions for Andreas?
+* Implement op code RCLA and RLA
 
 ---
  

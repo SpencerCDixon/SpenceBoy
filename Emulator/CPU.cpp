@@ -50,6 +50,28 @@ StepResult CPU::step()
     switch (op_code) {
     case OpCode::NOP:
         break;
+    case OpCode::RLCA: {
+        bool will_carry = m_registers.a & 0x80;
+        set_subtract_flag(false);
+        set_half_carry_flag(false);
+        set_zero_flag(false);
+        set_carry_flag(will_carry);
+        m_registers.a <<= 1;
+        if (will_carry)
+            m_registers.a += 1;
+        break;
+    }
+    case OpCode::RLA: {
+        bool will_carry = m_registers.a & 0x80;
+        set_subtract_flag(false);
+        set_half_carry_flag(false);
+        set_zero_flag(false);
+        set_carry_flag(will_carry);
+        m_registers.a <<= 1;
+        if (will_carry)
+            m_registers.a += 1;
+        break;
+    }
     case OpCode::CPL:
         m_registers.a = ~m_registers.a;
         break;

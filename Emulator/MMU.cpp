@@ -73,7 +73,7 @@ u8 MMU::read(u16 address)
         ASSERT(idx >= 0 && idx < IO_SIZE);
         return m_io_devices[idx]->in(address);
     } else {
-        dbg() << "bad read address: " << address;
+        dbg() << "bad read address: " << to_hex(address);
     }
 
     ASSERT_NOT_REACHED();

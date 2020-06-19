@@ -152,7 +152,8 @@ int main(int argc, char* argv[])
 //        TEST_CASE(pushing_and_popping, push-pop.gb)
 //        TEST_CASE(complex_subroutine, complex-routine.gb)
 //        TEST_CASE(cp, cp.gb)
-        TEST_CASE(lcd_status, lcd-status.gb)
+//        TEST_CASE(lcd_status, lcd-status.gb)
+        TEST_CASE(rla_rlca, rlca.gb)
     }
 
     // Not ready for prime time yet

@@ -1320,7 +1320,7 @@ IF DEF(SGB_SUPPORT)
 ENDC    
     
     ; Initialize display
-    call StopLCD
+		call StopLCD
     call initdma
     
     ld	a, IEF_VBLANK ; We only want vblank interrupts (for updating sprites)
