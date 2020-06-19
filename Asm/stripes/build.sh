@@ -7,4 +7,3 @@ rgbfix -v -p 0 stripes.gb
 
 cp ./stripes.gb ../../Tests/data
 hexdump -C stripes.gb
-

@@ -4,7 +4,7 @@ SECTION "Includes@home",ROM0
 ; Prior to importing GingerBread, some options can be specified
 
 ; Max 15 characters, should be uppercase ASCII
-GAME_NAME EQUS "STRIPES " 
+GAME_NAME EQUS "STRIPES"
 
 ; Include SGB support in GingerBread. This makes the GingerBread library take up a bit more space on ROM0. To remove support, comment out this line (don't set it to 0)
 ;SGB_SUPPORT EQU 1 
@@ -13,7 +13,7 @@ GAME_NAME EQUS "STRIPES "
 ;GBC_SUPPORT EQU 1
 
 ; Set the size of the ROM file here. 0 means 32 kB, 1 means 64 kB, 2 means 128 kB and so on.
-ROM_SIZE EQU 1 
+ROM_SIZE EQU 0 
 
 ; Set the size of save RAM inside the cartridge. 
 ; If printed to real carts, it needs to be small enough to fit. 
@@ -25,8 +25,7 @@ INCLUDE "../common/gingerbread.asm"
 INCLUDE "stripe.inc"
 
 SECTION "StartOfGameCode",ROM0    
-begin: ; GingerBread assumes that the label "begin" is where the game should start
-
+begin: 
 	ld hl, stripebackground_tile_data
 	ld de, TILEDATA_START
 	ld bc, stripebackground_tile_data_size
@@ -38,12 +37,12 @@ begin: ; GingerBread assumes that the label "begin" is where the game should sta
 	call mCopyVRAM
 
 	; move x to the far right
-	; ld a, $60
-	; ld [SCROLL_X], a 
+	ld a, $00
+	ld [SCROLL_X], a 
 
 	; move y to the bottom
-	; ld a, $70
-	; ld [SCROLL_Y], a 
+	ld a, $00
+	ld [SCROLL_Y], a 
 
 	call StartLCD
 	halt
