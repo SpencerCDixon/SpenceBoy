@@ -148,10 +148,12 @@ size_t PPU::index_into_tileset(size_t original_index)
     if (bg_window_tile_data_select() == 0x8000) {
         return original_index;
     } else if (bg_window_tile_data_select() == 0x8800) {
-        if (original_index < 128)
-            return original_index + 128;
-        else
+        if (original_index < 128) {
+            // 0-127 is in Block 2. Index 0 is actually index 256
+            return original_index + 256;
+        } else {
             return original_index;
+        }
     } else {
         ASSERT_NOT_REACHED();
     }
@@ -176,7 +178,8 @@ u8 PPU::in(u16 address)
 
     // TODO: LCD Stat
     if (address == 0xff44) {
-        return 145;
+        // Tetris expects to receive 148 on the LCD stat otherwise it gets in an infinite loop
+        return 148;
     }
 
     return 0;
