@@ -4,11 +4,20 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 6/20/2020**
+ 
+### What did I get done today?
+
+* Added a rudimentary timer to try and achieve closer to 60 fps instead
+
+---
+ 
 **Date: 6/19/2020**
  
 ### What did I get done today?
 
 * Implement op codes for RET_XX
+* Get stripe ASM example rendering using the gingerbread.asm library (fixed some MMU reads)
 
 ---
  

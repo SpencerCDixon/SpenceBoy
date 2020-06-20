@@ -31,6 +31,8 @@ void Emulator::run()
     u64 cycle_count = 0;
 
     while (!quit) {
+        auto frame_timer = Timer("frame");
+
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {
                 quit = true;
@@ -76,7 +78,6 @@ void Emulator::run()
         }
 
         if (!halted) {
-            auto t = Timer("4 megahertz()");
 
             for (;;) {
                 auto result = m_cpu.step();
@@ -106,8 +107,6 @@ void Emulator::run()
         renderer().draw_texture(m_gb_background, Point { 20, 20 });
         renderer().draw_texture(ppu().tilemap(), Point { 324, 20 });
         renderer().draw_texture(ppu().tileset(), Point { 324, 286 });
-
-        // TODO: This should really include the SCX, SCY in the src rect
         renderer().draw_partial_texture(ppu().tilemap(), { ppu().scx(), ppu().scy(), 159, 143 }, { 85, 67, 159, 143 });
 
         // Render Debug:
@@ -116,6 +115,6 @@ void Emulator::run()
         }
 
         renderer().present();
-        // TODO: Timing to determine how much I should sleep to hit 60 FPS.
+        frame_timer.wait_until_elapsed_ms(16);
     }
 }
