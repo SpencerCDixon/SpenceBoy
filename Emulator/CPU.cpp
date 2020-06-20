@@ -151,6 +151,9 @@ StepResult CPU::step()
     case OpCode::LD_HL_ADDR_A:
         write(get_hl(), m_registers.a);
         break;
+    case OpCode::LD_a16_ADDR_A:
+        write(fetch_and_inc_u16(), m_registers.a);
+        break;
     case OpCode::LD_BC_ADDR_A:
         write(get_bc(), m_registers.a);
         break;
@@ -484,8 +487,8 @@ StepResult CPU::step()
         break;
     case OpCode::TEST_COMPLETE:
     case OpCode::HALT:
-        //        hex_dump("WRAM", m_wram, 5200, WRAM_START);
-        //        hex_dump("VRAM", emulator().mmu().vram(), VRAM_SIZE, VRAM_START);
+        // hex_dump("WRAM", emulator().mmu().wram(), 100, WRAM_START);
+        // hex_dump("VRAM", emulator().mmu().vram(), VRAM_SIZE, VRAM_START);
         result.should_halt = true;
         break;
     case OpCode::PREFIX: {

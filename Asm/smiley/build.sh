@@ -7,4 +7,3 @@ rgbfix -v -p 0 smiley.gb
 
 cp ./smiley.gb ../../Tests/data
 hexdump -C smiley.gb
-

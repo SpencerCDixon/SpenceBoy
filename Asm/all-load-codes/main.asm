@@ -71,4 +71,7 @@ Start:
 	; assert(b == 40)
 	; assert(h == 40)
 
+	ld a, $08
+	ld [$c008], a
+
 	halt

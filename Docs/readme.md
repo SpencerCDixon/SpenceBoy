@@ -263,7 +263,7 @@ the `C` standard library.
 - [x] LD_L_d8 (0x2E)
 - [ ] LD_SP_HL (0xF9)
 - [x] LD_SP_d16 (0x31)
-- [ ] LD_a16_ADDR_A (0xEA)
+- [x] LD_a16_ADDR_A (0xEA)
 - [ ] LD_a16_ADDR_SP (0x08)
 - [x] NOP (0x00)
 - [x] OR_A (0xB7)
