@@ -9,6 +9,7 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 ### What did I get done today?
 
 * Added a rudimentary timer to try and achieve closer to 60 fps instead
+* Implement rest of conditional jump op codes
 
 ---
  

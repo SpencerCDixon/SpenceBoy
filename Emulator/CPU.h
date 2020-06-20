@@ -168,8 +168,9 @@ private:
     }
 
     // Fetch
-    u8 fetch_and_inc_8bit();
-    u16 fetch_and_inc_16bit();
+    u8 fetch_and_inc_u8();
+    s8 fetch_and_inc_s8();
+    u16 fetch_and_inc_u16();
 
 private:
     Emulator& m_emulator;

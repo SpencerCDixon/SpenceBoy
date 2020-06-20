@@ -13,11 +13,10 @@ ENDR
 SECTION "Game code", ROM0
 
 Start:
-
-; .waitVBlank
-	; ld a, [rLY]
-	; cp 144
-	; jr c, .waitVBlank
+.waitVBlank
+	ld a, [rLY]
+	cp 144
+	jr c, .waitVBlank
 
 	xor a ; ld a, 0
 	ld [rLCDC], a

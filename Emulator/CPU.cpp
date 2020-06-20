@@ -45,7 +45,7 @@ StepResult CPU::step()
 {
     // TODO: handle interrupts?
     StepResult result;
-    OpCode op_code = static_cast<OpCode>(fetch_and_inc_8bit());
+    OpCode op_code = static_cast<OpCode>(fetch_and_inc_u8());
 
     switch (op_code) {
     case OpCode::NOP:
@@ -82,19 +82,19 @@ StepResult CPU::step()
         m_registers.a = m_registers.e;
         break;
     case OpCode::LD_A_d8:
-        m_registers.a = fetch_and_inc_8bit();
+        m_registers.a = fetch_and_inc_u8();
         break;
     case OpCode::LD_B_d8:
-        m_registers.b = fetch_and_inc_8bit();
+        m_registers.b = fetch_and_inc_u8();
         break;
     case OpCode::LD_C_d8:
-        m_registers.c = fetch_and_inc_8bit();
+        m_registers.c = fetch_and_inc_u8();
         break;
     case OpCode::LD_D_d8:
-        m_registers.d = fetch_and_inc_8bit();
+        m_registers.d = fetch_and_inc_u8();
         break;
     case OpCode::LD_E_d8:
-        m_registers.e = fetch_and_inc_8bit();
+        m_registers.e = fetch_and_inc_u8();
         break;
     case OpCode::LD_B_A:
         m_registers.b = m_registers.a;
@@ -130,10 +130,10 @@ StepResult CPU::step()
         m_registers.h = m_registers.d;
         break;
     case OpCode::LD_H_d8:
-        m_registers.h = fetch_and_inc_8bit();
+        m_registers.h = fetch_and_inc_u8();
         break;
     case OpCode::LD_L_d8:
-        m_registers.l = fetch_and_inc_8bit();
+        m_registers.l = fetch_and_inc_u8();
         break;
     case OpCode::LD_A_HL_ADDR_INC:
         m_registers.a = read(get_hl());
@@ -161,15 +161,15 @@ StepResult CPU::step()
         write(get_hl(), m_registers.c);
         break;
     case OpCode::LD_HL_ADDR_d8:
-        write(get_hl(), fetch_and_inc_8bit());
+        write(get_hl(), fetch_and_inc_u8());
         break;
     case OpCode::LDH_a8_ADDR_A: {
-        u16 address = IO_START + fetch_and_inc_8bit();
+        u16 address = IO_START + fetch_and_inc_u8();
         write(address, m_registers.a);
         break;
     }
     case OpCode::LDH_A_a8_ADDR: {
-        u16 address = IO_START + fetch_and_inc_8bit();
+        u16 address = IO_START + fetch_and_inc_u8();
         m_registers.a = read(address);
         break;
     }
@@ -207,7 +207,7 @@ StepResult CPU::step()
         dec_de();
         break;
     case OpCode::ADD_A_d8:
-        add_a(fetch_and_inc_8bit());
+        add_a(fetch_and_inc_u8());
         break;
     case OpCode::ADD_A_A:
         add_a(m_registers.a);
@@ -234,26 +234,44 @@ StepResult CPU::step()
         add_a(read(get_hl()));
         break;
     case OpCode::JP_NZ_a16: {
-        u16 new_address = fetch_and_inc_16bit();
+        u16 new_address = fetch_and_inc_u16();
         if (!get_zero_flag())
             m_registers.program_counter = new_address;
         break;
     }
     case OpCode::JP_Z_a16: {
-        u16 new_address = fetch_and_inc_16bit();
+        u16 new_address = fetch_and_inc_u16();
         if (get_zero_flag())
             m_registers.program_counter = new_address;
         break;
     }
     case OpCode::JP_a16:
-        m_registers.program_counter = fetch_and_inc_16bit();
+        m_registers.program_counter = fetch_and_inc_u16();
         break;
     case OpCode::JR_r8:
-        m_registers.program_counter += static_cast<s8>(fetch_and_inc_8bit());
+        m_registers.program_counter += fetch_and_inc_s8();
         break;
     case OpCode::JR_NZ_r8: {
-        s8 offset = static_cast<s8>(fetch_and_inc_8bit());
+        s8 offset = fetch_and_inc_s8();
         if (!get_zero_flag())
+            m_registers.program_counter += offset;
+        break;
+    }
+    case OpCode::JR_Z_r8: {
+        s8 offset = fetch_and_inc_s8();
+        if (get_zero_flag())
+            m_registers.program_counter += offset;
+        break;
+    }
+    case OpCode::JR_NC_r8: {
+        s8 offset = fetch_and_inc_s8();
+        if (!get_carry_flag())
+            m_registers.program_counter += offset;
+        break;
+    }
+    case OpCode::JR_C_r8: {
+        s8 offset = fetch_and_inc_s8();
+        if (get_carry_flag())
             m_registers.program_counter += offset;
         break;
     }
@@ -279,27 +297,27 @@ StepResult CPU::step()
         cp_a(&m_registers.l);
         break;
     case OpCode::CP_d8: {
-        u8 value = fetch_and_inc_8bit();
+        u8 value = fetch_and_inc_u8();
         cp_a(&value);
         break;
     }
     case OpCode::SUB_d8:
-        m_registers.a -= fetch_and_inc_8bit();
+        m_registers.a -= fetch_and_inc_u8();
         break;
     case OpCode::LD_HL_d16:
-        m_registers.l = fetch_and_inc_8bit();
-        m_registers.h = fetch_and_inc_8bit();
+        m_registers.l = fetch_and_inc_u8();
+        m_registers.h = fetch_and_inc_u8();
         break;
     case OpCode::LD_DE_d16:
-        m_registers.e = fetch_and_inc_8bit();
-        m_registers.d = fetch_and_inc_8bit();
+        m_registers.e = fetch_and_inc_u8();
+        m_registers.d = fetch_and_inc_u8();
         break;
     case OpCode::LD_BC_d16:
-        m_registers.c = fetch_and_inc_8bit();
-        m_registers.b = fetch_and_inc_8bit();
+        m_registers.c = fetch_and_inc_u8();
+        m_registers.b = fetch_and_inc_u8();
         break;
     case OpCode::LD_SP_d16:
-        m_registers.stack_ptr = fetch_and_inc_16bit();
+        m_registers.stack_ptr = fetch_and_inc_u16();
         break;
     case OpCode::INC_DE:
         inc_de();
@@ -364,7 +382,7 @@ StepResult CPU::step()
         and_with_a(m_registers.l);
         break;
     case OpCode::AND_d8:
-        and_with_a(fetch_and_inc_8bit());
+        and_with_a(fetch_and_inc_u8());
         break;
     case OpCode::OR_A:
         or_with_a(m_registers.a);
@@ -388,7 +406,7 @@ StepResult CPU::step()
         or_with_a(m_registers.l);
         break;
     case OpCode::OR_d8:
-        or_with_a(fetch_and_inc_8bit());
+        or_with_a(fetch_and_inc_u8());
         break;
     case OpCode::XOR_A:
         xor_reg(&m_registers.a);
@@ -443,7 +461,7 @@ StepResult CPU::step()
         break;
     case OpCode::CALL_a16:
         push(m_registers.program_counter + 2);
-        m_registers.program_counter = fetch_and_inc_16bit();
+        m_registers.program_counter = fetch_and_inc_u16();
         break;
     case OpCode::RET_C:
         if (get_carry_flag())
@@ -471,7 +489,7 @@ StepResult CPU::step()
         result.should_halt = true;
         break;
     case OpCode::PREFIX: {
-        PrefixOpCode prefix_op_code = static_cast<PrefixOpCode>(fetch_and_inc_8bit());
+        PrefixOpCode prefix_op_code = static_cast<PrefixOpCode>(fetch_and_inc_u8());
         handle_prefix_op_code(prefix_op_code);
         result.cycles += cycles_for_prefix_opcode(prefix_op_code);
         break;
@@ -539,17 +557,24 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
 // Memory Access
 //
 
-u8 CPU::fetch_and_inc_8bit()
+s8 CPU::fetch_and_inc_s8()
+{
+    s8 next = emulator().mmu().rom()[m_registers.program_counter];
+    m_registers.program_counter++;
+    return next;
+}
+
+u8 CPU::fetch_and_inc_u8()
 {
     u8 next = emulator().mmu().rom()[m_registers.program_counter];
     m_registers.program_counter++;
     return next;
 }
 
-u16 CPU::fetch_and_inc_16bit()
+u16 CPU::fetch_and_inc_u16()
 {
-    u8 b1 = fetch_and_inc_8bit();
-    u8 b2 = fetch_and_inc_8bit();
+    u8 b1 = fetch_and_inc_u8();
+    u8 b2 = fetch_and_inc_u8();
     return to_le_16_bit(b1, b2);
 }
 
