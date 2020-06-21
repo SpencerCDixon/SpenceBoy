@@ -40,26 +40,6 @@ target_include_directories(gameboy PUBLIC ".")
 # Testing
 #---------
 
-add_executable(cpu_test
-        Tests/TestCPU.cpp
-        Emulator/Emulator.cpp
-        Emulator/CPU.cpp
-        Emulator/PPU.cpp
-        Emulator/MMU.cpp
-        Emulator/Joypad.cpp
-        Emulator/IODevice.cpp
-        Emulator/SoundCard.cpp
-        Emulator/GUI/Bitmap.h
-        Emulator/GUI/Rect.h
-        Emulator/GUI/SDLRenderer.cpp
-        Emulator/GUI/SDLRenderer.h
-        Emulator/GUI/Texture.cpp
-        SD/LogStream.cpp
-        SD/String.cpp
-        SD/File.cpp
-        SD/File.h)
-target_include_directories(cpu_test PUBLIC ".")
-
 add_executable(string_test Tests/TestString.cpp SD/String.cpp SD/LogStream.cpp SD/Utility.h)
 target_include_directories(string_test PUBLIC ".")
 
@@ -82,7 +62,6 @@ if (APPLE)
     include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS})
     target_link_libraries(gameboy ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES})
     target_link_libraries(joypad_test ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES})
-    target_link_libraries(cpu_test ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES})
 endif()
 
 if (NOT APPLE)
@@ -95,6 +74,5 @@ if (NOT APPLE)
     include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
     target_link_libraries(gameboy ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
     target_link_libraries(joypad_test ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
-    target_link_libraries(cpu_test ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 endif()
 

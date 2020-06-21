@@ -8,11 +8,12 @@ case "${unameOut}" in
     *)          machine="Unsupported:${unameOut}"
 esac
 
-echo "machine is: $machine"
+echo "Machine detected as: $machine"
 
 if [ "$machine" == "Mac" ]; then
   echo "detected machine is macOS... installing deps"
   brew install rgbds
+  brew install colordiff
 elif [ "$machine" == "Linux" ]; then
   echo "detected machine is Linux... installing deps"
   pushd ..
