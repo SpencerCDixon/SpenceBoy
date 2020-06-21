@@ -13,9 +13,9 @@ void print_usage()
           << " pedagogical purposes.\n\n"
           << "\t--verbose - enable verbose logging for easier debugging\n"
           << "\t--asset-dir <location of graphical assets>\n"
-          << "\t--test-dir <location of test ROMs>\n"
           << "\t--help - print this screen\n"
-          << "\t--run-tests - run ROM tests\n\n";
+          << "\t--test - run ROM tests\n\n"
+          << "\t--no-gui - run SpenceBoy without GUI\n\n";
 }
 
 int main(int argc, char* argv[])
@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
         RenderingBackend::SDL,
         false,
         false,
-        "./Tests",
+        true,
         "./Asssets"
     };
 
@@ -38,17 +38,21 @@ int main(int argc, char* argv[])
 
         if (strcmp(argv[i], "--asset-dir") == 0)
             settings.assets_dir = argv[i + 1];
-        if (strcmp(argv[i], "--test-dir") == 0)
-            settings.test_dir = argv[i + 1];
-        if (strcmp(argv[i], "--run-tests") == 0)
+        if (strcmp(argv[i], "--test") == 0)
             settings.in_test_mode = true;
         if (strcmp(argv[i], "--verbose") == 0)
             settings.verbose_logging = true;
+        if (strcmp(argv[i], "--no-gui") == 0)
+            settings.has_gui = false;
     }
 
-    dbg() << "\n\nRunning SpenceBoy with the following settings:\n\n"
-          << "\ttest-dir: " << settings.test_dir << "\n"
-          << "\tasset-dir: " << settings.assets_dir << "\n";
+    if (!settings.in_test_mode) {
+        dbg() << "\n\nRunning SpenceBoy with the following settings:\n\n"
+              << "\tasset-dir: " << settings.assets_dir << "\n"
+              << "\tin-test-mode: " << settings.in_test_mode << "\n"
+              << "\tverbose: " << settings.verbose_logging << "\n"
+              << "\thas-gui: " << settings.has_gui << "\n";
+    }
 
     Emulator emulator { settings };
     emulator.load_rom(rom_path);

@@ -12,13 +12,11 @@ enum class RenderingBackend {
 };
 
 // TODO:
-// * --no-gui
-// * --run
 // * --backend <serenity|sdl|gtk|metal>
 struct RuntimeSettings {
     RenderingBackend backend;
     bool in_test_mode;
     bool verbose_logging;
-    String test_dir;
+    bool has_gui;
     String assets_dir;
 };

@@ -20,7 +20,6 @@ public:
 
     ~LogStream();
 
-    // TODO(scd): Create a 'Write' interface so I could pass in-mem write for tests
     void write(const char *characters, int length) const {
         fwrite(characters, length, 1, stdout);
     }

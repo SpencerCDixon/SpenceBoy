@@ -78,7 +78,6 @@ void Emulator::run()
         }
 
         if (!halted) {
-
             for (;;) {
                 auto result = m_cpu.step();
                 if (result.should_halt) {
