@@ -63,6 +63,13 @@ void SDLRenderer::present()
     SDL_RenderPresent(m_renderer);
 }
 
+void SDLRenderer::draw_rect(const Rect& rect, const Color& color)
+{
+    SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
+    auto sdl_rect = rect.to_sdl();
+    SDL_RenderFillRect(m_renderer, &sdl_rect);
+}
+
 void SDLRenderer::draw_texture(const Texture& tex, const Rect& rect)
 {
     auto dest = rect.to_sdl();

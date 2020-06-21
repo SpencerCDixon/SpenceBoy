@@ -99,6 +99,9 @@ void Emulator::run()
 
         local_persist Color bg_clear { 255, 255, 255, 255 };
         local_persist Color gb_clear { 125, 130, 255, 255 };
+        local_persist u8 WINDOW_WIDTH = 160;
+        local_persist u8 WINDOW_HEIGHT = 144;
+
         renderer().clear(bg_clear);
 
         ppu().clear(gb_clear);
@@ -107,12 +110,22 @@ void Emulator::run()
         renderer().draw_texture(m_gb_background, Point { 20, 20 });
         renderer().draw_texture(ppu().tilemap(), Point { 324, 20 });
         renderer().draw_texture(ppu().tileset(), Point { 324, 286 });
-        renderer().draw_partial_texture(ppu().tilemap(), { ppu().scx(), ppu().scy(), 159, 143 }, { 85, 67, 159, 143 });
+        renderer().draw_partial_texture(ppu().tilemap(), { ppu().scx(), ppu().scy(), WINDOW_WIDTH, WINDOW_HEIGHT }, { 85, 67, WINDOW_WIDTH, WINDOW_HEIGHT });
 
         // Render Debug:
         if (show_input_debug) {
             input_debug.render();
         }
+
+        // BG Tilemap Debug Wireframe:
+        auto window_frame_color = Color { 0, 0, 0, 255 };
+        auto base_x = 324 + ppu().scx();
+        auto base_y = 20 + ppu().scy();
+        auto thickness = 1;
+        renderer().draw_rect({ base_x, base_y, WINDOW_WIDTH, thickness }, window_frame_color);
+        renderer().draw_rect({ base_x, base_y + WINDOW_HEIGHT, WINDOW_WIDTH, thickness }, window_frame_color);
+        renderer().draw_rect({ base_x, base_y, thickness, WINDOW_HEIGHT }, window_frame_color);
+        renderer().draw_rect({ base_x + WINDOW_WIDTH, base_y, thickness, WINDOW_HEIGHT }, window_frame_color);
 
         renderer().present();
         frame_timer.wait_until_elapsed_ms(16);

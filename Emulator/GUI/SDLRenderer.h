@@ -18,6 +18,7 @@ public:
     virtual void clear(const Color&) override;
     virtual void present() override;
 
+    void draw_rect(const Rect& rect, const Color& color) override;
     void draw_texture(const Texture& tex, const Rect& rect) override;
     void draw_texture(const Texture& tex, const Point& point) override;
     void draw_texture_rotated(const Texture& tex, const Point& rect, f64 angle) override;

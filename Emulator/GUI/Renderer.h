@@ -12,16 +12,9 @@
 #include "Emulator/GUI/Rect.h"
 #include "Emulator/GUI/Texture.h"
 
-//struct WindowSettings {
-//    u16 width;
-//    u16 height;
-//    bool resizeable;
-//    String title;
-//};
-
-// ACall: Should my renderer be project agnostic or is it okay to specialize it for my
-// specific game boy rendering. I.E. instead of generic draw_XXX() calls I could have like
-// draw_background(), draw_window(), draw_sprites(), etc.
+// TODO: An API I've enjoyed in the past is the ability to set an offset and provide a block/function
+// and every render call inside that block happens at the offset then the offset gets popped off
+// when the function finishes execution. Consider adding something similar to my Renderer.
 
 class Renderer {
 public:
@@ -30,9 +23,10 @@ public:
     virtual void clear(const Color&) = 0;
     virtual void present() = 0;
 
+    virtual void draw_rect(const Rect& rect, const Color& color) = 0;
     virtual void draw_texture(const Texture& tex, const Rect& rect) = 0;
     virtual void draw_texture(const Texture& tex, const Point& point) = 0;
-    virtual void draw_texture_rotated(const Texture& tex, const Point& rect, f64 angle) = 0;
+    virtual void draw_texture_rotated(const Texture& tex, const Point& point, f64 angle) = 0;
     virtual void draw_partial_texture(const Texture& tex, const Rect& src, const Rect& dest) = 0;
 private:
 };
