@@ -6,8 +6,8 @@
 #include "Emulator/PPU.h"
 #include <SD/LogStream.h>
 
-constexpr u16 WIN_HEIGHT = 500;
-constexpr u16 WIN_WIDTH = 600;
+constexpr u16 EMULATOR_WINDOW_HEIGHT = 500;
+constexpr u16 EMULATOR_WINDOW_WIDTH = 600;
 
 static SDLRenderer s_the;
 
@@ -30,7 +30,7 @@ void SDLRenderer::init()
         error("unable to initialize SDL video subsystem");
     }
 
-    if (SDL_CreateWindowAndRenderer(WIN_WIDTH, WIN_HEIGHT, 0, &m_window, &m_renderer)) {
+    if (SDL_CreateWindowAndRenderer(EMULATOR_WINDOW_WIDTH, EMULATOR_WINDOW_HEIGHT, 0, &m_window, &m_renderer)) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window and renderer: %s", SDL_GetError());
         error("creating window and renderer");
     }
