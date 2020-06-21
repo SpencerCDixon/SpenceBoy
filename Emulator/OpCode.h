@@ -320,7 +320,6 @@ inline bool is_opcode(const OpCode& code)
     return false;
 }
 
-// Andreas: better way to do this?
 inline String to_string(const OpCode& code)
 {
     char* buffer = (char*)malloc(20);

@@ -14,8 +14,9 @@ void print_usage()
           << "\t--verbose - enable verbose logging for easier debugging\n"
           << "\t--asset-dir <location of graphical assets>\n"
           << "\t--help - print this screen\n"
-          << "\t--test - run ROM tests\n\n"
-          << "\t--no-gui - run SpenceBoy without GUI\n\n";
+          << "\t--test - run in test mode\n\n"
+          << "\t--no-gui - run SpenceBoy without GUI\n\n"
+          << "\t--rom - path to ROM to run\n\n";
 }
 
 int main(int argc, char* argv[])
@@ -28,9 +29,9 @@ int main(int argc, char* argv[])
         "./Asssets"
     };
 
-    const char* rom_path = argv[1];
+    String rom_path;
 
-    for (int i = 2; i < argc; i++) {
+    for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--help") == 0) {
             print_usage();
             exit(1);
@@ -44,6 +45,8 @@ int main(int argc, char* argv[])
             settings.verbose_logging = true;
         if (strcmp(argv[i], "--no-gui") == 0)
             settings.has_gui = false;
+        if (strcmp(argv[i], "--rom") == 0)
+            rom_path = argv[i + 1];
     }
 
     if (!settings.in_test_mode) {
@@ -55,7 +58,7 @@ int main(int argc, char* argv[])
     }
 
     Emulator emulator { settings };
-    emulator.load_rom(rom_path);
+    emulator.load_rom(rom_path.characters());
     emulator.run();
 
     return 0;

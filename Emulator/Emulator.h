@@ -23,17 +23,18 @@ public:
         : m_settings(settings)
         , m_mmu(*this)
         , m_joypad({})
-        , m_cpu(*this, settings.verbose_logging)
+        , m_cpu(*this)
         , m_ppu(*this)
         , m_sound_card({})
     {
-        SDLRenderer::the().init();
-
-        auto path = m_settings.assets_dir + "/SpenceBoy.png";
-        m_gb_background = Texture::from_image(path);
-
         mmu().init_devices();
-        ppu().init_textures();
+
+        if (settings.has_gui) {
+            SDLRenderer::the().init();
+            auto path = m_settings.assets_dir + "/SpenceBoy.png";
+            m_gb_background = Texture::from_image(path);
+            ppu().init_textures();
+        }
     }
 
     void load_rom(const char* path);
@@ -46,6 +47,7 @@ public:
     SoundCard& sound() { return m_sound_card; }
     Renderer& renderer() { return SDLRenderer::the(); }
     String& assets_dir() { return m_settings.assets_dir; }
+    RuntimeSettings& settings() { return m_settings; }
 
 private:
     RuntimeSettings m_settings;

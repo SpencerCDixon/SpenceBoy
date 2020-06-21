@@ -22,13 +22,32 @@ void Emulator::load_rom(const char* path)
 
 void Emulator::run()
 {
+    u64 cycle_count = 0;
+
+    if (!m_settings.has_gui) {
+        if (m_settings.in_test_mode)
+            dbg() << "Trace:\n------\n";
+
+        for (;;) {
+            auto result = m_cpu.step();
+            if (result.should_halt) {
+                exit(0);
+            } else {
+                cycle_count += result.cycles;
+                if (cycle_count >= CYCLES_PER_SECOND) {
+                    cycle_count = 0;
+                    break;
+                }
+            }
+        }
+    }
+
     SDL_Event e;
     bool quit = false;
     bool halted = false;
     bool show_input_debug = true;
 
     InputDebugWindow input_debug(*this);
-    u64 cycle_count = 0;
 
     while (!quit) {
         auto frame_timer = Timer("frame");

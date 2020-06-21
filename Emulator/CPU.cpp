@@ -25,9 +25,8 @@ constexpr u8 FLAG_HALF_CARRY = 0b00100000;
 constexpr u8 FLAG_CARRY      = 0b00010000;
 // clang-format on
 
-CPU::CPU(Emulator& emulator, bool verbose_logging)
+CPU::CPU(Emulator& emulator)
     : m_emulator(emulator)
-    , m_verbose_logging(verbose_logging)
     , m_registers({ 0 })
 {
     // TODO: Some boot process that I can define however I like. This could be done in SDL
@@ -509,8 +508,10 @@ StepResult CPU::step()
         break;
     }
 
-    if (m_verbose_logging) {
+    if (emulator().settings().verbose_logging || emulator().settings().in_test_mode) {
         dbg() << to_string(op_code) << "   " << *this;
+        if (result.should_halt)
+            dbg() << to_snapshot(test_state());
     }
 
     result.cycles += cycles_for_opcode(op_code);
@@ -780,7 +781,7 @@ String to_trace_line(const CPUTestState& test_state)
         "B: %03u [0x%02x] C: %03u [0x%02x]  "
         "D: %03u [0x%02x] E: %03u [0x%02x]  "
         "H: %03u [0x%02x] L: %03u [0x%02x] ---"
-        " WRAM: 0x%016" PRIx64 "| VRAM: 0x%016" PRIx64 " |",
+        " WRAM: 0x%016" PRIx64 " | VRAM: 0x%016" PRIx64 " |",
         test_state.registers.a,
         test_state.registers.a,
         test_state.registers.f,

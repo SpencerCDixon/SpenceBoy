@@ -5,6 +5,7 @@
     <excludeRoots>
       <file path="$PROJECT_DIR$/Asm/Tools" />
       <file path="$PROJECT_DIR$/Tests/data" />
+      <file path="$PROJECT_DIR$/Tests/precompiled" />
       <file path="$PROJECT_DIR$/build" />
       <file path="$PROJECT_DIR$/cmake" />
     </excludeRoots>

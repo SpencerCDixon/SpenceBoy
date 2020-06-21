@@ -46,7 +46,7 @@ String to_snapshot(const CPUTestState&);
 class CPU final : public IODevice {
 
 public:
-    explicit CPU(Emulator& emulator, bool verbose_logging = false);
+    explicit CPU(Emulator& emulator);
     ~CPU();
 
     StepResult step();
@@ -174,7 +174,6 @@ private:
 
 private:
     Emulator& m_emulator;
-    bool m_verbose_logging;
     Registers m_registers;
     bool m_interrupts_enabled { false };
 };

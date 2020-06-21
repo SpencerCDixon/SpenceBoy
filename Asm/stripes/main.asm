@@ -80,8 +80,8 @@ Start:
 	; ld hl, $ff40
 	; ld [hl], $81
 
-loop:
-	jp loop
+	nop
+	halt;
 
 SECTION "BGTileData",ROM0[$1000]
 
