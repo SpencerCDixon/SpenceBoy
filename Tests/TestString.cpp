@@ -28,9 +28,7 @@ private:
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
-    printf("Testing String class... \n");
-    printf("--------------------------\n\n");
-
+    printf("Testing String class... \n\n");
     printf("size of raw String %lu\n", sizeof(String));
 
     // Concat

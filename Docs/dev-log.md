@@ -8,6 +8,22 @@ A place to store my daily progress in building a GameBoy Color Emulator.
  
 ### What did I get done today?
 
+* Move all the test ROMs into a separate location
+
+---
+ 
+**Date: 6/21/2020**
+ 
+### What did I get done today?
+
+* Start refactoring the emulator to be able to run in a 'test' mode
+
+---
+ 
+**Date: 6/20/2020**
+ 
+### What did I get done today?
+
 * Added a rudimentary timer to try and achieve closer to 60 fps instead
 * Implement rest of conditional jump op codes
 * Fix critical bug with using the 0x8800 indexing method into bg tileset
