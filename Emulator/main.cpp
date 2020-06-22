@@ -8,14 +8,13 @@
 
 void print_usage()
 {
-    dbg() << "Usage: SpenceBoy <rom-path>\n\n"
+    dbg() << "Usage: SpenceBoy --rom <pah to rom>\n\n"
           << "\tSpenceBoy is a cross-platform GameBoy Color emulator built for"
           << " pedagogical purposes.\n\n"
           << "\t--verbose - enable verbose logging for easier debugging\n"
           << "\t--asset-dir <location of graphical assets>\n"
           << "\t--help - print this screen\n"
-          << "\t--test - run in test mode\n\n"
-          << "\t--no-gui - run SpenceBoy without GUI\n\n"
+          << "\t--test - run in test mode. Will run through all CPU cycles until a 'halt' is reached\n\n"
           << "\t--rom - path to ROM to run\n\n";
 }
 
@@ -25,7 +24,6 @@ int main(int argc, char* argv[])
         RenderingBackend::SDL,
         false,
         false,
-        true,
         "./Asssets"
     };
 
@@ -43,8 +41,6 @@ int main(int argc, char* argv[])
             settings.in_test_mode = true;
         if (strcmp(argv[i], "--verbose") == 0)
             settings.verbose_logging = true;
-        if (strcmp(argv[i], "--no-gui") == 0)
-            settings.has_gui = false;
         if (strcmp(argv[i], "--rom") == 0)
             rom_path = argv[i + 1];
     }
@@ -53,8 +49,7 @@ int main(int argc, char* argv[])
         dbg() << "\n\nRunning SpenceBoy with the following settings:\n\n"
               << "\tasset-dir: " << settings.assets_dir << "\n"
               << "\tin-test-mode: " << settings.in_test_mode << "\n"
-              << "\tverbose: " << settings.verbose_logging << "\n"
-              << "\thas-gui: " << settings.has_gui << "\n";
+              << "\tverbose: " << settings.verbose_logging << "\n";
     }
 
     Emulator emulator { settings };

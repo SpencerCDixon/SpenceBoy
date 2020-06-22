@@ -5,5 +5,5 @@ rgbasm -o main.o main.asm
 rgblink -o joypad.gb main.o
 rgbfix -v -p 0 joypad.gb
 
-cp ./joypad.gb ../../Tests/data
+cp ./joypad.gb ../ROMs
 hexdump -C ./joypad.gb

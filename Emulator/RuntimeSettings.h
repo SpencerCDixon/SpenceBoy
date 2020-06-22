@@ -17,6 +17,5 @@ struct RuntimeSettings {
     RenderingBackend backend;
     bool in_test_mode;
     bool verbose_logging;
-    bool has_gui;
     String assets_dir;
 };

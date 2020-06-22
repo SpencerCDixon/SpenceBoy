@@ -29,7 +29,7 @@ public:
     {
         mmu().init_devices();
 
-        if (settings.has_gui) {
+        if (!settings.in_test_mode) {
             SDLRenderer::the().init();
             auto path = m_settings.assets_dir + "/SpenceBoy.png";
             m_gb_background = Texture::from_image(path);
