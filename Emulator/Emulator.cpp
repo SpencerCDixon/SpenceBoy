@@ -38,7 +38,6 @@ void Emulator::run()
     bool quit = false;
     bool halted = false;
     bool show_input_debug = true;
-
     InputDebugWindow input_debug(*this);
 
     while (!quit) {
