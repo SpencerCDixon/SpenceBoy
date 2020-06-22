@@ -5,6 +5,6 @@ rgbasm -o main.o main.asm
 rgblink -o serenity.gb main.o
 rgbfix -v -p 0 serenity.gb
 
-cp ./serenity.gb ../../Tests/data
+cp ./serenity.gb ../ROMs
 hexdump -C serenity.gb
 
