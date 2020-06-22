@@ -59,7 +59,7 @@ the `C` standard library.
 
 - [ ] Add flags at end of execution to snapshots
 - [ ] Add some sort of ASM assertion that writes to unused memory and can be shown in console
-- [ ] Properly capture prefix opcodes in test snapshots
+- [x] Properly capture prefix opcodes in test snapshots
 
 ## Game Targets
 
