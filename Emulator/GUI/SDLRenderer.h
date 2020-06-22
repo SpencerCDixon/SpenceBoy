@@ -26,6 +26,7 @@ public:
 
     SDL_Renderer* renderer()
     {
+
         ASSERT(m_renderer);
         return m_renderer;
     }

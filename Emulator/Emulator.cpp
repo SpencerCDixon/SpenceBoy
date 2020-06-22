@@ -22,26 +22,18 @@ void Emulator::load_rom(const char* path)
 
 void Emulator::run()
 {
-    u64 cycle_count = 0;
-
-    if (!m_settings.has_gui) {
-        if (m_settings.in_test_mode)
-            dbg() << "Trace:\n------\n";
+    if (m_settings.in_test_mode) {
+        dbg() << "Trace:\n------\n";
 
         for (;;) {
             auto result = m_cpu.step();
             if (result.should_halt) {
                 exit(0);
-            } else {
-                cycle_count += result.cycles;
-                if (cycle_count >= CYCLES_PER_SECOND) {
-                    cycle_count = 0;
-                    break;
-                }
             }
         }
     }
 
+    u64 cycle_count = 0;
     SDL_Event e;
     bool quit = false;
     bool halted = false;
@@ -111,9 +103,6 @@ void Emulator::run()
                 }
             }
         }
-
-        //        if (halted)
-        //            dbg() << "halted!";
 
         local_persist Color bg_clear { 255, 255, 255, 255 };
         local_persist Color gb_clear { 125, 130, 255, 255 };
