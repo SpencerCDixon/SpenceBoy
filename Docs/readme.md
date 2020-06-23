@@ -4,6 +4,16 @@ This project is a GameBoy Color emulator. The primary objective is for
 educational purposes. No external dependencies are allowed other than `SDL2` and
 the `C` standard library.
 
+## Getting Started
+
+There are a number of `Scripts` which can be used as an example for how to run
+the emulator. To get bootstrapped quickly try running:
+
+```sh
+$ ./Scripts/bootstrap.sh
+$ ./Scripts/run.sh
+```
+
 # Roadmap
 
 ## General 
