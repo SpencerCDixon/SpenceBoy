@@ -14,6 +14,7 @@ if [ "$machine" == "Mac" ]; then
   echo "detected machine is macOS... installing deps"
   brew install rgbds
   brew install colordiff
+  brew install cmake
 elif [ "$machine" == "Linux" ]; then
   echo "detected machine is Linux... installing deps"
   pushd ..

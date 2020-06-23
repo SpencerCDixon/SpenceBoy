@@ -4,11 +4,13 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
-**Date: 6/20/2020**
+**Date: 6/22/2020**
  
 ### What did I get done today?
 
 * Move all the test ROMs into a separate location
+* Remove --no-gui in favor of an explicit test or not test mode to run emulator in
+* Improved various scripts so they can be run from anywhere
 
 ---
  
