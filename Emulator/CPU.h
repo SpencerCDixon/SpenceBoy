@@ -82,6 +82,16 @@ private:
     void and_with_a(u8 value);
     void or_with_a(u8 value);
     void swap_reg(u8* reg_ptr);
+    // ACall: Nicer way to do this?
+    void check_bit(u8 flag, u8* reg_ptr);
+    void check_bit_0(u8* reg_ptr) { check_bit(1 << 0, reg_ptr); }
+    void check_bit_1(u8* reg_ptr) { check_bit(1 << 1, reg_ptr); }
+    void check_bit_2(u8* reg_ptr) { check_bit(1 << 2, reg_ptr); }
+    void check_bit_3(u8* reg_ptr) { check_bit(1 << 3, reg_ptr); }
+    void check_bit_4(u8* reg_ptr) { check_bit(1 << 4, reg_ptr); }
+    void check_bit_5(u8* reg_ptr) { check_bit(1 << 5, reg_ptr); }
+    void check_bit_6(u8* reg_ptr) { check_bit(1 << 6, reg_ptr); }
+    void check_bit_7(u8* reg_ptr) { check_bit(1 << 7, reg_ptr); }
 
     // Flag Setting
     void set_zero_flag(bool should_set);
@@ -176,6 +186,7 @@ private:
     Emulator& m_emulator;
     Registers m_registers;
     bool m_interrupts_enabled { false };
+    bool m_in_boot_rom { true };
 };
 
 const LogStream& operator<<(const LogStream&, const CPUTestState&);

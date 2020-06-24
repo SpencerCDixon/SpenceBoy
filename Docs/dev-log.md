@@ -4,6 +4,15 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 6/23/2020**
+ 
+### What did I get done today?
+
+* Add boot rom into the MMU to be executed before the loaded ROM
+* Add support for BIT_X op code
+
+---
+ 
 **Date: 6/22/2020**
  
 ### What did I get done today?

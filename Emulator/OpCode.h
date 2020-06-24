@@ -268,14 +268,15 @@
     __ENUMERATE(0xDD, DEBUGGER, 4)         \
     __ENUMERATE(0xDB, TEST_COMPLETE, 4)
 
-#define ENUMERATE_PREFIX_OPCODES \
-    __ENUMERATE(0x27, SLA_A, 8)  \
-    __ENUMERATE(0x20, SLA_B, 8)  \
-    __ENUMERATE(0x21, SLA_C, 8)  \
-    __ENUMERATE(0x22, SLA_D, 8)  \
-    __ENUMERATE(0x23, SLA_E, 8)  \
-    __ENUMERATE(0x24, SLA_H, 8)  \
-    __ENUMERATE(0x25, SLA_L, 8)  \
+#define ENUMERATE_PREFIX_OPCODES  \
+    __ENUMERATE(0x7C, BIT_7_H, 8) \
+    __ENUMERATE(0x27, SLA_A, 8)   \
+    __ENUMERATE(0x20, SLA_B, 8)   \
+    __ENUMERATE(0x21, SLA_C, 8)   \
+    __ENUMERATE(0x22, SLA_D, 8)   \
+    __ENUMERATE(0x23, SLA_E, 8)   \
+    __ENUMERATE(0x24, SLA_H, 8)   \
+    __ENUMERATE(0x25, SLA_L, 8)   \
     __ENUMERATE(0x37, SWAP_A, 8)
 
 enum class OpCode : u8 {
@@ -346,8 +347,8 @@ inline void print_prefix_opcode(const PrefixOpCode& code)
 {
     switch (code) {
 #define __ENUMERATE(_hex, name, _code) \
-    case PrefixOpCode::name: \
-        dbg() << #name;      \
+    case PrefixOpCode::name:           \
+        dbg() << #name;                \
         break;
         ENUMERATE_PREFIX_OPCODES
 #undef __ENUMERATE
@@ -358,7 +359,7 @@ inline bool is_prefix_opcode(const PrefixOpCode& code)
 {
     switch (code) {
 #define __ENUMERATE(_hex, name, _code) \
-    case PrefixOpCode::name: \
+    case PrefixOpCode::name:           \
         return true;
         ENUMERATE_PREFIX_OPCODES
 #undef __ENUMERATE
@@ -370,10 +371,26 @@ inline u8 cycles_for_prefix_opcode(const PrefixOpCode& code)
 {
     switch (code) {
 #define __ENUMERATE(_hex, name, cycles) \
-    case PrefixOpCode::name: \
+    case PrefixOpCode::name:            \
         return static_cast<u8>(cycles);
-    ENUMERATE_PREFIX_OPCODES
+        ENUMERATE_PREFIX_OPCODES
 #undef __ENUMERATE
     }
     return 0;
+}
+
+inline String to_string(const PrefixOpCode& code)
+{
+    char* buffer = (char*)malloc(20);
+    switch (code) {
+#define __ENUMERATE(_hex, name, _cycles)     \
+    case PrefixOpCode::name: {               \
+        snprintf(buffer, 21, "%20s", #name); \
+        auto str = String(buffer);           \
+        free(buffer);                        \
+        return str;                          \
+    }
+        ENUMERATE_PREFIX_OPCODES
+#undef __ENUMERATE
+    }
 }

@@ -13,10 +13,6 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-// Useful to snag when debugging
-//        hex_dump("WRAM", m_wram, WRAM_SIZE, WRAM_START);
-//        hex_dump("VRAM", m_vram, VRAM_SIZE, VRAM_START);
-
 // Flags
 // clang-format off
 constexpr u8 FLAG_ZERO       = 0b10000000;
@@ -33,7 +29,11 @@ CPU::CPU(Emulator& emulator)
     // land and doesn't need to use normal GB rendering techniques. It must result in the program
     // counter being set at the proper location of 0x100.
     m_registers.stack_ptr = 0xfffe;
-    m_registers.program_counter = 0x100;
+
+    if (emulator.settings().in_test_mode)
+        m_registers.program_counter = 0x100;
+    else
+        m_registers.program_counter = 0x00;
 }
 
 CPU::~CPU()
@@ -545,6 +545,9 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
     case PrefixOpCode::SWAP_A:
         swap_reg(&m_registers.a);
         break;
+    case PrefixOpCode::BIT_7_H:
+        check_bit_7(&m_registers.h);
+        break;
     default:
         if (is_prefix_opcode(op_code)) {
             printf("[ " RED "FATAL" RESET " ] "
@@ -555,22 +558,35 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
         }
         ASSERT_NOT_REACHED();
     }
+
+    if (emulator().settings().verbose_logging || emulator().settings().in_test_mode) {
+        dbg() << to_string(op_code) << "   " << *this;
+    }
 }
 
 //
 // Memory Access
 //
-
 s8 CPU::fetch_and_inc_s8()
 {
-    s8 next = emulator().mmu().rom()[m_registers.program_counter];
+    s8 next;
+    if (m_in_boot_rom && !emulator().settings().in_test_mode)
+        next = emulator().mmu().bios()[m_registers.program_counter];
+    else
+        next = emulator().mmu().rom()[m_registers.program_counter];
+
     m_registers.program_counter++;
     return next;
 }
 
 u8 CPU::fetch_and_inc_u8()
 {
-    u8 next = emulator().mmu().rom()[m_registers.program_counter];
+    u8 next;
+    if (m_in_boot_rom && !emulator().settings().in_test_mode)
+        next = emulator().mmu().bios()[m_registers.program_counter];
+    else
+        next = emulator().mmu().rom()[m_registers.program_counter];
+
     m_registers.program_counter++;
     return next;
 }
@@ -644,7 +660,6 @@ void CPU::pop_return()
 //
 // Arithmetic
 //
-
 void CPU::cp_a(u8* value_ptr)
 {
     // TODO: half carry
@@ -656,7 +671,6 @@ void CPU::cp_a(u8* value_ptr)
 //
 // Bit Twiddling
 //
-
 void CPU::shift_left(u8* reg_ptr)
 {
     set_half_carry_flag(false);
@@ -698,6 +712,13 @@ void CPU::or_with_a(u8 value)
     set_half_carry_flag(false);
     set_carry_flag(false);
     set_zero_flag(m_registers.a == 0);
+}
+
+void CPU::check_bit(u8 flag, u8* reg_ptr)
+{
+    set_zero_flag((flag & *reg_ptr) == 0);
+    set_subtract_flag(false);
+    set_half_carry_flag(true);
 }
 
 //
@@ -769,7 +790,6 @@ const LogStream& operator<<(const LogStream& stream, CPU& cpu)
 //
 // Testing Utilities
 //
-
 String to_trace_line(const CPUTestState& test_state)
 {
     local_persist u16 buf_size = 512;
