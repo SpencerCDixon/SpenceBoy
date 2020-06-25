@@ -134,6 +134,16 @@ StepResult CPU::step()
     case OpCode::LD_L_d8:
         m_registers.l = fetch_and_inc_u8();
         break;
+    case OpCode::LD_A_C_ADDR: {
+        u16 address = 0xff00 + m_registers.c;
+        m_registers.a = read(address);
+        break;
+    }
+    case OpCode::LD_C_ADDR_A: {
+        u16 address = 0xff00 + m_registers.c;
+        write(address, m_registers.a);
+        break;
+    }
     case OpCode::LD_A_HL_ADDR_INC:
         m_registers.a = read(get_hl());
         inc_hl();
@@ -152,6 +162,9 @@ StepResult CPU::step()
         break;
     case OpCode::LD_a16_ADDR_A:
         write(fetch_and_inc_u16(), m_registers.a);
+        break;
+    case OpCode::LD_a16_ADDR_SP:
+        write(fetch_and_inc_u16(), m_registers.stack_ptr);
         break;
     case OpCode::LD_BC_ADDR_A:
         write(get_bc(), m_registers.a);

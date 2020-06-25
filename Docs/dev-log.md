@@ -4,12 +4,21 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 6/24/2020**
+ 
+### What did I get done today?
+
+* Support for LD_C_ADDR_A, LD_A_C_ADDR, LD_a16_ADDR_SP
+
+---
+ 
 **Date: 6/23/2020**
  
 ### What did I get done today?
 
 * Add boot rom into the MMU to be executed before the loaded ROM
 * Add support for BIT_X op code
+* Skip running Boot ROM when in test mode 
 
 ---
  

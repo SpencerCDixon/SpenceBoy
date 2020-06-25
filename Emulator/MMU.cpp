@@ -76,6 +76,8 @@ u8 MMU::read(u16 address)
         u16 idx = address - IO_START;
         ASSERT(idx >= 0 && idx < IO_SIZE);
         return m_io_devices[idx]->in(address);
+    } else if (address == IE_LOCATION) {
+        return emulator().cpu().in(address);
     } else {
         dbg() << "bad read address: " << to_hex(address);
     }
