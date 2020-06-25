@@ -49,7 +49,7 @@ u8 Joypad::in(u16)
     } else {
         dbg() << "Program was trying to read Joypad data but didn't have the IODevice "
               << "in a proper state to be able to get useful data back (0x10 or 0x20)";
-        ASSERT_NOT_REACHED();
+//        ASSERT_NOT_REACHED();
     }
 
     return result;

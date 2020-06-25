@@ -74,10 +74,13 @@ u8 MMU::read(u16 address)
         return m_hram[idx];
     } else if (address >= IO_START && address <= IO_END) {
         u16 idx = address - IO_START;
-        ASSERT(idx >= 0 && idx < IO_SIZE);
+        ASSERT(idx >= 0 && idx <= IO_SIZE);
         return m_io_devices[idx]->in(address);
     } else if (address == IE_LOCATION) {
         return emulator().cpu().in(address);
+    } else if (address >= OAM_START && address <= OAM_END) {
+        dbg() << "OAM read(). Not yet implemented";
+        return 0;
     } else {
         dbg() << "bad read address: " << to_hex(address);
     }
@@ -107,15 +110,21 @@ void MMU::write(u16 address, u8 data)
         return;
     } else if (address >= IO_START && address <= IO_END) {
         u16 idx = address - IO_START;
-        ASSERT(idx >= 0 && idx < IO_SIZE);
+        ASSERT(idx >= 0 && idx <= IO_SIZE);
         return m_io_devices[idx]->out(address, data);
     } else if (address >= ERAM_START && address <= ERAM_END) {
         dbg() << "echo ram write at: " << address << " treating as no-op";
         return;
+    } else if (address >= MBC_START && address <= MBC_END) {
+        dbg() << "memory bank controller write at: " << to_hex(address) << " treating as no-op";
+        return;
+    } else if (address >= OAM_START && address <= OAM_END) {
+        dbg() << "OAM::write() at: " << to_hex(address) << " treating as no-op";
+        return;
     } else if (address == IE_LOCATION) {
         emulator().cpu().out(address, data);
     } else {
-        dbg() << "bad write address: " << address;
+        dbg() << "bad write address: " << to_hex(address);
     }
 
     // If we've reached here it means we're trying to write to memory
