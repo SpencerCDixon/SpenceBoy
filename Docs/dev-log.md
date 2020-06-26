@@ -4,6 +4,14 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 6/25/2020**
+ 
+### What did I get done today?
+
+* Update the boot rom being used to try SameBoy's 
+
+---
+ 
 **Date: 6/24/2020**
  
 ### What did I get done today?

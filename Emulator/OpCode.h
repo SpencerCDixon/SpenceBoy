@@ -270,6 +270,7 @@
 
 #define ENUMERATE_PREFIX_OPCODES  \
     __ENUMERATE(0x7C, BIT_7_H, 8) \
+    __ENUMERATE(0x6C, BIT_5_H, 8) \
     __ENUMERATE(0x27, SLA_A, 8)   \
     __ENUMERATE(0x20, SLA_B, 8)   \
     __ENUMERATE(0x21, SLA_C, 8)   \

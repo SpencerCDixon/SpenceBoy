@@ -561,6 +561,9 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
     case PrefixOpCode::BIT_7_H:
         check_bit_7(&m_registers.h);
         break;
+    case PrefixOpCode::BIT_5_H:
+        check_bit_5(&m_registers.h);
+        break;
     default:
         if (is_prefix_opcode(op_code)) {
             printf("[ " RED "FATAL" RESET " ] "
