@@ -110,3 +110,24 @@ struct Rect {
     }
 };
 ```
+
+Another useful example to demonstrate:
+
+```c++
+struct X {
+    //implicit conversion
+    operator int() const { return 7; }
+    // explicit conversion
+    explicit operator int*() const { return nullptr; }
+};
+ 
+int main()
+{
+    X x;
+    int n = static_cast<int>(x);   // OK: sets n to 7
+    int m = x;                     // OK: sets m to 7
+ 
+    int* p = static_cast<int*>(x);  // OK: sets p to null
+//  int* q = x; // Error: no implicit conversion
+}
+```
