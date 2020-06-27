@@ -68,4 +68,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
         auto should_move = String("should be moved!");
         auto entity = Entity(move(should_move));
     }
+
+    // Trimming
+    {
+        auto my_string = String("with new line\n\t ");
+        ASSERT(my_string.trim_whitespace_right() == "with new line");
+    }
 }
