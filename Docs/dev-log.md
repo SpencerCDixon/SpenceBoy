@@ -4,6 +4,14 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 6/27/2020**
+ 
+### What did I get done today?
+
+* Fixed bug related to interger wrapping in timer code
+
+---
+ 
 **Date: 6/26/2020**
  
 ### What did I get done today?
