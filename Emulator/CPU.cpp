@@ -29,11 +29,16 @@ CPU::CPU(Emulator& emulator)
     // land and doesn't need to use normal GB rendering techniques. It must result in the program
     // counter being set at the proper location of 0x100.
     m_registers.stack_ptr = 0xfffe;
+    m_registers.program_counter = 0x100;
 
-    if (emulator.settings().in_test_mode)
+
+    if (emulator.settings().in_test_mode) {
         m_registers.program_counter = 0x100;
-    else
+    } else if (!m_in_boot_rom) {
+        m_registers.program_counter = 0x100;
+    } else {
         m_registers.program_counter = 0x00;
+    }
 }
 
 CPU::~CPU()
