@@ -136,6 +136,6 @@ void Emulator::run()
         renderer().draw_rect({ base_x + WINDOW_WIDTH, base_y, thickness, WINDOW_HEIGHT }, window_frame_color);
 
         renderer().present();
-        frame_timer.wait_until_elapsed_ms(16);
+        frame_timer.wait_until_elapsed_ms(16.666);
     }
 }

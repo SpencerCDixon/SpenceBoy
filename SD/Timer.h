@@ -14,33 +14,38 @@ class Timer {
 public:
     Timer(String name)
         : m_name(name)
-        , m_start_time(clock())
     {
+        struct timespec ts;
+        clock_gettime(CLOCK_MONOTONIC, &ts);
+        m_start_nanoseconds = ts.tv_nsec;
     }
 
     ~Timer()
     {
-        clock_t total_time;
-        total_time = clock() - m_start_time;
-        double time_taken = ((double)total_time) / (CLOCKS_PER_SEC / 1000); // in ms
-        dbg() << m_name << " took: " << time_taken << "ms";
+        struct timespec now;
+        clock_gettime(CLOCK_MONOTONIC, &now);
+        long time_taken = (now.tv_nsec - m_start_nanoseconds) / 1000000;
+
+        // Andreas: Whaaat!?
+        if (time_taken < 0)
+            return;
+
+        dbg() << m_name << " took: " << (u32)time_taken << "ms";
     }
 
-    void wait_until_elapsed_ms(int ms)
+    void wait_until_elapsed_ms(double ms)
     {
-        clock_t end_time;
-        end_time = clock() - (clock() - m_start_time) + ms * CLOCKS_PER_SEC / 1000;
+        struct timespec now;
+        clock_gettime(CLOCK_MONOTONIC, &now);
 
-        // clock_gettime -> use monotonically
+        struct timespec sleep_request;
+        sleep_request.tv_sec = 0;
+        sleep_request.tv_nsec = (ms * 1000000) - (now.tv_nsec - m_start_nanoseconds);
 
-        // sleep instead of loop using 'nanosleep'
-        // save time when start doing frame
-        // we know that 16.66ms is the next frame boundary
-        // compute diff and sleep
-        while (clock() < end_time) { }
+        nanosleep(&sleep_request, nullptr);
     }
 
 private:
     String m_name;
-    clock_t m_start_time;
+    long m_start_nanoseconds;
 };

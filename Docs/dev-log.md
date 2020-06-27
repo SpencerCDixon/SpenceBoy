@@ -4,6 +4,17 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 6/26/2020**
+ 
+### What did I get done today?
+
+* Call with Andreas
+* Fix Joypad test case that I broke from boot ROM work
+* Improve Rect API to interface with SDL better
+* Save CPU cycles by sleeping instead of entering a while loop
+
+---
+ 
 **Date: 6/25/2020**
  
 ### What did I get done today?
