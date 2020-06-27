@@ -30,6 +30,13 @@ public:
     {
         clock_t end_time;
         end_time = clock() - (clock() - m_start_time) + ms * CLOCKS_PER_SEC / 1000;
+
+        // clock_gettime -> use monotonically
+
+        // sleep instead of loop using 'nanosleep'
+        // save time when start doing frame
+        // we know that 16.66ms is the next frame boundary
+        // compute diff and sleep
         while (clock() < end_time) { }
     }
 

@@ -186,7 +186,7 @@ private:
     Emulator& m_emulator;
     Registers m_registers;
     bool m_interrupts_enabled { false };
-    bool m_in_boot_rom { true };
+    bool m_in_boot_rom { false };
 };
 
 const LogStream& operator<<(const LogStream&, const CPUTestState&);

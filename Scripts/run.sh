@@ -10,5 +10,5 @@ mkdir -p build
 pushd build
 cmake ..
 make
-./gameboy --rom $SCRIPTPATH/../Asm/ROMs/joypad.gb --asset-dir $SCRIPTPATH/../Assets
+./gameboy --rom $SCRIPTPATH/../Asm/ROMs/serenity.gb --asset-dir $SCRIPTPATH/../Assets
 popd

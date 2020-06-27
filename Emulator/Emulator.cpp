@@ -88,6 +88,8 @@ void Emulator::run()
         }
 
         if (!halted) {
+            // if runtime settings.breakpoint
+            // cpu.set_breakpoint();
             for (;;) {
                 auto result = m_cpu.step();
                 if (result.should_halt) {

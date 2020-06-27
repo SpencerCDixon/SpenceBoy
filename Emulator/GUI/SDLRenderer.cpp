@@ -66,13 +66,13 @@ void SDLRenderer::present()
 void SDLRenderer::draw_rect(const Rect& rect, const Color& color)
 {
     SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
-    auto sdl_rect = rect.to_sdl();
+    SDL_Rect sdl_rect = rect;
     SDL_RenderFillRect(m_renderer, &sdl_rect);
 }
 
 void SDLRenderer::draw_texture(const Texture& tex, const Rect& rect)
 {
-    auto dest = rect.to_sdl();
+    SDL_Rect dest = rect;
     SDL_RenderCopy(m_renderer, static_cast<SDL_Texture*>(tex.data()), NULL, &dest);
 }
 
@@ -90,7 +90,7 @@ void SDLRenderer::draw_texture_rotated(const Texture& tex, const Point& point, f
 
 void SDLRenderer::draw_partial_texture(const Texture& tex, const Rect& src, const Rect& dest)
 {
-    auto src_rect = src.to_sdl();
-    auto dest_rect = dest.to_sdl();
+    SDL_Rect src_rect = src;
+    SDL_Rect dest_rect = dest;
     SDL_RenderCopy(m_renderer, static_cast<SDL_Texture*>(tex.data()), &src_rect, &dest_rect);
 }

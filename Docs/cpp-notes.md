@@ -91,3 +91,22 @@ private:
     OtherItem m_other_item;
 };
 ```
+
+## Operator Overloading
+
+In Rust, there is a concept of `Into<T>` for easily transitioning between types. In C++,
+we can use operator overloading to achieve similar results. Here is an example of me using
+operator overloading to convert between my custom `Rect` type and the SDL rect type:
+
+```c++
+struct Rect {
+    int x;
+    int y;
+    int width;
+    int height;
+    
+    operator SDL_Rect() const {
+        return SDL_Rect { this->x, this->y, this->width, this->height };
+    }
+};
+```
