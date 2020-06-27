@@ -1,6 +1,3 @@
-INCLUDE "../common/hardware.inc"
-
-; The gameboy will load our code at address $100
 SECTION "Header", ROM0[$100]
 
 EntryPoint:
@@ -11,7 +8,7 @@ REPT $150 - $104
 	db 0
 ENDR
 
-SECTION "Game code", ROM0
+SECTION "GameCode", ROM0
 
 ; Key status
 KEY_START   EQU %10000000
@@ -27,19 +24,19 @@ stripebackground_tile_map_size EQU $0400
 BACKGROUND_MAPDATA_START    EQU $9800 ; up to $9BFF
 
 mCopy:
-    inc b
-    inc c
-    jr  .skip
+	inc b
+	inc c
+	jr  .skip
 .loop:
-    ld a, [hl+]
-    ld [de], a
-    inc de
+	ld a, [hl+]
+	ld [de], a
+	inc de
 .skip:
-    dec c
-    jr  nz, .loop
-    dec b
-    jr nz, .loop
-    ret
+	dec c
+	jr  nz, .loop
+	dec b
+	jr nz, .loop
+	ret
 
 ; A copy function I created -scd
 copyData:
