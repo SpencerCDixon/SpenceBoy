@@ -6,6 +6,7 @@
 #include <SD/LogStream.h>
 #include <SD/String.h>
 #include <SD/Utility.h>
+#include <SD/Test.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -21,39 +22,36 @@ public:
         : m_name(move(name))
     {
     }
-
 private:
     String m_name;
 };
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
-    printf("Testing String class... \n\n");
-    printf("size of raw String %lu\n", sizeof(String));
-
     // Concat
     {
         String s1;
         s1 = "hello";
         s1 += " there!";
         assert_str_eq(s1, "hello there!");
-        printf("%s\n", s1.characters());
 
         String s2 = s1 + " this is a test!";
         assert_str_eq(s2, "hello there! this is a test!");
-        printf("%s\n", s2.characters());
+        PASS("concat");
     }
 
     // Log Streaming
     {
         auto s1 = String("logging to debug stream");
         dbg() << s1;
+        PASS("log streaming");
     }
 
     // Equality
     {
         ASSERT(String("equal") == String("equal"));
         ASSERT(String("equal") != String("notequal"));
+        PASS("equality checks");
     }
 
     // Move Constructor
@@ -67,11 +65,12 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 
         auto should_move = String("should be moved!");
         auto entity = Entity(move(should_move));
+        PASS("move constructor");
     }
 
     // Trimming
     {
         auto my_string = String("with new line\n\t ");
-        ASSERT(my_string.trim_whitespace_right() == "with new line");
+        TEST_ASSERT(my_string.trim_whitespace_right() == "with new line", "trim_whitespace_right()");
     }
 }

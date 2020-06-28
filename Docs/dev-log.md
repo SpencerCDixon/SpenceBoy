@@ -8,7 +8,9 @@ A place to store my daily progress in building a GameBoy Color Emulator.
  
 ### What did I get done today?
  
-* Add a new Vector class to SD which is needed for breakpoints/watchpoints 
+* Add a new Vector class to SD which is needed for breakpoints/watchpoints in Debugger
+* Add useful testing macros
+* Improve test output using new macros
 
 ---
  

@@ -3,29 +3,29 @@
 //
 
 #include <SD/Assertions.h>
-#include <SD/LogStream.h>
+#include <SD/Test.h>
 #include <SD/Vector.h>
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
-    if (false)
-        ASSERT_NOT_REACHED();
+    {
+        Vector<u8> v;
 
-    dbg() << "Testing vector...";
+        u8 second_value = 60;
+        v.append(42);
+        v.append(second_value);
+        v.append(3);
 
-    Vector<u8> bytes;
-
-    u8 second_value = 60;
-    bytes.append(42);
-    bytes.append(second_value);
-
-    ASSERT(bytes[0] == 42);
-    ASSERT(bytes[1] == 60);
+        ASSERT(v[0] == 42);
+        ASSERT(v[1] == 60);
+        ASSERT(v.at(2) == 3);
+        PASS("append()");
+    }
 
     // Empty
     {
         Vector<bool> v;
-        ASSERT(v.is_empty());
+        TEST_ASSERT(v.is_empty(), "is empty")
     }
 
     // First/Last
@@ -34,14 +34,14 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
         v.append(1);
         v.append(2);
         v.append(3);
-        ASSERT(v.first() == 1);
-        ASSERT(v.last() == 3);
+        TEST_ASSERT(v.first() == 1, "first()")
+        TEST_ASSERT(v.last() == 3, "last()")
     }
 
     // Contains
     {
         Vector<int> v { 1, 2, 42, 4, 5 };
-        ASSERT(v.contains_slow(42));
+        TEST_ASSERT(v.contains_slow(42), "contains_slow()")
     }
 
     // Copy Constructor
@@ -50,6 +50,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
         auto v2 = v1;
         ASSERT(v1.first() == 1);
         ASSERT(v2.first() == 1);
+        PASS("copy constructor");
     }
 
     // Move Constructor
@@ -58,6 +59,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
         auto v2 = move(v1);
         ASSERT(v1.is_empty());
         ASSERT(v2.first() == 1);
+        PASS("move constructor");
     }
 
     // Iteration
@@ -68,6 +70,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
         for (auto& val : v1)
             sum += val;
 
-        ASSERT(sum == 6);
+        TEST_ASSERT(sum == 6, "iteration");
     }
 }
