@@ -10,5 +10,8 @@ mkdir -p build
 pushd build
 cmake ..
 make
-./gameboy --rom $SCRIPTPATH/../Asm/ROMs/serenity.gb --asset-dir $SCRIPTPATH/../Assets
+# ./gameboy --rom $SCRIPTPATH/../Asm/ROMs/serenity.gb --asset-dir $SCRIPTPATH/../Assets
+
+# Example running in debug mode which will hit breakpoints and do step debugging
+./gameboy --rom $SCRIPTPATH/../Tests/data/increments.gb --asset-dir $SCRIPTPATH/../Assets --debug
 popd

@@ -25,12 +25,8 @@ CPU::CPU(Emulator& emulator)
     : m_emulator(emulator)
     , m_registers({ 0 })
 {
-    // TODO: Some boot process that I can define however I like. This could be done in SDL
-    // land and doesn't need to use normal GB rendering techniques. It must result in the program
-    // counter being set at the proper location of 0x100.
     m_registers.stack_ptr = 0xfffe;
     m_registers.program_counter = 0x100;
-
 
     if (emulator.settings().in_test_mode) {
         m_registers.program_counter = 0x100;
@@ -47,6 +43,9 @@ CPU::~CPU()
 
 StepResult CPU::step()
 {
+    if (in_breakpoint())
+        return StepResult::breakpoint();
+
     // TODO: handle interrupts?
     StepResult result;
     OpCode op_code = static_cast<OpCode>(fetch_and_inc_u8());
@@ -899,4 +898,9 @@ CPUTestState CPU::test_state()
     result.wram_checksum = checksum((const unsigned char*)emulator().mmu().wram(), WRAM_SIZE);
     result.vram_checksum = checksum((const unsigned char*)emulator().mmu().vram(), VRAM_SIZE);
     return result;
+}
+
+bool CPU::in_breakpoint()
+{
+    return emulator().settings().in_debug_mode && m_breakpoint > 0 && m_registers.program_counter == m_breakpoint;
 }

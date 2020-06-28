@@ -2,10 +2,12 @@
 // Created by Spencer Dixon on 5/10/20.
 //
 
-#include "Emulator.h"
-#include "Joypad.h"
 #include <SD/Timer.h>
 #include <SD/Types.h>
+
+#include "Emulator.h"
+#include "Debugger.h"
+#include "Joypad.h"
 
 // FIXME: Look into correct clock speed info. For now, going to hard code 4 Megahertz
 // FIXME: Of course I need to device by the frame rate to calculate how many cycles to execute before
@@ -38,7 +40,9 @@ void Emulator::run()
     bool quit = false;
     bool halted = false;
     bool show_input_debug = true;
+    bool should_enter_debugger = settings().in_debug_mode;
     InputDebugWindow input_debug(*this);
+    Debugger debugger(*this);
 
     while (!quit) {
         auto frame_timer = Timer("frame");
@@ -85,13 +89,20 @@ void Emulator::run()
 
             if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_k && SDL_GetModState() & KMOD_CTRL)
                 show_input_debug = !show_input_debug;
+
+            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL)
+                should_enter_debugger = !should_enter_debugger;
         }
 
         if (!halted) {
-            // if runtime settings.breakpoint
-            // cpu.set_breakpoint();
             for (;;) {
+                if (should_enter_debugger) {
+                    debugger.enter();
+                    should_enter_debugger = false;
+                }
+
                 auto result = m_cpu.step();
+
                 if (result.should_halt) {
                     halted = true;
                     break;

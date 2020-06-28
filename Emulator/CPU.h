@@ -33,6 +33,12 @@ struct Registers {
 struct StepResult {
     u8 cycles { 0 };
     bool should_halt { false };
+    bool hit_breakpoint { false };
+
+    static StepResult breakpoint()
+    {
+        return { 0, false, true };
+    }
 };
 
 struct CPUTestState {
@@ -53,7 +59,9 @@ public:
     Emulator& emulator() { return m_emulator; }
     bool interrupts_enabled() { return m_interrupts_enabled; }
 
+    //
     // IODevice
+    //
     u8 in(u16 address) override;
     void out(u16 address, u8 value) override;
 
@@ -177,16 +185,26 @@ private:
         set_zero_flag(m_registers.a == 0);
     }
 
+    //
     // Fetch
+    //
     u8 fetch_and_inc_u8();
     s8 fetch_and_inc_s8();
     u16 fetch_and_inc_u16();
+
+    //
+    // Debug
+    //
+    bool in_breakpoint();
 
 private:
     Emulator& m_emulator;
     Registers m_registers;
     bool m_interrupts_enabled { false };
     bool m_in_boot_rom { false };
+
+    // When set greater than 0 and in debug mode we will pause execution
+    u16 m_breakpoint { 0 };
 };
 
 const LogStream& operator<<(const LogStream&, const CPUTestState&);

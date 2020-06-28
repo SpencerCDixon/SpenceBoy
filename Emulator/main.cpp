@@ -15,6 +15,7 @@ void print_usage()
           << "\t--asset-dir <location of graphical assets>\n"
           << "\t--help - print this screen\n"
           << "\t--test - run in test mode. Will run through all CPU cycles until a 'halt' is reached\n\n"
+          << "\t--debug - run in debug mode allowing step and breakpoint debugging\n\n"
           << "\t--rom - path to ROM to run\n\n";
 }
 
@@ -22,6 +23,7 @@ int main(int argc, char* argv[])
 {
     RuntimeSettings settings {
         RenderingBackend::SDL,
+        false,
         false,
         false,
         "./Asssets"
@@ -39,6 +41,8 @@ int main(int argc, char* argv[])
             settings.assets_dir = argv[i + 1];
         if (strcmp(argv[i], "--test") == 0)
             settings.in_test_mode = true;
+        if (strcmp(argv[i], "--debug") == 0)
+            settings.in_debug_mode = true;
         if (strcmp(argv[i], "--verbose") == 0)
             settings.verbose_logging = true;
         if (strcmp(argv[i], "--rom") == 0)
@@ -49,6 +53,7 @@ int main(int argc, char* argv[])
         dbg() << "\n\nRunning SpenceBoy with the following settings:\n\n"
               << "\tasset-dir: " << settings.assets_dir << "\n"
               << "\tin-test-mode: " << settings.in_test_mode << "\n"
+              << "\tin-debug-mode: " << settings.in_debug_mode << "\n"
               << "\tverbose: " << settings.verbose_logging << "\n";
     }
 
