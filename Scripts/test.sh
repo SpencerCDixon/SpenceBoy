@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Euo pipefail
+set -euo pipefail
 
 SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
@@ -43,6 +43,13 @@ echo -e "\033[32;1mRunning Joypad tests...\033[0m"
 echo "-----------------------"
 echo
 ../build/joypad_test
+
+echo
+echo "-----------------------"
+echo -e "\033[32;1mRunning Vector tests...\033[0m"
+echo "-----------------------"
+echo
+../build/vector_test
 
 echo
 echo "-----------------------"

@@ -4,11 +4,21 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 6/28/2020**
+ 
+### What did I get done today?
+ 
+* Add a new Vector class to SD which is needed for breakpoints/watchpoints 
+
+---
+ 
 **Date: 6/27/2020**
  
 ### What did I get done today?
 
 * Fixed bug related to interger wrapping in timer code
+* Start creating a Debugger which will let me set breakpoints and step through code
+* Add utilities to String
 
 ---
  

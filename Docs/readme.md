@@ -26,11 +26,10 @@ $ ./Scripts/run.sh
 ## Standard Lib
 
 - [ ] Hash Map
-- [ ] Pair/Tuple (useful for converting u16 into two u8's etc.)
 - [ ] Result
 - [ ] Shared Pointer
 - [ ] Unique Pointer
-- [ ] Vector
+- [x] Vector
 - [x] Assertions
 - [x] Basic Logging
 - [x] Color

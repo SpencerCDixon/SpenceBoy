@@ -8,12 +8,16 @@ add_compile_options(-Wimplicit-fallthrough -Wall -Wextra -Werror)
 add_executable(gameboy
         Emulator/CPU.cpp
         Emulator/CPU.h
+        Emulator/Debugger.cpp
+        Emulator/Debugger.h
         Emulator/Emulator.cpp
         Emulator/Emulator.h
         Emulator/GUI/Bitmap.h
         Emulator/GUI/Rect.h
         Emulator/GUI/SDLRenderer.cpp
         Emulator/GUI/SDLRenderer.h
+        Emulator/GUI/Texture.cpp
+        Emulator/GUI/Texture.h
         Emulator/IODevice.cpp
         Emulator/IODevice.h
         Emulator/InternalSDL.h
@@ -21,10 +25,13 @@ add_executable(gameboy
         Emulator/Joypad.h
         Emulator/MMU.cpp
         Emulator/MMU.h
+        Emulator/MemoryMap.h
         Emulator/OpCode.h
         Emulator/PPU.cpp
         Emulator/PPU.h
         Emulator/RuntimeSettings.h
+        Emulator/SoundCard.cpp
+        Emulator/SoundCard.h
         Emulator/main.cpp
         SD/Bytes.h
         SD/File.cpp
@@ -33,7 +40,9 @@ add_executable(gameboy
         SD/LogStream.h
         SD/Option.h
         SD/String.cpp
-        SD/Timer.h Emulator/GUI/Texture.cpp Emulator/GUI/Texture.h Emulator/MemoryMap.h Emulator/SoundCard.cpp Emulator/SoundCard.h)
+        SD/Timer.h
+        SD/Vector.h
+        )
 target_include_directories(gameboy PUBLIC ".")
 
 #---------
@@ -45,6 +54,9 @@ target_include_directories(string_test PUBLIC ".")
 
 add_executable(joypad_test Tests/TestJoypadDevice.cpp SD/LogStream.cpp Emulator/Joypad.cpp Emulator/GUI/SDLRenderer.cpp Emulator/GUI/Texture.cpp SD/String.cpp)
 target_include_directories(joypad_test PUBLIC ".")
+
+add_executable(vector_test Tests/TestVector.cpp SD/LogStream.cpp SD/String.cpp)
+target_include_directories(vector_test PUBLIC ".")
 
 #-------------
 # Dependencies
