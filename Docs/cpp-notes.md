@@ -131,3 +131,38 @@ int main()
 //  int* q = x; // Error: no implicit conversion
 }
 ```
+
+## Explicit Keyword
+
+When resolving types, the compiler is allowed to make one 'implicit' conversion.
+What this means in practice is if you have a type like:
+
+```c++
+class String {
+public:
+  String(int x);
+}
+```
+
+And you try:
+
+```c++
+String my_string = 'x';
+```
+
+The 'x' will be converted into an `int` and the `String(int)` constructor will
+get called. This is most likely unintended behavior. Besides assignment, there
+are a few other places that this can occur. For example:
+
+```c++
+void PrintString(const String&) 
+{
+  // print stuff
+}
+PrintString('x'); // Implicit conversion into String(x as an int) will occur
+```
+
+To avoid bugs with implicit conversions in primitive data types you can add the
+`explicit` keyword before the constructor. When explicit, the compiler will
+require either a cast or an explicit use of constructor.
+
