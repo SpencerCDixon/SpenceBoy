@@ -18,6 +18,12 @@ RESULT=`mktemp /tmp/tmp.XXXXXX || exit 1`
 
 $PROGRAM $TEST > $RESULT
 if [ -e $EXPECTATION ]; then
+    if grep -q "ERROR:" $RESULT; then
+        echo -e "[ \033[31;1mFAIL\033[0m ] " $TEST
+        rm -f $RESULT >/dev/null
+        exit 1
+    fi
+
     if diff -q $EXPECTATION $RESULT >/dev/null; then
         echo -ne "[ \033[32;1mPASS\033[0m ] "
     else
