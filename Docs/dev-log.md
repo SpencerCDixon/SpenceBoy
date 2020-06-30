@@ -4,7 +4,15 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
-**Date: 6/28/2020**
+**Date: 6/30/2020**
+ 
+### What did I get done today?
+
+* Refactor the main loop of the CPU to make testing/debugging easier to understand
+
+---
+ 
+**Date: 6/29/2020**
  
 ### What did I get done today?
 

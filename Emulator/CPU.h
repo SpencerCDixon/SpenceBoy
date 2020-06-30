@@ -55,6 +55,8 @@ public:
     explicit CPU(Emulator& emulator);
     ~CPU();
 
+    void main_loop();
+    void main_test_loop();
     StepResult step();
     Emulator& emulator() { return m_emulator; }
     bool interrupts_enabled() { return m_interrupts_enabled; }
@@ -196,13 +198,17 @@ private:
     // Debug
     //
     bool in_breakpoint();
+    // TODO: attached? m_debugger *
 
 private:
     Emulator& m_emulator;
     Registers m_registers;
+
+    bool m_halted { false };
     bool m_interrupts_enabled { false };
     bool m_in_boot_rom { false };
 
+    // TODO: Experiment with using a Vector<BreakPoint>'s.
     // When set greater than 0 and in debug mode we will pause execution
     u16 m_breakpoint { 0 };
 };

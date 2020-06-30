@@ -13,6 +13,11 @@
 #include <inttypes.h>
 #include <stdio.h>
 
+// FIXME: Look into correct clock speed info. For now, going to hard code 4 Megahertz
+// FIXME: Of course I need to device by the frame rate to calculate how many cycles to execute before
+// rendering. 4,000,000 / 60 = 66k cycles worth of work a frame.
+static constexpr u32 CYCLES_PER_SECOND = 66000;
+
 // Flags
 // clang-format off
 constexpr u8 FLAG_ZERO       = 0b10000000;
@@ -39,6 +44,50 @@ CPU::CPU(Emulator& emulator)
 
 CPU::~CPU()
 {
+}
+
+void CPU::main_loop()
+{
+    u32 cycles_executed = 0;
+
+    for (;;) {
+        if (m_halted)
+            break;
+
+        // TODO: if attached to debugger -> prompt and such
+        auto result = step();
+        m_halted = result.should_halt;
+
+        cycles_executed += result.cycles;
+
+        // if (has_interrupt_request)
+        // handle_interrupt
+
+        if (cycles_executed >= CYCLES_PER_SECOND)
+            break;
+    }
+}
+
+void CPU::main_test_loop()
+{
+    // Test cases should all be able to execute in less than 20 seconds. If we've been executing
+    // for more than 20 seconds there is probably a bug in our CPU/Test ASM that needs to be addressed.
+    u64 max_test_cycles = CYCLES_PER_SECOND * 20;
+    u64 cycles_executed = 0;
+
+    dbg() << "Trace:\n------\n";
+    for (;;) {
+        auto result = step();
+        cycles_executed += result.cycles;
+
+        if (result.should_halt)
+            ::exit(0);
+
+        if (cycles_executed >= max_test_cycles) {
+            dbg() << " [ " RED "ERROR: " RESET " ] test case reached max cycle count!";
+            ::exit(1);
+        }
+    }
 }
 
 StepResult CPU::step()

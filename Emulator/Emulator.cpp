@@ -9,12 +9,6 @@
 #include "Debugger.h"
 #include "Joypad.h"
 
-// FIXME: Look into correct clock speed info. For now, going to hard code 4 Megahertz
-// FIXME: Of course I need to device by the frame rate to calculate how many cycles to execute before
-// rendering. 4,000,000 / 60 = 66k cycles worth of work a frame.
-//constexpr u64 CYCLES_PER_SECOND = 4000000;
-constexpr u64 CYCLES_PER_SECOND = 66000;
-
 // TODO(scd): Decide if I want to be able to load a new rom once the emulator is running. For now,
 // lets keep it simple and force a load before run().
 void Emulator::load_rom(const char* path)
@@ -24,29 +18,22 @@ void Emulator::load_rom(const char* path)
 
 void Emulator::run()
 {
-    if (m_settings.in_test_mode) {
-        dbg() << "Trace:\n------\n";
+    if (m_settings.in_test_mode)
+        cpu().main_test_loop();
 
-        for (;;) {
-            auto result = m_cpu.step();
-            if (result.should_halt) {
-                exit(0);
-            }
-        }
-    }
-
-    u64 cycle_count = 0;
     SDL_Event e;
     bool quit = false;
-    bool halted = false;
     bool show_input_debug = true;
-    bool should_enter_debugger = settings().in_debug_mode;
+//    bool should_enter_debugger = settings().in_debug_mode;
     InputDebugWindow input_debug(*this);
     Debugger debugger(*this);
 
     while (!quit) {
         auto frame_timer = Timer("frame");
 
+        //
+        // Input
+        //
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {
                 quit = true;
@@ -90,32 +77,18 @@ void Emulator::run()
             if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_k && SDL_GetModState() & KMOD_CTRL)
                 show_input_debug = !show_input_debug;
 
-            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL)
-                should_enter_debugger = !should_enter_debugger;
+//            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL)
+//                should_enter_debugger = !should_enter_debugger;
         }
 
-        if (!halted) {
-            for (;;) {
-                if (should_enter_debugger) {
-                    debugger.enter();
-                    should_enter_debugger = false;
-                }
+        //
+        // Execute
+        //
+        cpu().main_loop();
 
-                auto result = m_cpu.step();
-
-                if (result.should_halt) {
-                    halted = true;
-                    break;
-                } else {
-                    cycle_count += result.cycles;
-                    if (cycle_count >= CYCLES_PER_SECOND) {
-                        cycle_count = 0;
-                        break;
-                    }
-                }
-            }
-        }
-
+        //
+        // Render
+        //
         local_persist Color bg_clear { 255, 255, 255, 255 };
         local_persist Color gb_clear { 125, 130, 255, 255 };
         local_persist u8 WINDOW_WIDTH = 160;
@@ -131,7 +104,9 @@ void Emulator::run()
         renderer().draw_texture(ppu().tileset(), Point { 324, 286 });
         renderer().draw_partial_texture(ppu().tilemap(), { ppu().scx(), ppu().scy(), WINDOW_WIDTH, WINDOW_HEIGHT }, { 85, 67, WINDOW_WIDTH, WINDOW_HEIGHT });
 
-        // Render Debug:
+        //
+        // Render Debug
+        //
         if (show_input_debug) {
             input_debug.render();
         }
