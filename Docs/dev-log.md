@@ -7,6 +7,14 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 **Date: 6/28/2020**
  
 ### What did I get done today?
+
+* Add support for dumping VRAM/WRAM in the Debugger
+
+---
+ 
+**Date: 6/28/2020**
+ 
+### What did I get done today?
  
 * Add a new Vector class to SD which is needed for breakpoints/watchpoints in Debugger
 * Add useful testing macros
