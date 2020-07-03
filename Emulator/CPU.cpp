@@ -90,6 +90,12 @@ void CPU::main_test_loop()
     }
 }
 
+// TODO: This should no longer return a StepResult...
+// if it would halt -> set m_halted
+// update number of cycles at end of exeuction m_cycles_executed
+// main_loop() should be resetting cycles executed after it executes amount per second
+// step() -> execute_one_instruction()
+// peek_next_instruction() -> show metadata about next instruction may be useful in Debugger
 StepResult CPU::step()
 {
     if (in_breakpoint())

@@ -4,6 +4,24 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 7/2/2020**
+ 
+### What did I get done today?
+
+* Spent time stepping through new boot ROM with the new debugger to figure out
+    what op code is causing issues
+
+---
+ 
+**Date: 7/1/2020**
+ 
+### What did I get done today?
+
+* Researched debugger implementation in Computron for inspiration on how I can
+    improve mine to have breakpoints and watchpoints.
+
+---
+ 
 **Date: 6/30/2020**
  
 ### What did I get done today?
