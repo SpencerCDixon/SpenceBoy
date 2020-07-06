@@ -10,6 +10,8 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 * Removed StepResult abstraction in favor of having 'execute_one_instruction' have appropriate side effects like handling
 halting and incrementing cycle count.
+* Fix up the Option class to be useful
+
 
 ---
  
