@@ -52,7 +52,10 @@ void CPU::main_loop()
         if (m_halted)
             break;
 
-        // TODO: if attached to debugger -> prompt and such
+        // TODO: debugger could return an action and break out of loop?
+        if (m_debugger)
+            m_debugger->repl();
+
         execute_one_instruction();
 
         // if (has_interrupt_request)
@@ -574,6 +577,20 @@ void CPU::execute_one_instruction()
     }
 
     m_cycles_executed += cycles_for_opcode(op_code);
+}
+
+Option<OpCode> CPU::peek_next_instruction()
+{
+    u8 next;
+    if (m_in_boot_rom && !emulator().settings().in_test_mode)
+        next = emulator().mmu().bios()[m_registers.program_counter + 1];
+    else
+        next = emulator().mmu().rom()[m_registers.program_counter + 1];
+
+    if (!is_opcode(static_cast<OpCode>(next)))
+        return {};
+
+    return Option<OpCode>(static_cast<OpCode>(next));
 }
 
 void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)

@@ -9,8 +9,6 @@
 #include "Debugger.h"
 #include "Joypad.h"
 
-// TODO(scd): Decide if I want to be able to load a new rom once the emulator is running. For now,
-// lets keep it simple and force a load before run().
 void Emulator::load_rom(const char* path)
 {
     mmu().load_rom(path);
@@ -24,9 +22,8 @@ void Emulator::run()
     SDL_Event e;
     bool quit = false;
     bool show_input_debug = true;
-//    bool should_enter_debugger = settings().in_debug_mode;
+    bool should_enter_debugger = settings().in_debug_mode;
     InputDebugWindow input_debug(*this);
-    Debugger debugger(*this);
 
     while (!quit) {
         auto frame_timer = Timer("frame");
@@ -77,8 +74,13 @@ void Emulator::run()
             if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_k && SDL_GetModState() & KMOD_CTRL)
                 show_input_debug = !show_input_debug;
 
-//            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL)
-//                should_enter_debugger = !should_enter_debugger;
+            if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL)
+                should_enter_debugger = !should_enter_debugger;
+        }
+
+        if (should_enter_debugger) {
+            m_debugger.enter();
+            cpu().attach_debugger(&m_debugger);
         }
 
         //

@@ -7,6 +7,7 @@
 #include <SD/Utility.h>
 
 #include "CPU.h"
+#include "Debugger.h"
 #include "Emulator/GUI/Bitmap.h"
 #include "Emulator/GUI/SDLRenderer.h"
 #include "Emulator/GUI/Texture.h"
@@ -26,6 +27,7 @@ public:
         , m_cpu(*this)
         , m_ppu(*this)
         , m_sound_card({})
+        , m_debugger(*this)
     {
         mmu().init_devices();
 
@@ -56,6 +58,7 @@ private:
     CPU m_cpu;
     PPU m_ppu;
     SoundCard m_sound_card;
+    Debugger m_debugger;
 
     // Maybe this belongs elsewhere. But where?
     Texture m_gb_background;

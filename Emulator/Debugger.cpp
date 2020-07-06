@@ -25,9 +25,7 @@ void Debugger::enter()
     dbg() << "\tv | vram     - dump contents of VRAM";
     dbg() << "\tw | wram     - dump contents of WRAM\n\n";
 
-    dbg() << m_emulator.cpu().test_state();
-
-    repl();
+//    dbg() << m_emulator.cpu().test_state();
 }
 
 void Debugger::exit()
@@ -65,6 +63,18 @@ bool Debugger::handle_command(String command)
         dbg() << "  stepping the CPU one cycle";
         m_emulator.cpu().execute_one_instruction();
         dbg() << m_emulator.cpu().test_state();
+    }
+
+    if (trimmed == "p" || trimmed == "peek") {
+        dbg() << "Peeking the next op code to be: ";
+        auto next = m_emulator.cpu().peek_next_instruction();
+
+        if (next.is_none()) {
+            dbg() << "  unknown next op code";
+            return true;
+        }
+
+        dbg() << to_string(next.value());
     }
 
     if (trimmed == "c" || trimmed == "continue") {

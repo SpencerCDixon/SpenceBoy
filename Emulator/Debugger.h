@@ -21,9 +21,9 @@ public:
 
     void enter();
     void exit();
+    void repl();
 
 private:
-    void repl();
     String prompt_for_input();
     bool handle_command(String command);
 

@@ -12,10 +12,12 @@
 #include <SD/Bytes.h>
 #include <SD/LogStream.h>
 #include <SD/Types.h>
+#include <SD/Option.h>
 
 #include <stdlib.h>
 
 class Emulator;
+class Debugger;
 
 struct Registers {
     u8 a { 0 };
@@ -47,6 +49,7 @@ public:
     void main_loop();
     void main_test_loop();
     void execute_one_instruction();
+
     Emulator& emulator() { return m_emulator; }
     //    bool interrupts_enabled() { return m_interrupts_enabled; }
 
@@ -57,9 +60,11 @@ public:
     void out(u16 address, u8 value) override;
 
     //
-    // Testing Utilities
+    // Testing/Debug Utilities
     //
     CPUTestState test_state();
+    Option<OpCode> peek_next_instruction();
+    void attach_debugger(Debugger* debugger) { m_debugger = debugger; }
 
 private:
     void handle_prefix_op_code(const PrefixOpCode& op_code);
@@ -198,6 +203,7 @@ private:
     bool m_interrupts_enabled { false };
     bool m_in_boot_rom { false };
 
+    Debugger* m_debugger { nullptr };
     // TODO: Experiment with using a Vector<BreakPoint>'s.
     // When set greater than 0 and in debug mode we will pause execution
     u16 m_breakpoint { 0 };
