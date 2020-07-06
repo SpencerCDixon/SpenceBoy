@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Exuo pipefail
+set -exuo pipefail
 
 SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
