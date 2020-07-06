@@ -48,23 +48,20 @@ CPU::~CPU()
 
 void CPU::main_loop()
 {
-    u32 cycles_executed = 0;
-
     for (;;) {
         if (m_halted)
             break;
 
         // TODO: if attached to debugger -> prompt and such
-        auto result = step();
-        m_halted = result.should_halt;
-
-        cycles_executed += result.cycles;
+        execute_one_instruction();
 
         // if (has_interrupt_request)
         // handle_interrupt
 
-        if (cycles_executed >= CYCLES_PER_SECOND)
+        if (m_cycles_executed >= CYCLES_PER_SECOND) {
+            m_cycles_executed = 0;
             break;
+        }
     }
 }
 
@@ -73,36 +70,26 @@ void CPU::main_test_loop()
     // Test cases should all be able to execute in less than 20 seconds. If we've been executing
     // for more than 20 seconds there is probably a bug in our CPU/Test ASM that needs to be addressed.
     u64 max_test_cycles = CYCLES_PER_SECOND * 20;
-    u64 cycles_executed = 0;
 
     dbg() << "Trace:\n------\n";
     for (;;) {
-        auto result = step();
-        cycles_executed += result.cycles;
+        execute_one_instruction();
 
-        if (result.should_halt)
+        if (m_halted)
             ::exit(0);
 
-        if (cycles_executed >= max_test_cycles) {
+        if (m_cycles_executed >= max_test_cycles) {
             dbg() << " [ " RED "ERROR: " RESET " ] test case reached max cycle count!";
             ::exit(1);
         }
     }
 }
 
-// TODO: This should no longer return a StepResult...
-// if it would halt -> set m_halted
-// update number of cycles at end of exeuction m_cycles_executed
-// main_loop() should be resetting cycles executed after it executes amount per second
-// step() -> execute_one_instruction()
 // peek_next_instruction() -> show metadata about next instruction may be useful in Debugger
-StepResult CPU::step()
+void CPU::execute_one_instruction()
 {
-    if (in_breakpoint())
-        return StepResult::breakpoint();
+    // Check if we should handle interrupts?
 
-    // TODO: handle interrupts?
-    StepResult result;
     OpCode op_code = static_cast<OpCode>(fetch_and_inc_u8());
 
     switch (op_code) {
@@ -560,12 +547,12 @@ StepResult CPU::step()
     case OpCode::HALT:
         // hex_dump("WRAM", emulator().mmu().wram(), 100, WRAM_START);
         // hex_dump("VRAM", emulator().mmu().vram(), VRAM_SIZE, VRAM_START);
-        result.should_halt = true;
+        m_halted = true;
         break;
     case OpCode::PREFIX: {
         PrefixOpCode prefix_op_code = static_cast<PrefixOpCode>(fetch_and_inc_u8());
         handle_prefix_op_code(prefix_op_code);
-        result.cycles += cycles_for_prefix_opcode(prefix_op_code);
+        m_cycles_executed += cycles_for_prefix_opcode(prefix_op_code);
         break;
     }
     default:
@@ -582,12 +569,11 @@ StepResult CPU::step()
 
     if (emulator().settings().verbose_logging || emulator().settings().in_test_mode) {
         dbg() << to_string(op_code) << "   " << *this;
-        if (result.should_halt)
+        if (m_halted)
             dbg() << to_snapshot(test_state());
     }
 
-    result.cycles += cycles_for_opcode(op_code);
-    return result;
+    m_cycles_executed += cycles_for_opcode(op_code);
 }
 
 void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)

@@ -4,6 +4,15 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 7/6/2020**
+
+### What did I get done today?
+
+* Removed StepResult abstraction in favor of having 'execute_one_instruction' have appropriate side effects like handling
+halting and incrementing cycle count.
+
+---
+ 
 **Date: 7/2/2020**
  
 ### What did I get done today?

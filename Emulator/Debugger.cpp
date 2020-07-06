@@ -63,7 +63,7 @@ bool Debugger::handle_command(String command)
 
     if (trimmed == "s" || trimmed == "step") {
         dbg() << "  stepping the CPU one cycle";
-        m_emulator.cpu().step();
+        m_emulator.cpu().execute_one_instruction();
         dbg() << m_emulator.cpu().test_state();
     }
 

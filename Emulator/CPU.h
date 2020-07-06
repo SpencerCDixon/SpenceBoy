@@ -30,17 +30,6 @@ struct Registers {
     u16 program_counter { 0 };
 };
 
-struct StepResult {
-    u8 cycles { 0 };
-    bool should_halt { false };
-    bool hit_breakpoint { false };
-
-    static StepResult breakpoint()
-    {
-        return { 0, false, true };
-    }
-};
-
 struct CPUTestState {
     Registers registers;
     u64 wram_checksum;
@@ -57,9 +46,9 @@ public:
 
     void main_loop();
     void main_test_loop();
-    StepResult step();
+    void execute_one_instruction();
     Emulator& emulator() { return m_emulator; }
-    bool interrupts_enabled() { return m_interrupts_enabled; }
+    //    bool interrupts_enabled() { return m_interrupts_enabled; }
 
     //
     // IODevice
@@ -204,6 +193,7 @@ private:
     Emulator& m_emulator;
     Registers m_registers;
 
+    u64 m_cycles_executed { 0 };
     bool m_halted { false };
     bool m_interrupts_enabled { false };
     bool m_in_boot_rom { false };
