@@ -70,7 +70,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 
     // Trimming
     {
-        auto my_string = String("with new line\n\t ");
-        TEST_ASSERT(my_string.trim_whitespace_right() == "with new line", "trim_whitespace_right()");
+        auto right_space = String("with new line\n\t ");
+        TEST_ASSERT(right_space.trim_whitespace_right() == "with new line", "trim_whitespace_right()");
+
+        auto left_space = String("     lots of space to left");
+        TEST_ASSERT(left_space.trim_whitespace_left() == "lots of space to left", "trim_whitespace_left()");
     }
 }

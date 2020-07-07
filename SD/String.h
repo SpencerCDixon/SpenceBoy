@@ -65,6 +65,7 @@ public:
     }
 
     String trim_whitespace_right();
+    String trim_whitespace_left();
 
 private:
     void set_string(const char* cstring)
