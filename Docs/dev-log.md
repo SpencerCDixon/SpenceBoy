@@ -4,6 +4,15 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 7/8/2020**
+
+### What did I get done today?
+
+* Add trim left to String
+* Improve debugger by adding a peek() mechanism to see upcoming op codes
+
+---
+ 
 **Date: 7/6/2020**
 
 ### What did I get done today?
@@ -11,7 +20,6 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 * Removed StepResult abstraction in favor of having 'execute_one_instruction' have appropriate side effects like handling
 halting and incrementing cycle count.
 * Fix up the Option class to be useful
-
 
 ---
  

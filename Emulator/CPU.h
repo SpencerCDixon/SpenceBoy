@@ -37,18 +37,19 @@ struct CPUTestState {
     u64 wram_checksum;
     u64 vram_checksum;
 };
+
 String to_trace_line(const CPUTestState&);
+String to_step_line(const CPUTestState&);
 String to_snapshot(const CPUTestState&);
 
 class CPU final : public IODevice {
-
 public:
     explicit CPU(Emulator& emulator);
     ~CPU();
 
     void main_loop();
     void main_test_loop();
-    void execute_one_instruction();
+    OpCode execute_one_instruction();
 
     Emulator& emulator() { return m_emulator; }
     //    bool interrupts_enabled() { return m_interrupts_enabled; }

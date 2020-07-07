@@ -89,7 +89,7 @@ void CPU::main_test_loop()
 }
 
 // peek_next_instruction() -> show metadata about next instruction may be useful in Debugger
-void CPU::execute_one_instruction()
+OpCode CPU::execute_one_instruction()
 {
     // Check if we should handle interrupts?
 
@@ -577,6 +577,8 @@ void CPU::execute_one_instruction()
     }
 
     m_cycles_executed += cycles_for_opcode(op_code);
+
+    return op_code;
 }
 
 Option<OpCode> CPU::peek_next_instruction()
@@ -898,6 +900,44 @@ String to_trace_line(const CPUTestState& test_state)
         test_state.registers.l,
         test_state.wram_checksum,
         test_state.vram_checksum);
+    auto str = String(buffer);
+    free(buffer);
+    return str;
+}
+
+String to_step_line(const CPUTestState& state)
+{
+    local_persist u16 buf_size = 512;
+    char* buffer = (char*)calloc(buf_size, sizeof(char));
+    snprintf(
+        buffer,
+        buf_size,
+        "a: %03u [$%02x]       f: %03u [$%02x]\n"
+        "b: %03u [$%02x]       c: %03u [$%02x]\n"
+        "d: %03u [$%02x]       e: %03u [$%02x]\n"
+        "h: %03u [$%02x]       l: %03u [$%02x]\n"
+        "s: %03u [$%02x]   p: %03u [$%02x]\n",
+        state.registers.a,
+        state.registers.a,
+        state.registers.f,
+        state.registers.f,
+        state.registers.b,
+        state.registers.b,
+        state.registers.c,
+        state.registers.c,
+        state.registers.d,
+        state.registers.d,
+        state.registers.e,
+        state.registers.e,
+        state.registers.h,
+        state.registers.h,
+        state.registers.l,
+        state.registers.l,
+        state.registers.stack_ptr,
+        state.registers.stack_ptr,
+        state.registers.program_counter,
+        state.registers.program_counter);
+
     auto str = String(buffer);
     free(buffer);
     return str;

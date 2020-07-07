@@ -25,7 +25,7 @@ void Debugger::enter()
     dbg() << "\tv | vram     - dump contents of VRAM";
     dbg() << "\tw | wram     - dump contents of WRAM\n\n";
 
-//    dbg() << m_emulator.cpu().test_state();
+    //    dbg() << m_emulator.cpu().test_state();
 }
 
 void Debugger::exit()
@@ -42,7 +42,7 @@ void Debugger::repl()
 
 String Debugger::prompt_for_input()
 {
-    printf(" >> ");
+    printf(GREEN " >> " RESET);
 
     char* line = (char*)malloc(1024 * sizeof(char));
     fgets(line, 1024, stdin);
@@ -54,27 +54,27 @@ String Debugger::prompt_for_input()
 
 bool Debugger::handle_command(String command)
 {
+    auto peeked_instruction = [&] {
+        auto next = m_emulator.cpu().peek_next_instruction();
+        if (next.is_none())
+            return String("No More Instructions");
+
+        return to_string(next.value()).trim_whitespace_left();
+    };
+
     auto trimmed = command.trim_whitespace_right();
 
-    if (trimmed == "q" || trimmed == "quit")
+    if (trimmed == "q" || trimmed == "quit" || trimmed == "exit")
         ::exit(0);
 
     if (trimmed == "s" || trimmed == "step") {
-        dbg() << "  stepping the CPU one cycle";
-        m_emulator.cpu().execute_one_instruction();
-        dbg() << m_emulator.cpu().test_state();
+        auto op_code = m_emulator.cpu().execute_one_instruction();
+        dbg() << "Executed OpCode: " << YELLOW << to_string(op_code).trim_whitespace_left() << RESET << "\n";
+        dbg() << to_step_line(m_emulator.cpu().test_state());
     }
 
     if (trimmed == "p" || trimmed == "peek") {
-        dbg() << "Peeking the next op code to be: ";
-        auto next = m_emulator.cpu().peek_next_instruction();
-
-        if (next.is_none()) {
-            dbg() << "  unknown next op code";
-            return true;
-        }
-
-        dbg() << to_string(next.value());
+        dbg() << "Next OpCode: " << YELLOW << peeked_instruction() << RESET;
     }
 
     if (trimmed == "c" || trimmed == "continue") {
