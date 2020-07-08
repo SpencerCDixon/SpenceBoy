@@ -34,8 +34,3 @@ inline constexpr T&& forward(typename RemoveReference<T>::Type& param)
 private:                       \
     c(const c&) = delete;      \
     c& operator=(const c&) = delete;
-
-#define SD_MAKE_NONMOVABLE(c) \
-private:                       \
-    c(c&&) = delete;      \
-    c& operator=(c&&) = delete;

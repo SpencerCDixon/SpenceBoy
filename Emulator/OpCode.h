@@ -394,4 +394,5 @@ inline String to_string(const PrefixOpCode& code)
         ENUMERATE_PREFIX_OPCODES
 #undef __ENUMERATE
     }
+    return {};
 }
