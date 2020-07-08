@@ -52,9 +52,13 @@ void CPU::main_loop()
         if (m_halted)
             break;
 
+        if (in_breakpoint() && !m_debugger)
+            attach_debugger(&emulator().debugger());
+
         // TODO: debugger could return an action and break out of loop?
-        if (m_debugger)
+        if (m_debugger) {
             m_debugger->repl();
+        }
 
         execute_one_instruction();
 
@@ -1000,5 +1004,5 @@ CPUTestState CPU::test_state()
 
 bool CPU::in_breakpoint()
 {
-    return emulator().settings().in_debug_mode && m_breakpoint > 0 && m_registers.program_counter == m_breakpoint;
+    return emulator().settings().in_debug_mode && !m_breakpoints.is_empty() && m_breakpoints.contains_slow(m_registers.program_counter);
 }

@@ -81,6 +81,7 @@ void Emulator::run()
         if (should_enter_debugger) {
             m_debugger.enter();
             cpu().attach_debugger(&m_debugger);
+            should_enter_debugger = false;
         }
 
         //

@@ -13,6 +13,7 @@
 #include <SD/LogStream.h>
 #include <SD/Types.h>
 #include <SD/Option.h>
+#include <SD/Vector.h>
 
 #include <stdlib.h>
 
@@ -66,6 +67,7 @@ public:
     CPUTestState test_state();
     Option<OpCode> peek_next_instruction();
     void attach_debugger(Debugger* debugger) { m_debugger = debugger; }
+    void detach_debugger() { m_debugger = nullptr; }
 
 private:
     void handle_prefix_op_code(const PrefixOpCode& op_code);
@@ -193,7 +195,6 @@ private:
     // Debug
     //
     bool in_breakpoint();
-    // TODO: attached? m_debugger *
 
 private:
     Emulator& m_emulator;
@@ -205,9 +206,7 @@ private:
     bool m_in_boot_rom { false };
 
     Debugger* m_debugger { nullptr };
-    // TODO: Experiment with using a Vector<BreakPoint>'s.
-    // When set greater than 0 and in debug mode we will pause execution
-    u16 m_breakpoint { 0 };
+    Vector<u16> m_breakpoints { 10 };
 };
 
 const LogStream& operator<<(const LogStream&, const CPUTestState&);

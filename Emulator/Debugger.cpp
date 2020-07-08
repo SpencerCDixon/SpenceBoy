@@ -13,6 +13,8 @@ Debugger::Debugger(Emulator& emulator)
 {
 }
 
+// TODO:
+// * add a <num> after memory dump commands so I can just see a percentage of memory
 void Debugger::enter()
 {
     dbg() << "---------------------------";
@@ -24,20 +26,15 @@ void Debugger::enter()
     dbg() << "\tc | continue - continue execution without stepping";
     dbg() << "\tv | vram     - dump contents of VRAM";
     dbg() << "\tw | wram     - dump contents of WRAM\n\n";
-
-    //    dbg() << m_emulator.cpu().test_state();
 }
 
-void Debugger::exit()
+void Debugger::repl(bool should_continue)
 {
-    // TODO:
-}
+    if (!should_continue)
+        return;
 
-void Debugger::repl()
-{
     auto input = prompt_for_input();
-    while (handle_command(input))
-        repl();
+    repl(handle_command(input));
 }
 
 String Debugger::prompt_for_input()
@@ -55,7 +52,7 @@ String Debugger::prompt_for_input()
 bool Debugger::handle_command(String command)
 {
     auto peeked_instruction = [&] {
-        auto next = m_emulator.cpu().peek_next_instruction();
+        auto next = emulator().cpu().peek_next_instruction();
         if (next.is_none())
             return String("No More Instructions");
 
@@ -68,9 +65,9 @@ bool Debugger::handle_command(String command)
         ::exit(0);
 
     if (trimmed == "s" || trimmed == "step") {
-        auto op_code = m_emulator.cpu().execute_one_instruction();
+        auto op_code = emulator().cpu().execute_one_instruction();
         dbg() << "Executed OpCode: " << YELLOW << to_string(op_code).trim_whitespace_left() << RESET << "\n";
-        dbg() << to_step_line(m_emulator.cpu().test_state());
+        dbg() << to_step_line(emulator().cpu().test_state());
     }
 
     if (trimmed == "p" || trimmed == "peek") {
@@ -79,15 +76,17 @@ bool Debugger::handle_command(String command)
 
     if (trimmed == "c" || trimmed == "continue") {
         dbg() << "exiting debugger...";
+        emulator().cpu().detach_debugger();
+        dbg() << "returning false";
         return false;
     }
 
     if (trimmed == "v" || trimmed == "vram") {
-        hex_dump("VRAM", m_emulator.mmu().vram(), VRAM_SIZE, VRAM_START);
+        hex_dump("VRAM", emulator().mmu().vram(), VRAM_SIZE, VRAM_START);
     }
 
     if (trimmed == "w" || trimmed == "wram") {
-        hex_dump("WRAM", m_emulator.mmu().wram(), WRAM_SIZE, WRAM_START);
+        hex_dump("WRAM", emulator().mmu().wram(), WRAM_SIZE, WRAM_START);
     }
 
     return true;

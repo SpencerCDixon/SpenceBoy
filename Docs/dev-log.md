@@ -8,6 +8,14 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ### What did I get done today?
 
+* Add ability to set breakpoints. You can "continue" in debugger and then execution will pause again at the breakpionts.
+
+---
+ 
+**Date: 7/8/2020**
+
+### What did I get done today?
+
 * Add trim left to String
 * Improve debugger by adding a peek() mechanism to see upcoming op codes
 

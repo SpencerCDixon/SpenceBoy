@@ -20,10 +20,10 @@ public:
     explicit Debugger(Emulator& emulator);
 
     void enter();
-    void exit();
-    void repl();
+    void repl(bool should_continue = true);
 
 private:
+    Emulator& emulator() { return m_emulator; }
     String prompt_for_input();
     bool handle_command(String command);
 

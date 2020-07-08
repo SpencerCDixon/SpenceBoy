@@ -50,6 +50,7 @@ public:
     Renderer& renderer() { return SDLRenderer::the(); }
     String& assets_dir() { return m_settings.assets_dir; }
     RuntimeSettings& settings() { return m_settings; }
+    Debugger& debugger() { return m_debugger; }
 
 private:
     RuntimeSettings m_settings;
