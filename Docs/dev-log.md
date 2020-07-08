@@ -9,10 +9,11 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 ### What did I get done today?
 
 * Add ability to set breakpoints. You can "continue" in debugger and then execution will pause again at the breakpionts.
+* Fix stringify bits method 
 
 ---
  
-**Date: 7/8/2020**
+**Date: 7/7/2020**
 
 ### What did I get done today?
 

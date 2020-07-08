@@ -25,8 +25,8 @@
 
 inline String to_bits(u8 value)
 {
-    char buf[10] = { '0', 'b' };
-    snprintf(buf + 2, 10, BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(value));
+    char buf[11] = { '0', 'b' };
+    snprintf(buf + 2, 9, BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(value));
     return String(buf);
 }
 
