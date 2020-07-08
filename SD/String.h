@@ -64,8 +64,12 @@ public:
         return *this;
     }
 
-    String trim_whitespace_right();
-    String trim_whitespace_left();
+    enum class TrimLocation {
+        Left,
+        Right,
+        Both
+    };
+    String trim_whitespace(TrimLocation location = TrimLocation::Both);
 
 private:
     void set_string(const char* cstring)

@@ -71,9 +71,12 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     // Trimming
     {
         auto right_space = String("with new line\n\t ");
-        TEST_ASSERT(right_space.trim_whitespace_right() == "with new line", "trim_whitespace_right()");
+        TEST_ASSERT(right_space.trim_whitespace(String::TrimLocation::Right) == "with new line", "trim_whitespace(Right)");
 
         auto left_space = String("     lots of space to left");
-        TEST_ASSERT(left_space.trim_whitespace_left() == "lots of space to left", "trim_whitespace_left()");
+        TEST_ASSERT(left_space.trim_whitespace(String::TrimLocation::Left) == "lots of space to left", "trim_whitespace(Left)");
+
+        auto both = String("  \twhitespace on both sides\n  ");
+        TEST_ASSERT(both.trim_whitespace() == "whitespace on both sides", "trim_whitespace(Both)");
     }
 }
