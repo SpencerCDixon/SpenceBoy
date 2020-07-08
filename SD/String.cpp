@@ -61,11 +61,40 @@ String String::trim_whitespace(TrimLocation location)
         }
     }
 
-    char* buffer = (char*)malloc(substring_length + 1);
-    memcpy(buffer, characters() + substring_start, substring_length);
-    buffer[substring_length] = '\0';
-    set_string(buffer);
-    free(buffer);
+    return substring(substring_start, substring_length);
+}
 
-    return *this;
+Vector<String> String::split(char separator)
+{
+    if (!length())
+        return {};
+
+    Vector<String> result {};
+
+    size_t last_start = 0;
+    for (size_t i = 0; i < length(); ++i) {
+        char ch = characters()[i];
+
+        if (ch == separator) {
+            size_t sub_length = i - last_start;
+            if (sub_length != 0)
+                result.append(substring(last_start, sub_length));
+            last_start = i + 1;
+        }
+    }
+
+    size_t tail_length = length() - last_start;
+    if (tail_length != 0)
+        result.append(substring(last_start, tail_length));
+
+    return result;
+}
+
+String String::substring(size_t start, size_t length)
+{
+    if (!length)
+        return {};
+
+    ASSERT(start + length <= this->length());
+    return { characters() + start, length };
 }

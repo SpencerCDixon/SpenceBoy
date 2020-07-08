@@ -5,9 +5,10 @@
 #pragma once
 
 #include <SD/Assertions.h>
+#include <SD/Vector.h>
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 class String {
@@ -34,6 +35,14 @@ public:
 
         other.m_length = 0;
         other.m_characters = nullptr;
+    }
+    String(const char* cstring, size_t length)
+    {
+        m_length = length;
+        delete[] m_characters;
+        m_characters = new char[m_length + 1];
+        memcpy(m_characters, cstring, length);
+        m_characters[length] = '\0';
     }
 
     // PERF: Needs to be optimized
@@ -70,6 +79,8 @@ public:
         Both
     };
     String trim_whitespace(TrimLocation location = TrimLocation::Both);
+    String substring(size_t start, size_t length);
+    Vector<String> split(char separator);
 
 private:
     void set_string(const char* cstring)

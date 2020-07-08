@@ -28,6 +28,40 @@ private:
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
+    // Construction
+    {
+        String s1("long string", 4);
+        assert_str_eq(s1, "long");
+        PASS("partial cstring constructor");
+    }
+
+    // Substring
+    {
+        String s1("hello world");
+        auto s2 = s1.substring(0, 5);
+        assert_str_eq(s2, "hello");
+        auto s3 = s1.substring(6, 5);
+        assert_str_eq(s3, "world");
+        PASS("substring");
+    }
+
+    // Split
+    {
+        String s1("hello world");
+        auto r1 = s1.split(' ');
+        assert_str_eq(r1[0], "hello");
+        assert_str_eq(r1[1], "world");
+
+        String s2("one,two,three,four,  five");
+        auto r2 = s2.split(',');
+        assert_str_eq(r2[0], "one");
+        assert_str_eq(r2[1], "two");
+        assert_str_eq(r2[2], "three");
+        assert_str_eq(r2[3], "four");
+        assert_str_eq(r2[4], "  five");
+        PASS("split");
+    }
+
     // Concat
     {
         String s1;
