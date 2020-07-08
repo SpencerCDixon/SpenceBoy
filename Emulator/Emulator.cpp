@@ -6,7 +6,6 @@
 #include <SD/Types.h>
 
 #include "Emulator.h"
-#include "Debugger.h"
 #include "Joypad.h"
 
 void Emulator::load_rom(const char* path)
@@ -79,8 +78,8 @@ void Emulator::run()
         }
 
         if (should_enter_debugger) {
-            m_debugger.enter();
-            cpu().attach_debugger(&m_debugger);
+            debugger().enter();
+            cpu().attach_debugger(&debugger());
             should_enter_debugger = false;
         }
 

@@ -25,7 +25,8 @@ void Debugger::enter()
     dbg() << "\ts | step     - step through to next command";
     dbg() << "\tc | continue - continue execution without stepping";
     dbg() << "\tv | vram     - dump contents of VRAM";
-    dbg() << "\tw | wram     - dump contents of WRAM\n\n";
+    dbg() << "\tw | wram     - dump contents of WRAM";
+    dbg() << "\tbp <num>     - add breakpoint at num\n\n";
 }
 
 void Debugger::repl(bool should_continue)
@@ -56,17 +57,17 @@ bool Debugger::handle_command(String command)
         if (next.is_none())
             return String("No More Instructions");
 
-        return to_string(next.value()).trim_whitespace_left();
+        return to_string(next.value()).trim_whitespace();
     };
 
-    auto trimmed = command.trim_whitespace_right();
+    auto trimmed = command.trim_whitespace();
 
     if (trimmed == "q" || trimmed == "quit" || trimmed == "exit")
         ::exit(0);
 
     if (trimmed == "s" || trimmed == "step") {
         auto op_code = emulator().cpu().execute_one_instruction();
-        dbg() << "Executed OpCode: " << YELLOW << to_string(op_code).trim_whitespace_left() << RESET << "\n";
+        dbg() << "Executed OpCode: " << YELLOW << to_string(op_code).trim_whitespace() << RESET << "\n";
         dbg() << to_step_line(emulator().cpu().test_state());
     }
 
