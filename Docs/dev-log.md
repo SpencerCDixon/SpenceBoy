@@ -11,6 +11,7 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 * Fix in memory boot rom
 * Add script for quickly creating tests
 * Add support for 'RL' prefixed op codes
+* Add support for 'LD_A_C'
 
 ---
  

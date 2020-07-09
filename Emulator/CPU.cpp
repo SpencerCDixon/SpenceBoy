@@ -92,7 +92,6 @@ void CPU::main_test_loop()
     }
 }
 
-// peek_next_instruction() -> show metadata about next instruction may be useful in Debugger
 OpCode CPU::execute_one_instruction()
 {
     // Check if we should handle interrupts?
@@ -129,6 +128,9 @@ OpCode CPU::execute_one_instruction()
         break;
     case OpCode::LD_A_B:
         m_registers.a = m_registers.b;
+        break;
+    case OpCode::LD_A_C:
+        m_registers.a = m_registers.c;
         break;
     case OpCode::LD_A_E:
         m_registers.a = m_registers.e;
