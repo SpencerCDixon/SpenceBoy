@@ -1,5 +1,6 @@
 #include "String.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 String operator+(const String& lhs, const String& rhs)
@@ -97,4 +98,17 @@ String String::substring(size_t start, size_t length)
 
     ASSERT(start + length <= this->length());
     return { characters() + start, length };
+}
+
+Option<int> String::to_int()
+{
+    if (*this == "0")
+        return { 0 };
+
+    int val = atoi(characters());
+
+    if (!val)
+        return {};
+
+    return { val };
 }

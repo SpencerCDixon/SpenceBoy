@@ -113,4 +113,16 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
         auto both = String("  \twhitespace on both sides\n  ");
         TEST_ASSERT(both.trim_whitespace() == "whitespace on both sides", "trim_whitespace(Both)");
     }
+
+    // to_int
+    {
+        String s1("42");
+        TEST_ASSERT(s1.to_int().value() == 42, "to_int() with valid number");
+
+        String s2("blah");
+        TEST_ASSERT(s2.to_int().is_none(), "to_int() with invalid number is none");
+
+        String s3("0");
+        TEST_ASSERT(s3.to_int().value() == 0, "to_int() 0 works");
+    }
 }

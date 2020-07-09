@@ -10,7 +10,7 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 * Add ability to set breakpoints. You can "continue" in debugger and then execution will pause again at the breakpionts.
 * Fix stringify bits method 
-* Add string split() and substring() methods
+* Add string split(), substring(), and to_int() methods
 
 ---
  

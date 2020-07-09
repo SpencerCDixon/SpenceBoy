@@ -6,6 +6,7 @@
 
 #include <SD/Assertions.h>
 #include <SD/Vector.h>
+#include <SD/Option.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -81,6 +82,8 @@ public:
     String trim_whitespace(TrimLocation location = TrimLocation::Both);
     String substring(size_t start, size_t length);
     Vector<String> split(char separator);
+
+    Option<int> to_int();
 
 private:
     void set_string(const char* cstring)
