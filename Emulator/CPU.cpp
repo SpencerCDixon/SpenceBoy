@@ -791,6 +791,17 @@ void CPU::check_bit(u8 flag, u8* reg_ptr)
     set_half_carry_flag(true);
 }
 
+void CPU::rotate_left(u8* reg_ptr)
+{
+    bool will_carry = (*reg_ptr & 0x8) == 0x8;
+    *reg_ptr <<= 1;
+
+    set_zero_flag(*reg_ptr == 0);
+    set_carry_flag(will_carry);
+    set_subtract_flag(false);
+    set_half_carry_flag(false);
+}
+
 //
 // Flag Setting
 //

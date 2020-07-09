@@ -4,6 +4,16 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 7/9/2020**
+
+### What did I get done today?
+
+* Fix in memory boot rom
+* Add script for quickly creating tests
+* Add support for 'RL' prefixed op codes
+
+---
+ 
 **Date: 7/8/2020**
 
 ### What did I get done today?

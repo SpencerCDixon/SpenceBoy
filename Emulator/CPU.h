@@ -92,6 +92,7 @@ private:
     void and_with_a(u8 value);
     void or_with_a(u8 value);
     void swap_reg(u8* reg_ptr);
+    void rotate_left(u8* reg_ptr);
     // ACall: Nicer way to do this?
     void check_bit(u8 flag, u8* reg_ptr);
     void check_bit_0(u8* reg_ptr) { check_bit(1 << 0, reg_ptr); }
