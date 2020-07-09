@@ -8,8 +8,8 @@ cd $SCRIPTPATH/..
 mkdir -p build
 
 pushd build
-cmake ..
-make
+cmake -GNinja ..
+ninja
 # ./gameboy --rom $SCRIPTPATH/../Asm/ROMs/serenity.gb --asset-dir $SCRIPTPATH/../Assets
 
 # Example running in debug mode which will hit breakpoints and do step debugging

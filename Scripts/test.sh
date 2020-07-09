@@ -14,8 +14,8 @@ echo "-----------------------"
 echo
 
 pushd build
-cmake ..
-make
+cmake -GNinja ..
+ninja
 popd
 
 pushd Asm
