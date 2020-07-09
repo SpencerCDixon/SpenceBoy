@@ -31,9 +31,8 @@ CPU::CPU(Emulator& emulator)
     , m_registers({ 0 })
 {
     m_registers.stack_ptr = 0xfffe;
-    m_registers.program_counter = 0x100;
 
-    if (emulator.settings().in_test_mode) {
+    if (should_skip_boot_rom()) {
         m_registers.program_counter = 0x100;
     } else if (!m_in_boot_rom) {
         m_registers.program_counter = 0x100;
@@ -992,4 +991,9 @@ CPUTestState CPU::test_state()
 bool CPU::in_breakpoint()
 {
     return emulator().settings().in_debug_mode && !m_breakpoints.is_empty() && m_breakpoints.contains_slow(m_registers.program_counter);
+}
+
+bool CPU::should_skip_boot_rom()
+{
+    return emulator().settings().in_test_mode;
 }

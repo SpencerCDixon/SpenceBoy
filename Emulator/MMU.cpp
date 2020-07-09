@@ -58,10 +58,11 @@ void MMU::load_rom(const char* rom_path)
 
 //    printf("[\n");
 //    for (int i = 0; i < 256; ++i) {
+//
 //        if (i % 20 == 0)
 //            printf("\n");
-//        else
-//            printf("%d, ", m_rom[i]);
+//
+//        printf("%d, ", m_rom[i]);
 //    }
 //    printf("]\n");
 //    ASSERT_NOT_REACHED();

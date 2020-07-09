@@ -198,6 +198,7 @@ private:
     // Debug
     //
     bool in_breakpoint();
+    bool should_skip_boot_rom();
 
 private:
     Emulator& m_emulator;
@@ -206,7 +207,7 @@ private:
     u64 m_cycles_executed { 0 };
     bool m_halted { false };
     bool m_interrupts_enabled { false };
-    bool m_in_boot_rom { false };
+    bool m_in_boot_rom { true };
 
     Debugger* m_debugger { nullptr };
     Vector<u16> m_breakpoints {};

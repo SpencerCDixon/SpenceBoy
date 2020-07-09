@@ -2,11 +2,11 @@
 set -euo pipefail
 
 rgbasm -o main.o dmg_boot.asm
-rgblink -o boot.gb main.o
+rgblink -o dmg_boot.gb main.o
 
-dd if=./boot.gb of=boot.bin bs=256 count=1
+dd if=./dmg_boot.gb of=dmg_boot.bin bs=256 count=1
 
-rm boot.gb
+rm dmg_boot.gb
 rm main.o
 
-hexdump -C boot.bin
+hexdump -C dmg_boot.bin
