@@ -588,6 +588,27 @@ OpCode CPU::execute_one_instruction()
 void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
 {
     switch (op_code) {
+    case PrefixOpCode::RL_A:
+        rotate_left(&m_registers.a);
+        break;
+    case PrefixOpCode::RL_B:
+        rotate_left(&m_registers.b);
+        break;
+    case PrefixOpCode::RL_C:
+        rotate_left(&m_registers.c);
+        break;
+    case PrefixOpCode::RL_D:
+        rotate_left(&m_registers.d);
+        break;
+    case PrefixOpCode::RL_E:
+        rotate_left(&m_registers.e);
+        break;
+    case PrefixOpCode::RL_H:
+        rotate_left(&m_registers.h);
+        break;
+    case PrefixOpCode::RL_L:
+        rotate_left(&m_registers.l);
+        break;
     case PrefixOpCode::SLA_A:
         shift_left(&m_registers.a);
         break;
@@ -793,7 +814,7 @@ void CPU::check_bit(u8 flag, u8* reg_ptr)
 
 void CPU::rotate_left(u8* reg_ptr)
 {
-    bool will_carry = (*reg_ptr & 0x8) == 0x8;
+    bool will_carry = (*reg_ptr & 0x80) == 0x80;
     *reg_ptr <<= 1;
 
     set_zero_flag(*reg_ptr == 0);

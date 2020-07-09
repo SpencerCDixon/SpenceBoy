@@ -269,6 +269,13 @@
     __ENUMERATE(0xDB, TEST_COMPLETE, 4)
 
 #define ENUMERATE_PREFIX_OPCODES  \
+    __ENUMERATE(0x10, RL_B, 8)    \
+    __ENUMERATE(0x11, RL_C, 8)    \
+    __ENUMERATE(0x12, RL_D, 8)    \
+    __ENUMERATE(0x13, RL_E, 8)    \
+    __ENUMERATE(0x14, RL_H, 8)    \
+    __ENUMERATE(0x15, RL_L, 8)    \
+    __ENUMERATE(0x17, RL_A, 8)    \
     __ENUMERATE(0x7C, BIT_7_H, 8) \
     __ENUMERATE(0x6C, BIT_5_H, 8) \
     __ENUMERATE(0x27, SLA_A, 8)   \
