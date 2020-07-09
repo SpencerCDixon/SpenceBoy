@@ -206,7 +206,7 @@ private:
     bool m_in_boot_rom { false };
 
     Debugger* m_debugger { nullptr };
-    Vector<u16> m_breakpoints { 10 };
+    Vector<u16> m_breakpoints { };
 };
 
 const LogStream& operator<<(const LogStream&, const CPUTestState&);

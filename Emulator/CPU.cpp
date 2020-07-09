@@ -55,9 +55,10 @@ void CPU::main_loop()
         if (in_breakpoint() && !m_debugger)
             attach_debugger(&emulator().debugger());
 
-        // TODO: debugger could return an action and break out of loop?
+        // Andreas: This feels a bit clunky. Is there a better way to do this?
+        // It also seems to take two 'continue' commands to properly leave the loop :-(
         if (m_debugger) {
-            m_debugger->repl();
+            while (m_debugger->loop() == DebuggerResult::Continue) { }
         }
 
         execute_one_instruction();

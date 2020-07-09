@@ -8,24 +8,22 @@
 
 class Emulator;
 
-//enum class DebuggerCommand {
-//    Step,
-//    Continue,
-//    SetBreakpoint,
-//    DeleteBreakpoint
-//};
+enum class DebuggerResult {
+    Exit,
+    Continue,
+};
 
 class Debugger {
 public:
     explicit Debugger(Emulator& emulator);
 
     void enter();
-    void repl(bool should_continue = true);
+    DebuggerResult loop();
 
 private:
     Emulator& emulator() { return m_emulator; }
     String prompt_for_input();
-    bool handle_command(String command);
+    DebuggerResult handle_command(String command);
 
 private:
     Emulator& m_emulator;

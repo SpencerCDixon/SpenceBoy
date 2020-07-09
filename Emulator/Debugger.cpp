@@ -29,13 +29,10 @@ void Debugger::enter()
     dbg() << "\tbp <num>     - add breakpoint at num\n\n";
 }
 
-void Debugger::repl(bool should_continue)
+DebuggerResult Debugger::loop()
 {
-    if (!should_continue)
-        return;
-
     auto input = prompt_for_input();
-    repl(handle_command(input));
+    return handle_command(input);
 }
 
 String Debugger::prompt_for_input()
@@ -50,7 +47,7 @@ String Debugger::prompt_for_input()
     return result;
 }
 
-bool Debugger::handle_command(String command)
+DebuggerResult Debugger::handle_command(String command)
 {
     auto peeked_instruction = [&] {
         auto next = emulator().cpu().peek_next_instruction();
@@ -60,35 +57,39 @@ bool Debugger::handle_command(String command)
         return to_string(next.value()).trim_whitespace();
     };
 
-    auto trimmed = command.trim_whitespace();
+    auto command_args = command.trim_whitespace().split(' ');
+    auto primary = command_args[0];
 
-    if (trimmed == "q" || trimmed == "quit" || trimmed == "exit")
+    if (primary == "q" || primary == "quit" || primary == "exit")
         ::exit(0);
 
-    if (trimmed == "s" || trimmed == "step") {
+    if (primary == "s" || primary == "step") {
         auto op_code = emulator().cpu().execute_one_instruction();
         dbg() << "Executed OpCode: " << YELLOW << to_string(op_code).trim_whitespace() << RESET << "\n";
         dbg() << to_step_line(emulator().cpu().test_state());
     }
 
-    if (trimmed == "p" || trimmed == "peek") {
+    if (primary == "p" || primary == "peek") {
         dbg() << "Next OpCode: " << YELLOW << peeked_instruction() << RESET;
     }
 
-    if (trimmed == "c" || trimmed == "continue") {
+    if (primary == "c" || primary == "continue") {
         dbg() << "exiting debugger...";
         emulator().cpu().detach_debugger();
-        dbg() << "returning false";
-        return false;
+        return DebuggerResult::Exit;
     }
 
-    if (trimmed == "v" || trimmed == "vram") {
+    if (primary == "v" || primary == "vram") {
         hex_dump("VRAM", emulator().mmu().vram(), VRAM_SIZE, VRAM_START);
     }
 
-    if (trimmed == "w" || trimmed == "wram") {
+    if (primary == "w" || primary == "wram") {
         hex_dump("WRAM", emulator().mmu().wram(), WRAM_SIZE, WRAM_START);
     }
 
-    return true;
+    if (primary == "bp") {
+        dbg() << "Would set breakpiont at: " << command_args[1];
+    }
+
+    return DebuggerResult::Continue;
 }
