@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -Exuo pipefail
 
+SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+cd $SCRIPTPATH/..
+
 unameOut="$(uname -s)"
 case "${unameOut}" in
     Linux*)     machine=Linux;;
@@ -17,7 +20,6 @@ if [ "$machine" == "Mac" ]; then
   brew install cmake
 elif [ "$machine" == "Linux" ]; then
   echo "detected machine is Linux... installing deps"
-  pushd ..
   mkdir -p third_party
   pushd third_party
   sudo apt-get install byacc flex pkg-config libpng-dev
@@ -28,8 +30,10 @@ elif [ "$machine" == "Linux" ]; then
   popd # rgbds
   popd # third_party
   echo "installing SDL dependencies"
-  sudo apt install cmake libsdl2-dev g++
-  popd # root
+  sudo apt install cmake libsdl2-dev libsdl2-image-dev g++
 else
   echo "your platform is not currently supported :-("
 fi
+
+echo "copying git pre-push hook"
+cp ./Assets/git-pre-push-template ./.git/hooks/pre-push
