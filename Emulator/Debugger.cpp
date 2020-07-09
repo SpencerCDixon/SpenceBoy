@@ -13,20 +13,18 @@ Debugger::Debugger(Emulator& emulator)
 {
 }
 
-// TODO:
-// * add a <num> after memory dump commands so I can just see a percentage of memory
 void Debugger::enter()
 {
     dbg() << "---------------------------";
     dbg() << "Entering SpenceBoy Debugger";
     dbg() << "---------------------------";
-    dbg() << "\nCommands:\n";
-    dbg() << "\tq | quit     - exit the emulator";
-    dbg() << "\ts | step     - step through to next command";
-    dbg() << "\tc | continue - continue execution without stepping";
-    dbg() << "\tv | vram     - dump contents of VRAM";
-    dbg() << "\tw | wram     - dump contents of WRAM";
-    dbg() << "\tbp <num>     - add breakpoint at num\n\n";
+    dbg() << "\n " WHITE "Commands:\n" RESET;
+    dbg() << "  q  | quit     - exit the debugger and the emulator";
+    dbg() << "  s  | step     - step through to the next command";
+    dbg() << "  c  | continue - continue execution without stepping until a breakpoint";
+    dbg() << "  v  | vram     - dump contents of VRAM";
+    dbg() << "  w  | wram     - dump contents of WRAM";
+    dbg() << "  bp | <num>    - add breakpoint at program counter num\n\n";
 }
 
 DebuggerResult Debugger::loop()
@@ -49,46 +47,42 @@ String Debugger::prompt_for_input()
 
 DebuggerResult Debugger::handle_command(String command)
 {
-    auto peeked_instruction = [&] {
-        auto next = emulator().cpu().peek_next_instruction();
-        if (next.is_none())
-            return String("No More Instructions");
-
-        return to_string(next.value()).trim_whitespace();
-    };
-
     auto command_args = command.trim_whitespace().split(' ');
-    auto primary = command_args[0];
+    auto primary_command = command_args[0];
 
-    if (primary == "q" || primary == "quit" || primary == "exit")
+    if (primary_command == "q" || primary_command == "quit" || primary_command == "exit")
         ::exit(0);
 
-    if (primary == "s" || primary == "step") {
+    if (primary_command == "s" || primary_command == "step") {
         auto op_code = emulator().cpu().execute_one_instruction();
         dbg() << "Executed OpCode: " << YELLOW << to_string(op_code).trim_whitespace() << RESET << "\n";
         dbg() << to_step_line(emulator().cpu().test_state());
     }
 
-    if (primary == "p" || primary == "peek") {
-        dbg() << "Next OpCode: " << YELLOW << peeked_instruction() << RESET;
-    }
-
-    if (primary == "c" || primary == "continue") {
+    if (primary_command == "c" || primary_command == "continue") {
         dbg() << "exiting debugger...";
         emulator().cpu().detach_debugger();
         return DebuggerResult::Exit;
     }
 
-    if (primary == "v" || primary == "vram") {
+    if (primary_command == "v" || primary_command == "vram") {
         hex_dump("VRAM", emulator().mmu().vram(), VRAM_SIZE, VRAM_START);
     }
 
-    if (primary == "w" || primary == "wram") {
+    if (primary_command == "w" || primary_command == "wram") {
         hex_dump("WRAM", emulator().mmu().wram(), WRAM_SIZE, WRAM_START);
     }
 
-    if (primary == "bp") {
-        dbg() << "Would set breakpiont at: " << command_args[1];
+    if (primary_command == "bp") {
+        auto bp = command_args[1].to_int();
+        if (bp.is_none()) {
+            dbg() << RED "error: " RESET "incompatible breakpoint (require an int)";
+            return DebuggerResult::Continue;
+        }
+
+        emulator().cpu().add_breakpoint(bp.value());
+
+        dbg() << GREEN "added: " RESET "breakpoint at " << bp.value();
     }
 
     return DebuggerResult::Continue;

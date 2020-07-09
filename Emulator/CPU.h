@@ -11,8 +11,8 @@
 
 #include <SD/Bytes.h>
 #include <SD/LogStream.h>
-#include <SD/Types.h>
 #include <SD/Option.h>
+#include <SD/Types.h>
 #include <SD/Vector.h>
 
 #include <stdlib.h>
@@ -65,9 +65,12 @@ public:
     // Testing/Debug Utilities
     //
     CPUTestState test_state();
-    Option<OpCode> peek_next_instruction();
     void attach_debugger(Debugger* debugger) { m_debugger = debugger; }
     void detach_debugger() { m_debugger = nullptr; }
+    void add_breakpoint(u16 breakpoint)
+    {
+        m_breakpoints.append(breakpoint);
+    }
 
 private:
     void handle_prefix_op_code(const PrefixOpCode& op_code);
@@ -206,7 +209,7 @@ private:
     bool m_in_boot_rom { false };
 
     Debugger* m_debugger { nullptr };
-    Vector<u16> m_breakpoints { };
+    Vector<u16> m_breakpoints {};
 };
 
 const LogStream& operator<<(const LogStream&, const CPUTestState&);
