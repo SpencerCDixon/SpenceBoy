@@ -88,7 +88,7 @@ private:
 
     // Bit Twiddling
     void shift_left(u8* reg_ptr);
-    void xor_reg(u8* reg_ptr);
+    void xor_value_with_a(u8 value);
     void and_with_a(u8 value);
     void or_with_a(u8 value);
     void swap_reg(u8* reg_ptr);

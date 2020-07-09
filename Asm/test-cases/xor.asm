@@ -1,9 +1,5 @@
-INCLUDE "../common/hardware.inc"
-
-; The gameboy will load our code at address $100
 SECTION "Header", ROM0[$100]
 
-; There is a bunch of header junk starting at $104 so we need to immediately jump to our code
 EntryPoint:
 	jp Start; 
 
@@ -11,7 +7,7 @@ REPT $150 - $104
 	db 0
 ENDR
 
-SECTION "Game code", ROM0
+SECTION "TestCode", ROM0
 
 Start:
 	; Assert carry in shift works properly
@@ -39,4 +35,8 @@ Start:
 	ld l, %00001111
 	xor l 
 
+	ld a, %11001100
+	xor %00110011
+
+	nop
 	halt

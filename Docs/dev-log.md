@@ -12,6 +12,8 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 * Add script for quickly creating tests
 * Add support for 'RL' prefixed op codes
 * Add support for 'LD_A_C'
+* Fix broken XOR implementation
+* Add support for 'XOR_d8'
 
 ---
  

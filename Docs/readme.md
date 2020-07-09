@@ -339,4 +339,4 @@ $ ./Scripts/run.sh
 - [x] XOR_H (0xAC)
 - [ ] XOR_HL_ADDR (0xAE)
 - [x] XOR_L (0xAD)
-- [ ] XOR_d8 (0xEE)
+- [x] XOR_d8 (0xEE)

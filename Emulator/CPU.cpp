@@ -479,25 +479,28 @@ OpCode CPU::execute_one_instruction()
         or_with_a(fetch_and_inc_u8());
         break;
     case OpCode::XOR_A:
-        xor_reg(&m_registers.a);
+        xor_value_with_a(m_registers.a);
         break;
     case OpCode::XOR_B:
-        xor_reg(&m_registers.b);
+        xor_value_with_a(m_registers.b);
         break;
     case OpCode::XOR_C:
-        xor_reg(&m_registers.c);
+        xor_value_with_a(m_registers.c);
         break;
     case OpCode::XOR_D:
-        xor_reg(&m_registers.d);
+        xor_value_with_a(m_registers.d);
         break;
     case OpCode::XOR_E:
-        xor_reg(&m_registers.e);
+        xor_value_with_a(m_registers.e);
         break;
     case OpCode::XOR_H:
-        xor_reg(&m_registers.h);
+        xor_value_with_a(m_registers.h);
         break;
     case OpCode::XOR_L:
-        xor_reg(&m_registers.l);
+        xor_value_with_a(m_registers.l);
+        break;
+    case OpCode::XOR_d8:
+        xor_value_with_a(fetch_and_inc_u8());
         break;
     case OpCode::DI:
         m_interrupts_enabled = false;
@@ -773,10 +776,14 @@ void CPU::shift_left(u8* reg_ptr)
     set_zero_flag(*reg_ptr == 0);
 }
 
-void CPU::xor_reg(u8* reg_ptr)
+void CPU::xor_value_with_a(u8 value)
 {
-    *reg_ptr ^= m_registers.a;
-    set_zero_flag(*reg_ptr == 0);
+    u8 result = m_registers.a ^ value;
+    m_registers.a = result;
+    set_zero_flag(result == 0);
+    set_half_carry_flag(false);
+    set_subtract_flag(false);
+    set_carry_flag(false);
 }
 
 void CPU::and_with_a(u8 value)
