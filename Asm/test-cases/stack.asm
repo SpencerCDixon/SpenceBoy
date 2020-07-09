@@ -9,7 +9,7 @@ ENDR
 
 WRAM_END EQU $E000
 
-SECTION "GameCode", ROM0
+SECTION "TestCode", ROM0
 
 Start:
 	ld b, $ff

@@ -7,7 +7,7 @@ REPT $150 - $104
 	db 0
 ENDR
 
-SECTION "GameCode", ROM0
+SECTION "TestCode", ROM0
 
 ; Smiley based off: https://medium.com/@ulrikdamm/writing-your-first-gameboy-game-4ea62c76db29
 Start:
