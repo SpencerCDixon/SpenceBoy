@@ -644,6 +644,24 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
     case PrefixOpCode::BIT_5_H:
         check_bit_5(&m_registers.h);
         break;
+    case PrefixOpCode::RES_0_HL_ADDR: {
+        u8 value = read(get_hl());
+        reset_bit(0, &value);
+        write(get_hl(), value);
+        break;
+    }
+    case PrefixOpCode::RES_0_A:
+        reset_bit(0, &m_registers.a);
+        break;
+    case PrefixOpCode::RES_0_B:
+        reset_bit(0, &m_registers.b);
+        break;
+    case PrefixOpCode::RES_0_C:
+        reset_bit(0, &m_registers.c);
+        break;
+    case PrefixOpCode::RES_0_D:
+        reset_bit(0, &m_registers.d);
+        break;
     default:
         if (is_prefix_opcode(op_code)) {
             printf("[ " RED "FATAL" RESET " ] "
@@ -830,6 +848,11 @@ void CPU::rotate_left(u8* reg_ptr)
     set_carry_flag(will_carry);
     set_subtract_flag(false);
     set_half_carry_flag(false);
+}
+
+void CPU::reset_bit(u8 bit_to_reset, u8* value_ptr)
+{
+    *value_ptr &= ~(1 << bit_to_reset);
 }
 
 //

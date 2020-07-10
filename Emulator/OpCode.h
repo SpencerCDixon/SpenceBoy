@@ -268,23 +268,28 @@
     __ENUMERATE(0xDD, DEBUGGER, 4)         \
     __ENUMERATE(0xDB, TEST_COMPLETE, 4)
 
-#define ENUMERATE_PREFIX_OPCODES  \
-    __ENUMERATE(0x10, RL_B, 8)    \
-    __ENUMERATE(0x11, RL_C, 8)    \
-    __ENUMERATE(0x12, RL_D, 8)    \
-    __ENUMERATE(0x13, RL_E, 8)    \
-    __ENUMERATE(0x14, RL_H, 8)    \
-    __ENUMERATE(0x15, RL_L, 8)    \
-    __ENUMERATE(0x17, RL_A, 8)    \
-    __ENUMERATE(0x7C, BIT_7_H, 8) \
-    __ENUMERATE(0x6C, BIT_5_H, 8) \
-    __ENUMERATE(0x27, SLA_A, 8)   \
-    __ENUMERATE(0x20, SLA_B, 8)   \
-    __ENUMERATE(0x21, SLA_C, 8)   \
-    __ENUMERATE(0x22, SLA_D, 8)   \
-    __ENUMERATE(0x23, SLA_E, 8)   \
-    __ENUMERATE(0x24, SLA_H, 8)   \
-    __ENUMERATE(0x25, SLA_L, 8)   \
+#define ENUMERATE_PREFIX_OPCODES         \
+    __ENUMERATE(0x10, RL_B, 8)           \
+    __ENUMERATE(0x11, RL_C, 8)           \
+    __ENUMERATE(0x12, RL_D, 8)           \
+    __ENUMERATE(0x13, RL_E, 8)           \
+    __ENUMERATE(0x14, RL_H, 8)           \
+    __ENUMERATE(0x15, RL_L, 8)           \
+    __ENUMERATE(0x17, RL_A, 8)           \
+    __ENUMERATE(0x86, RES_0_HL_ADDR, 16) \
+    __ENUMERATE(0x87, RES_0_A, 8)        \
+    __ENUMERATE(0x80, RES_0_B, 8)        \
+    __ENUMERATE(0x81, RES_0_C, 8)        \
+    __ENUMERATE(0x82, RES_0_D, 8)        \
+    __ENUMERATE(0x7C, BIT_7_H, 8)        \
+    __ENUMERATE(0x6C, BIT_5_H, 8)        \
+    __ENUMERATE(0x27, SLA_A, 8)          \
+    __ENUMERATE(0x20, SLA_B, 8)          \
+    __ENUMERATE(0x21, SLA_C, 8)          \
+    __ENUMERATE(0x22, SLA_D, 8)          \
+    __ENUMERATE(0x23, SLA_E, 8)          \
+    __ENUMERATE(0x24, SLA_H, 8)          \
+    __ENUMERATE(0x25, SLA_L, 8)          \
     __ENUMERATE(0x37, SWAP_A, 8)
 
 enum class OpCode : u8 {
