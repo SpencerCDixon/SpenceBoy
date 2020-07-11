@@ -222,7 +222,7 @@ $ ./Scripts/run.sh
 - [x] LD_C_d8 (0x0E)
 - [x] LD_DE_ADDR_A (0x12)
 - [x] LD_DE_d16 (0x11)
-- [ ] LD_D_A (0x57)
+- [x] LD_D_A (0x57)
 - [x] LD_D_B (0x50)
 - [x] LD_D_C (0x51)
 - [x] LD_D_D (0x52)

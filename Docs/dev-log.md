@@ -9,6 +9,8 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 ### What did I get done today?
 
 * Arithmetic shift right op codes
+* Add support for some more load op codes
+* Add support for add to stack pointer
 
 ---
  

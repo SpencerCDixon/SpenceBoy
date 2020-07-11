@@ -73,6 +73,13 @@ inline bool will_carry(u8 byte1, u8 byte2)
     return (result & carry_flag) == carry_flag;
 }
 
+inline bool will_carry(u16 original, u8 value_to_add)
+{
+    u32 result = original + value_to_add;
+    u32 carry_flag = 1 << 16;
+    return (result & carry_flag) == carry_flag;
+}
+
 inline bool will_carry_from_left_shift(u8 byte1)
 {
     u16 result = byte1 << 1;

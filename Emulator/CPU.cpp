@@ -138,6 +138,9 @@ OpCode CPU::execute_one_instruction()
     case OpCode::LD_A_E:
         m_registers.a = m_registers.e;
         break;
+    case OpCode::LD_D_A:
+        m_registers.d = m_registers.a;
+        break;
     case OpCode::LD_A_d8:
         m_registers.a = fetch_and_inc_u8();
         break;
@@ -306,6 +309,15 @@ OpCode CPU::execute_one_instruction()
     case OpCode::ADD_A_HL_ADDR:
         add_a(read(get_hl()));
         break;
+    case OpCode::ADD_SP_r8: {
+        u8 value = fetch_and_inc_s8();
+        set_zero_flag(false);
+        set_subtract_flag(false);
+        set_carry_flag(will_carry(get_sp(), value));
+        m_registers.stack_ptr += value;
+        // TODO: half-carry
+        break;
+    }
     case OpCode::JP_NZ_a16: {
         u16 new_address = fetch_and_inc_u16();
         if (!get_zero_flag())
