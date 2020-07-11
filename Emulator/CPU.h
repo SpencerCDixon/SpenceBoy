@@ -93,17 +93,8 @@ private:
     void or_with_a(u8 value);
     void swap_reg(u8* reg_ptr);
     void rotate_left(u8* reg_ptr);
-    // ACall: Nicer way to do this?
     void reset_bit(u8 bit_to_reset, u8* value_ptr);
-    void check_bit(u8 flag, u8* reg_ptr);
-    void check_bit_0(u8* reg_ptr) { check_bit(1 << 0, reg_ptr); }
-    void check_bit_1(u8* reg_ptr) { check_bit(1 << 1, reg_ptr); }
-    void check_bit_2(u8* reg_ptr) { check_bit(1 << 2, reg_ptr); }
-    void check_bit_3(u8* reg_ptr) { check_bit(1 << 3, reg_ptr); }
-    void check_bit_4(u8* reg_ptr) { check_bit(1 << 4, reg_ptr); }
-    void check_bit_5(u8* reg_ptr) { check_bit(1 << 5, reg_ptr); }
-    void check_bit_6(u8* reg_ptr) { check_bit(1 << 6, reg_ptr); }
-    void check_bit_7(u8* reg_ptr) { check_bit(1 << 7, reg_ptr); }
+    void check_bit(u8 bit_to_check, u8* value_ptr);
 
     // Flag Setting
     void set_zero_flag(bool should_set);

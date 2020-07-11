@@ -8,7 +8,8 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ### What did I get done today?
 
-* Add support for some bit reset op codes 
+* Add support for some bit reset op codes
+* Refactor bit checking using what I learned from bit resetting 
 
 ---
  

@@ -639,10 +639,10 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
         swap_reg(&m_registers.a);
         break;
     case PrefixOpCode::BIT_7_H:
-        check_bit_7(&m_registers.h);
+        check_bit(7, &m_registers.h);
         break;
     case PrefixOpCode::BIT_5_H:
-        check_bit_5(&m_registers.h);
+        check_bit(5, &m_registers.h);
         break;
     case PrefixOpCode::RES_0_HL_ADDR: {
         u8 value = read(get_hl());
@@ -832,9 +832,9 @@ void CPU::or_with_a(u8 value)
     set_zero_flag(m_registers.a == 0);
 }
 
-void CPU::check_bit(u8 flag, u8* reg_ptr)
+void CPU::check_bit(u8 bit_to_check, u8* reg_ptr)
 {
-    set_zero_flag((flag & *reg_ptr) == 0);
+    set_zero_flag(((1 << bit_to_check) & *reg_ptr) == 0);
     set_subtract_flag(false);
     set_half_carry_flag(true);
 }
