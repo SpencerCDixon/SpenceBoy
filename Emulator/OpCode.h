@@ -284,6 +284,8 @@
     __ENUMERATE(0x46, BIT_0_HL_ADDR, 16) \
     __ENUMERATE(0x7C, BIT_7_H, 8)        \
     __ENUMERATE(0x6C, BIT_5_H, 8)        \
+    __ENUMERATE(0x2f, SRA_A, 8)          \
+    __ENUMERATE(0x28, SRA_B, 8)          \
     __ENUMERATE(0x27, SLA_A, 8)          \
     __ENUMERATE(0x20, SLA_B, 8)          \
     __ENUMERATE(0x21, SLA_C, 8)          \

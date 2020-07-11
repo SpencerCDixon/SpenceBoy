@@ -189,7 +189,7 @@ $ ./Scripts/run.sh
 - [ ] LD_A_BC_ADDR (0x0A)
 - [x] LD_A_C (0x79)
 - [x] LD_A_C_ADDR (0xF2)
-- [ ] LD_A_D (0x7A)
+- [x] LD_A_D (0x7A)
 - [x] LD_A_DE_ADDR (0x1A)
 - [x] LD_A_E (0x7B)
 - [ ] LD_A_H (0x7C)

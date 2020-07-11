@@ -51,6 +51,7 @@ inline u16 to_le_16_bit(u8 byte1, u8 byte2)
 }
 
 // NOTE: half carry is not used much in real world, was required for old hardware but new hardware
+// doesn't often take advantage of it
 inline bool will_half_carry(u8 byte1, u8 byte2)
 {
     byte2 = byte2 & 0b00001111;

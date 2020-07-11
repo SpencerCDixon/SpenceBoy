@@ -132,6 +132,9 @@ OpCode CPU::execute_one_instruction()
     case OpCode::LD_A_C:
         m_registers.a = m_registers.c;
         break;
+    case OpCode::LD_A_D:
+        m_registers.a = m_registers.d;
+        break;
     case OpCode::LD_A_E:
         m_registers.a = m_registers.e;
         break;
@@ -635,6 +638,12 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
     case PrefixOpCode::SLA_L:
         shift_left(&m_registers.l);
         break;
+    case PrefixOpCode::SRA_A:
+        shift_right_into_carry(&m_registers.a);
+        break;
+    case PrefixOpCode::SRA_B:
+        shift_right_into_carry(&m_registers.b);
+        break;
     case PrefixOpCode::SWAP_A:
         swap_reg(&m_registers.a);
         break;
@@ -644,6 +653,12 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
     case PrefixOpCode::BIT_5_H:
         check_bit(5, &m_registers.h);
         break;
+    case PrefixOpCode::BIT_0_HL_ADDR: {
+        u8 value = read(get_hl());
+        check_bit(0, &value);
+        write(get_hl(), value);
+        break;
+    }
     case PrefixOpCode::RES_0_HL_ADDR: {
         u8 value = read(get_hl());
         reset_bit(0, &value);
@@ -724,7 +739,12 @@ void CPU::write(u16 address, u8 data)
 
 u8 CPU::in(u16 address)
 {
-    dbg() << "CPU::in(" << to_hex(address) << ")";
+    dbg() << "CPU::in(" << to_hex(address) << ") PC: " << m_registers.program_counter;
+
+    // HAAAACK: This is temporary so I can continue getting the boot rom loading. In the correct implementation
+    // we should be setting bit 0 of ff0f when th LCD controller enters into the V-Blank period.
+    if (m_registers.program_counter == 191)
+        write(0xff0f, 1);
     return 0;
 }
 
@@ -794,6 +814,16 @@ void CPU::shift_left(u8* reg_ptr)
     set_zero_flag(*reg_ptr == 0);
 }
 
+void CPU::shift_right_into_carry(u8* reg_ptr)
+{
+    u8 lsb = *reg_ptr & 0x1;
+    set_half_carry_flag(false);
+    set_subtract_flag(false);
+    set_carry_flag((bool)lsb);
+    *reg_ptr >>= 1;
+    *reg_ptr ^= (-lsb ^ *reg_ptr) & (1 << 7);
+}
+
 void CPU::xor_value_with_a(u8 value)
 {
     u8 result = m_registers.a ^ value;
@@ -834,7 +864,7 @@ void CPU::or_with_a(u8 value)
 
 void CPU::check_bit(u8 bit_to_check, u8* reg_ptr)
 {
-    set_zero_flag(((1 << bit_to_check) & *reg_ptr) == 0);
+    set_zero_flag((1 << bit_to_check) & *reg_ptr);
     set_subtract_flag(false);
     set_half_carry_flag(true);
 }

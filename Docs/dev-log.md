@@ -4,6 +4,14 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 7/11/2020**
+
+### What did I get done today?
+
+* Arithmetic shift right op codes
+
+---
+ 
 **Date: 7/10/2020**
 
 ### What did I get done today?
