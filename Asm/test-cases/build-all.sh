@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+cd "$SCRIPTPATH"
+
 for i in *.asm; do
     [ -f "$i" ] || break
     NAME=$(echo $i | sed s/.asm//)
