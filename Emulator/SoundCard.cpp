@@ -12,5 +12,5 @@ u8 SoundCard::in(u16 address)
 
 void SoundCard::out(u16 address, u8 value)
 {
-    dbg() << "PPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
+    dbg() << "SoundCard::out(" << to_hex(address) << ", " << to_hex(value) << ")";
 }

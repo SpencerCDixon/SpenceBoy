@@ -34,8 +34,6 @@ CPU::CPU(Emulator& emulator)
 
     if (should_skip_boot_rom()) {
         m_registers.program_counter = 0x100;
-    } else if (!m_in_boot_rom) {
-        m_registers.program_counter = 0x100;
     } else {
         m_registers.program_counter = 0x00;
     }
@@ -668,6 +666,7 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
     case PrefixOpCode::BIT_0_HL_ADDR: {
         u8 value = read(get_hl());
         check_bit(0, &value);
+        dbg() << "zero flag: " << get_zero_flag();
         write(get_hl(), value);
         break;
     }
@@ -756,7 +755,10 @@ u8 CPU::in(u16 address)
     // HAAAACK: This is temporary so I can continue getting the boot rom loading. In the correct implementation
     // we should be setting bit 0 of ff0f when the LCD controller enters into the V-Blank period.
     if (m_registers.program_counter == 191) {
-        write(0xff0f, 1);
+        //        u8 val = read(0xff0f);
+        //        dbg() << "val: " << val;
+//        write(0xff0f, 1);
+        return 0;
     }
     return 0;
 }
@@ -883,7 +885,7 @@ void CPU::or_with_a(u8 value)
 
 void CPU::check_bit(u8 bit_to_check, u8* reg_ptr)
 {
-    set_zero_flag((1 << bit_to_check) & *reg_ptr);
+    set_zero_flag(((1 << bit_to_check) & *reg_ptr) == 0);
     set_subtract_flag(false);
     set_half_carry_flag(true);
 }

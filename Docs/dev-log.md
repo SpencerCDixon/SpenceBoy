@@ -4,6 +4,14 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 7/12/2020**
+
+### What did I get done today?
+
+* Debug boot rom not WaitFrame
+
+---
+ 
 **Date: 7/11/2020**
 
 ### What did I get done today?

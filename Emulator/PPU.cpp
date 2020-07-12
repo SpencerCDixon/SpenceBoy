@@ -22,9 +22,11 @@ constexpr size_t TOTAL_BG_TILES = TILE_WIDTH * TILE_HEIGHT;
 constexpr size_t TOTAL_TILESET_TILES = 384;
 
 // PPU-related Registers
-constexpr u16 R_LCDC = 0xff40;
-constexpr u16 R_SCY = 0xff42;
-constexpr u16 R_SCX = 0xff43;
+constexpr static u16 R_LCDC = 0xff40;
+constexpr static u16 R_SCY = 0xff42;
+constexpr static u16 R_SCX = 0xff43;
+constexpr static u16 R_BGP = 0xff47;
+
 
 Tile8x8::Tile8x8()
 {
@@ -182,10 +184,10 @@ u8 PPU::in(u16 address)
         return m_lcd_control;
 
     // TODO: LCD Stat
-    if (address == 0xff44) {
-        // Tetris expects to receive 148 on the LCD stat otherwise it gets in an infinite loop
-        return 148;
-    }
+//    if (address == 0xff44) {
+//        // Tetris expects to receive 148 on the LCD stat otherwise it gets in an infinite loop
+//        return 148;
+//    }
 
     return 0;
 }
@@ -193,7 +195,6 @@ u8 PPU::in(u16 address)
 void PPU::out(u16 address, u8 value)
 {
     // TODO:
-    //    PPU::out() 0xff47 - BGP - BG Palette Data (R/W) - Non CGB Mode Only
     //    PPU::out() 0xff40 - LCDC Status Interrupt
     //    PPU::out(0xff42, 0x0)
     //    PPU::out(0xff43, 0x0)
@@ -212,6 +213,9 @@ void PPU::out(u16 address, u8 value)
     case R_LCDC:
         dbg() << "  lcd control written";
         m_lcd_control = value;
+        break;
+    case R_BGP:
+        dbg() << "  background palette would be set";
         break;
     default:
         break;
