@@ -9,6 +9,7 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 ### What did I get done today?
 
 * Debug boot rom not WaitFrame
+* Fix broken check_bit() function
 
 ---
  
