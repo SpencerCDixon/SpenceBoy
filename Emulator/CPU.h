@@ -54,6 +54,7 @@ public:
 
     Emulator& emulator() { return m_emulator; }
     //    bool interrupts_enabled() { return m_interrupts_enabled; }
+    bool in_boot_rom() { return m_in_boot_rom; }
 
     //
     // IODevice

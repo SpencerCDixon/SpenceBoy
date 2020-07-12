@@ -111,7 +111,7 @@ Start:
 
 
 ; Wait ~1 second
-    ld b, 60
+    ld b, 60 ; PC = 142
     call WaitBFrames
     
 ; Set registers to match the original DMG boot
@@ -120,10 +120,10 @@ Start:
     pop af
     ld hl, $014D
     ld bc, $0013
-    ld de, $00D8
+    ld de, $00D8 ; PC = 159
     
 ; Boot the game
-    jp BootGame
+    jp BootGame ; PC = 254
 
 
 DoubleBitsAndWriteRow:

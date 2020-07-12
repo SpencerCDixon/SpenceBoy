@@ -51,6 +51,11 @@ void Tile8x8::populate_from_palette(const u8* buffer, const u32* palette)
     }
 }
 
+bool PPU::lcd_display_enabled()
+{
+    return emulator().cpu().in_boot_rom() || m_lcd_control & 0x80;
+}
+
 void PPU::clear(const Color& color)
 {
     u32 argb_color = color.to_argb();

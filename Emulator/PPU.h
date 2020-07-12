@@ -81,7 +81,7 @@ private:
     Emulator& emulator() { return m_emulator; }
 
     // LCD Controls
-    bool lcd_display_enabled() { return m_lcd_control & 0x80; }
+    bool lcd_display_enabled();
     u16 bg_window_tile_data_select() { return m_lcd_control & 0x10 ? 0x8000 : 0x8800; }
     u16 bg_tilemap_display_select()
     {

@@ -11,6 +11,7 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 * Arithmetic shift right op codes
 * Add support for some more load op codes
 * Add support for add to stack pointer
+* Execute the full boot ROM sequence successfully!
 
 ---
  
