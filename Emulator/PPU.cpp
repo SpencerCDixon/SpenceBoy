@@ -139,6 +139,7 @@ void PPU::render()
 
     m_tilemap.set_data(m_bitmap);
     m_tileset.set_data(m_tileset_bitmap);
+//    emulator().cpu().enter_vblank();
 }
 
 size_t PPU::index_into_tileset(size_t original_index)

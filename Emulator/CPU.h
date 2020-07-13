@@ -55,6 +55,7 @@ public:
     Emulator& emulator() { return m_emulator; }
     //    bool interrupts_enabled() { return m_interrupts_enabled; }
     bool in_boot_rom() { return m_in_boot_rom; }
+    void enter_vblank() { m_in_vblank = true; }
 
     //
     // IODevice
@@ -203,7 +204,9 @@ private:
     bool m_halted { false };
     bool m_interrupts_enabled { false };
     bool m_in_boot_rom { true };
+    bool m_in_vblank { false };
 
+    // Debugging
     Debugger* m_debugger { nullptr };
     Vector<u16> m_breakpoints {};
 };

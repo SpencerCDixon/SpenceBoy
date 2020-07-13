@@ -754,12 +754,19 @@ u8 CPU::in(u16 address)
 
     // HAAAACK: This is temporary so I can continue getting the boot rom loading. In the correct implementation
     // we should be setting bit 0 of ff0f when the LCD controller enters into the V-Blank period.
+//    if (address == 0xff0f) {
     if (m_registers.program_counter == 191) {
-        //        u8 val = read(0xff0f);
-        //        dbg() << "val: " << val;
-//        write(0xff0f, 1);
         return 0;
+            //        u8 val = read(0xff0f);
+            //        dbg() << "val: " << val;
+            //        write(0xff0f, 1);
+            //        if (m_in_vblank) {
+            //            m_in_vblank = false;
+            //            return 1;
+            //        }
+//        }
     }
+
     return 0;
 }
 

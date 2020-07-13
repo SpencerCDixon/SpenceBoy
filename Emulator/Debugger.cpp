@@ -8,6 +8,18 @@
 
 #include <SD/LogStream.h>
 
+// Improvements:
+// **** What is the CPU cycle counter and what is the PPU dot counter (need them to be very visible)
+// **** Human readable versions of the flags (Z--C) instead of (0xfa)
+// * conditional breakpoints
+// * render the PPU after every step
+// * 'watch' breakpoints when an address in memory changes
+// * break whenever this register has this value
+// * dump all IO registers and state of PPU
+// * scx/scy sorts of values to understand state better
+
+// Implement these when it feels like they would be useful to solve problem at hand.
+
 Debugger::Debugger(Emulator& emulator)
     : m_emulator(emulator)
 {
