@@ -37,3 +37,4 @@ fi
 
 echo "copying git pre-push hook"
 cp ./Assets/git-pre-push-template ./.git/hooks/pre-push
+chmod +x ./.git/hooks/pre-push
