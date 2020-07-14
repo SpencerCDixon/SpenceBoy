@@ -35,3 +35,4 @@ Asm/Tools/mgbdis
 Games
 
 .vimrc
+.ycm_extra_conf.py

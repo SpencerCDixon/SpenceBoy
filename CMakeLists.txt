@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 
+set(CMAKE_C_COMPILER "clang")
+set(CMAKE_CXX_COMPILER "clang++")
+
 project(gameboy)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_compile_options(-Wimplicit-fallthrough -Wall -Wextra -Werror)
 
 add_executable(gameboy
