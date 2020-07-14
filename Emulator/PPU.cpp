@@ -18,7 +18,7 @@ constexpr size_t TILE_WIDTH = 32;
 constexpr size_t TILE_HEIGHT = 32;
 constexpr size_t TOTAL_BG_TILES = TILE_WIDTH * TILE_HEIGHT;
 
-// Three blocks of 128 each 
+// Three blocks of 128 each
 constexpr size_t TOTAL_TILESET_TILES = 384;
 
 // PPU-related Registers
@@ -26,7 +26,6 @@ constexpr static u16 R_LCDC = 0xff40;
 constexpr static u16 R_SCY = 0xff42;
 constexpr static u16 R_SCX = 0xff43;
 constexpr static u16 R_BGP = 0xff47;
-
 
 Tile8x8::Tile8x8()
 {
@@ -51,6 +50,14 @@ void Tile8x8::populate_from_palette(const u8* buffer, const u32* palette)
             set_pixel(col, row, palette[idx_into_palette]);
         }
     }
+}
+
+PPU::PPU(Emulator& emulator)
+    : m_emulator(emulator)
+    , m_vram(emulator.mmu().vram())
+    , m_bitmap({ GB_WIN_WIDTH, GB_WIN_HEIGHT }, GB_WIN_WIDTH * BITS_PER_PIXEL)
+    , m_tileset_bitmap({ TILESET_WIN_WIDTH, TILESET_WIN_HEIGHT }, TILESET_WIN_WIDTH * BITS_PER_PIXEL)
+{
 }
 
 bool PPU::lcd_display_enabled()
@@ -117,7 +124,7 @@ void PPU::render()
     Tile8x8 tileset[TOTAL_TILESET_TILES];
     for (size_t i = 0; i < TOTAL_TILESET_TILES; ++i) {
         size_t idx = i * 16; // 16 bytes (8 x 8 x 2 bpp)
-        auto* pointer = &emulator().mmu().vram()[idx];
+        auto* pointer = &vram()[idx];
         tileset[i].populate_from_palette(pointer, &m_palette[0]);
     }
 
@@ -125,7 +132,7 @@ void PPU::render()
     // should be used to render. Each byte represents the index into the tile map.
     size_t map_start = bg_tilemap_display_select() - 0x8000;
     for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
-        size_t tile_idx = emulator().mmu().vram()[map_start + i];
+        size_t tile_idx = vram()[map_start + i];
         size_t x = i % 32;
         size_t y = i / 32;
         fill_square(x, y, tileset[index_into_tileset(tile_idx)], m_bitmap);
@@ -139,7 +146,6 @@ void PPU::render()
 
     m_tilemap.set_data(m_bitmap);
     m_tileset.set_data(m_tileset_bitmap);
-//    emulator().cpu().enter_vblank();
 }
 
 size_t PPU::index_into_tileset(size_t original_index)
@@ -185,10 +191,10 @@ u8 PPU::in(u16 address)
         return m_lcd_control;
 
     // TODO: LCD Stat
-//    if (address == 0xff44) {
-//        // Tetris expects to receive 148 on the LCD stat otherwise it gets in an infinite loop
-//        return 148;
-//    }
+    //    if (address == 0xff44) {
+    //        // Tetris expects to receive 148 on the LCD stat otherwise it gets in an infinite loop
+    //        return 148;
+    //    }
 
     return 0;
 }

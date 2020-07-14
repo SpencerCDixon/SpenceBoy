@@ -48,15 +48,9 @@ private:
     u32 m_pixels[64];
 };
 
-// TODO: VRAM is never going to move, cache that pointer in the PPU.
 class PPU final : public IODevice {
 public:
-    PPU(Emulator& emulator)
-        : m_emulator(emulator)
-        , m_bitmap({ GB_WIN_WIDTH, GB_WIN_HEIGHT }, GB_WIN_WIDTH * BITS_PER_PIXEL)
-        , m_tileset_bitmap({ TILESET_WIN_WIDTH, TILESET_WIN_HEIGHT }, TILESET_WIN_WIDTH * BITS_PER_PIXEL)
-    {
-    }
+    PPU(Emulator& emulator);
 
     void init_textures()
     {
@@ -79,6 +73,7 @@ public:
 
 private:
     Emulator& emulator() { return m_emulator; }
+    u8* vram() { return m_vram; }
 
     // LCD Controls
     bool lcd_display_enabled();
@@ -93,6 +88,7 @@ private:
 
 private:
     Emulator& m_emulator;
+    u8* m_vram { nullptr };
     Bitmap m_bitmap;
     Bitmap m_tileset_bitmap;
 
