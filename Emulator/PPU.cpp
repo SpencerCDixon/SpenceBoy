@@ -114,6 +114,30 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
     }
 }
 
+void PPU::draw_scanline()
+{
+    // TODO:
+}
+
+// render() TODO:
+//
+// check that lcd is enabled
+//
+// Mode == AccessOAM
+//  -> switch to AccessVRAM
+// Mode == AccessVRAM
+//  -> draw_scanline()
+//  -> switch mode to HBlank
+// Mode == HBlank
+//  -> inc current line
+//  -> if >144 switch to AccessOAM
+// Mode == VBlank
+//  -> check if we're past 153, reset current line
+//  -> switch mode back to AOAM
+//
+// switch_mode()
+//  -> this needs to set any appropriate interrupts when switching modes
+
 void PPU::render()
 {
     if (!lcd_display_enabled()) {

@@ -4,6 +4,15 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 7/15/2020**
+
+### What did I get done today?
+
+* Add way to set interrupt flags
+* Research PPU more to start making progress on it
+
+---
+ 
 **Date: 7/12/2020**
 
 ### What did I get done today?

@@ -75,6 +75,9 @@ private:
     Emulator& emulator() { return m_emulator; }
     u8* vram() { return m_vram; }
 
+    // Drawing
+    void draw_scanline();
+
     // LCD Controls
     bool lcd_display_enabled();
     u16 bg_window_tile_data_select() { return m_lcd_control & 0x10 ? 0x8000 : 0x8800; }

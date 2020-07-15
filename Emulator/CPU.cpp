@@ -950,6 +950,11 @@ bool CPU::get_carry_flag()
     return m_registers.f & FLAG_CARRY;
 }
 
+void CPU::set_interrupt_flag(u8 flag)
+{
+    m_interrupt_flag = flag;
+}
+
 // TODO: Abstract the address checking into a method which tells me two things:
 // Hide all of this logic inside the MMU class which will simplify the CPU
 
