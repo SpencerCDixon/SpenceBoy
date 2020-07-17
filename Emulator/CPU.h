@@ -73,6 +73,7 @@ public:
     {
         m_breakpoints.append(breakpoint);
     }
+    String human_readable_flags();
 
 private:
     void handle_prefix_op_code(const PrefixOpCode& op_code);
@@ -104,8 +105,10 @@ private:
     void set_carry_flag(bool should_set);
     void set_half_carry_flag(bool should_set);
     void set_subtract_flag(bool should_set);
-    bool get_zero_flag();
     bool get_carry_flag();
+    bool get_half_carry_flag();
+    bool get_subtract_flag();
+    bool get_zero_flag();
 
     // Register related utilities
     // TODO(scd): consider maybe moving into Register class?

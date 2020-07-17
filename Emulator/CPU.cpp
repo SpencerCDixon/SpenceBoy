@@ -940,14 +940,21 @@ void CPU::set_subtract_flag(bool should_set)
     }
 }
 
-bool CPU::get_zero_flag()
-{
-    return m_registers.f & FLAG_ZERO;
-}
-
 bool CPU::get_carry_flag()
 {
     return m_registers.f & FLAG_CARRY;
+}
+bool CPU::get_half_carry_flag()
+{
+    return m_registers.f & FLAG_HALF_CARRY;
+}
+bool CPU::get_subtract_flag()
+{
+    return m_registers.f & FLAG_SUBTRACT;
+}
+bool CPU::get_zero_flag()
+{
+    return m_registers.f & FLAG_ZERO;
 }
 
 void CPU::set_interrupt_flag(u8 flag)
@@ -1114,4 +1121,14 @@ bool CPU::in_breakpoint()
 bool CPU::should_skip_boot_rom()
 {
     return emulator().settings().in_test_mode;
+}
+
+String CPU::human_readable_flags()
+{
+    String flags;
+    flags += get_zero_flag() ? "Z" : "-";
+    flags += get_subtract_flag() ? "N" : "-";
+    flags += get_half_carry_flag() ? "H" : "-";
+    flags += get_carry_flag() ? "C" : "-";
+    return flags;
 }
