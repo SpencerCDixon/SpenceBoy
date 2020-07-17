@@ -985,6 +985,16 @@ const LogStream& operator<<(const LogStream& stream, CPU& cpu)
 //
 // Testing Utilities
 //
+String to_human_readable_flags(u8 flags)
+{
+    String result;
+    result += (flags & FLAG_ZERO) ? "Z" : "-";
+    result += (flags & FLAG_SUBTRACT) ? "N" : "-";
+    result += (flags & FLAG_HALF_CARRY) ? "H" : "-";
+    result += (flags & FLAG_CARRY) ? "C" : "-";
+    return result;
+}
+
 String to_trace_line(const CPUTestState& test_state)
 {
     local_persist u16 buf_size = 512;
@@ -1027,11 +1037,13 @@ String to_step_line(const CPUTestState& state)
     snprintf(
         buffer,
         buf_size,
+        "Flags: %s\n"
         "a: %03u [$%02x]       f: %03u [$%02x]\n"
         "b: %03u [$%02x]       c: %03u [$%02x]\n"
         "d: %03u [$%02x]       e: %03u [$%02x]\n"
         "h: %03u [$%02x]       l: %03u [$%02x]\n"
         "s: %03u [$%02x]   p: %03u [$%02x]\n",
+        to_human_readable_flags(state.registers.f).characters(),
         state.registers.a,
         state.registers.a,
         state.registers.f,
@@ -1123,12 +1135,3 @@ bool CPU::should_skip_boot_rom()
     return emulator().settings().in_test_mode;
 }
 
-String CPU::human_readable_flags()
-{
-    String flags;
-    flags += get_zero_flag() ? "Z" : "-";
-    flags += get_subtract_flag() ? "N" : "-";
-    flags += get_half_carry_flag() ? "H" : "-";
-    flags += get_carry_flag() ? "C" : "-";
-    return flags;
-}

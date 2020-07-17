@@ -42,6 +42,7 @@ struct CPUTestState {
 String to_trace_line(const CPUTestState&);
 String to_step_line(const CPUTestState&);
 String to_snapshot(const CPUTestState&);
+String to_human_readable_flags(u8 flag);
 
 class CPU final : public IODevice {
 public:
@@ -73,7 +74,6 @@ public:
     {
         m_breakpoints.append(breakpoint);
     }
-    String human_readable_flags();
 
 private:
     void handle_prefix_op_code(const PrefixOpCode& op_code);
