@@ -10,7 +10,6 @@
 
 // Improvements:
 // **** What is the CPU cycle counter and what is the PPU dot counter (need them to be very visible)
-// **** Human readable versions of the flags (Z--C) instead of (0xfa)
 // * conditional breakpoints
 // * render the PPU after every step
 // * 'watch' breakpoints when an address in memory changes

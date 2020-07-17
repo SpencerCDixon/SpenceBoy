@@ -1002,7 +1002,7 @@ String to_trace_line(const CPUTestState& test_state)
     snprintf(
         buffer,
         buf_size,
-        "A: %03u [0x%02x] F: %03u [0x%02x]  "
+        "A: %03u [0x%02x] F: %03u [0x%02x] %s "
         "B: %03u [0x%02x] C: %03u [0x%02x]  "
         "D: %03u [0x%02x] E: %03u [0x%02x]  "
         "H: %03u [0x%02x] L: %03u [0x%02x] ---"
@@ -1011,6 +1011,7 @@ String to_trace_line(const CPUTestState& test_state)
         test_state.registers.a,
         test_state.registers.f,
         test_state.registers.f,
+        to_human_readable_flags(test_state.registers.f).characters(),
         test_state.registers.b,
         test_state.registers.b,
         test_state.registers.c,
