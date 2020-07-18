@@ -114,9 +114,82 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
     }
 }
 
+void PPU::progress_dot_counter(u8 cycles)
+{
+    static constexpr u32 CYCLES_PER_FRAME = 66000;
+    static constexpr u32 DOTS_PER_FRAME = 70224;
+    static constexpr f32 DOTS_PER_CYCLE = (f32)DOTS_PER_FRAME / (f32)CYCLES_PER_FRAME;
+
+    f32 dots = DOTS_PER_CYCLE * (f32)cycles;
+    m_dot_count += dots;
+    m_dots_until_transition -= dots;
+
+    dbg() << "dot count: " << m_dot_count << " until transition: " << m_dots_until_transition;
+
+    if (m_dot_count >= DOTS_PER_FRAME) {
+        m_dot_count = 0;
+        dbg() << "RENDERED FRAME OVER";
+        ::exit(1);
+        return;
+    }
+
+    // TODO: I need to carry the overflow in an intelligent way. HBlank and AccessVRAM can be variable but the others
+    // need to maintain an exact dot count.
+
+    switch (mode()) {
+    case PPUMode::AccessingOAM: {
+        if (m_dots_until_transition <= 0) {
+            m_dots_until_transition = 168;
+            set_mode(PPUMode::AccessingVRAM);
+        }
+        break;
+    }
+    case PPUMode::AccessingVRAM: {
+        if (m_dots_until_transition <= 0) {
+            draw_scanline();
+            m_current_scanline++;
+            m_dots_until_transition = 208;
+            set_mode(PPUMode::HorizontalBlanking);
+        }
+        break;
+    }
+    case PPUMode::VerticalBlanking: {
+        if (m_dots_until_transition <= 0 && m_current_scanline < 153) {
+            draw_scanline();
+            m_current_scanline++;
+            m_dots_until_transition = 456;
+        } else if (m_dots_until_transition) {
+            dbg() << "RESET FRAME";
+            m_dots_until_transition = 80;
+            set_mode(PPUMode::AccessingOAM);
+        }
+        break;
+    }
+    case PPUMode::HorizontalBlanking: {
+        if (m_dots_until_transition <= 0) {
+            if (m_current_scanline == 143) {
+                m_dots_until_transition = 456;
+                set_mode(PPUMode::VerticalBlanking);
+            } else {
+                m_dots_until_transition = 80;
+                set_mode(PPUMode::AccessingOAM);
+            }
+        }
+        break;
+    }
+    }
+}
+
 void PPU::draw_scanline()
 {
     // TODO:
+    dbg() << "draw_scanline() current line: " << m_current_scanline;
+}
+
+void PPU::set_mode(const PPUMode& mode)
+{
+    dbg() << "setting mode: " << mode;
+    m_mode = mode;
 }
 
 // render() TODO:
@@ -265,6 +338,25 @@ const LogStream& operator<<(const LogStream& stream, const Tile8x8& tile)
             }
         }
         stream.write("\n", 1);
+    }
+    return stream;
+}
+
+const LogStream& operator<<(const LogStream& stream, const PPUMode& mode)
+{
+    switch (mode) {
+    case PPUMode::AccessingOAM:
+        stream << "AccessingOAM";
+        break;
+    case PPUMode::AccessingVRAM:
+        stream << "AccessingVRAM";
+        break;
+    case PPUMode::VerticalBlanking:
+        stream << "VerticalBlanking";
+        break;
+    case PPUMode::HorizontalBlanking:
+        stream << "HorizontalBlanking";
+        break;
     }
     return stream;
 }

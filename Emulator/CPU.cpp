@@ -58,7 +58,9 @@ void CPU::main_loop()
             while (m_debugger->loop() == DebuggerResult::Continue) { }
         }
 
+        int prev_cycle_count = m_cycles_executed;
         execute_one_instruction();
+        emulator().ppu().progress_dot_counter(m_cycles_executed - prev_cycle_count);
 
         // if (has_interrupt_request)
         // handle_interrupt

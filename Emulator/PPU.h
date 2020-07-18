@@ -65,6 +65,8 @@ public:
         m_tileset = Texture::from_size({ TILESET_WIN_WIDTH, TILESET_WIN_HEIGHT }, TextureUsage::Streaming);
     }
 
+    void progress_dot_counter(u8 cycles);
+
     // IODevice
     u8 in(u16 address) override;
     void out(u16 address, u8 value) override;
@@ -83,7 +85,7 @@ private:
     u8* vram() { return m_vram; }
 
     PPUMode mode() { return m_mode; }
-    void set_mode(const PPUMode& mode) { m_mode = mode; }
+    void set_mode(const PPUMode& mode);
 
     // Drawing
     void draw_scanline();
@@ -102,7 +104,13 @@ private:
 private:
     Emulator& m_emulator;
     u8* m_vram { nullptr };
+
+    // Scanline rendering
     PPUMode m_mode { PPUMode::AccessingOAM };
+    u8 m_current_scanline { 0 };
+    f32 m_dot_count { 0 };
+    f32 m_dots_until_transition { 80 };
+
     Bitmap m_bitmap;
     Bitmap m_tileset_bitmap;
 
@@ -133,3 +141,4 @@ private:
 };
 
 const LogStream& operator<<(const LogStream&, const Tile8x8&);
+const LogStream& operator<<(const LogStream&, const PPUMode&);
