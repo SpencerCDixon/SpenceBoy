@@ -48,6 +48,13 @@ private:
     u32 m_pixels[64];
 };
 
+enum class PPUMode: u8 {
+    HorizontalBlanking = 0x0,
+    VerticalBlanking = 0x1,
+    AccessingOAM = 0x2,
+    AccessingVRAM = 0x3,
+};
+
 class PPU final : public IODevice {
 public:
     PPU(Emulator& emulator);
@@ -75,6 +82,9 @@ private:
     Emulator& emulator() { return m_emulator; }
     u8* vram() { return m_vram; }
 
+    PPUMode mode() { return m_mode; }
+    void set_mode(const PPUMode& mode) { m_mode = mode; }
+
     // Drawing
     void draw_scanline();
 
@@ -92,6 +102,7 @@ private:
 private:
     Emulator& m_emulator;
     u8* m_vram { nullptr };
+    PPUMode m_mode { PPUMode::AccessingOAM };
     Bitmap m_bitmap;
     Bitmap m_tileset_bitmap;
 
