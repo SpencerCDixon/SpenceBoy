@@ -28,6 +28,13 @@ elif [ "$machine" == "Linux" ]; then
   make
   make install
   popd # rgbds
+
+  git clone https://github.com/gbdev/pandocs
+  pushd pandocs
+  pushd render
+  npm install
+  pip3 install -r requirements.txt
+  bash merge.sh
   popd # third_party
   echo "installing SDL dependencies"
   sudo apt install cmake libsdl2-dev libsdl2-image-dev g++
