@@ -21,6 +21,8 @@ class Emulator;
 //constexpr u16 WIN_WIDTH = 160;
 constexpr u16 GB_WIN_HEIGHT = 256;
 constexpr u16 GB_WIN_WIDTH = 256;
+constexpr u16 LCD_HEIGHT = 144;
+constexpr u16 LCD_WIDTH = 160;
 constexpr u16 TILESET_WIN_HEIGHT = 96;
 constexpr u16 TILESET_WIN_WIDTH = 256;
 
@@ -31,14 +33,14 @@ public:
     inline u32 pixel(size_t x, size_t y) const
     {
         size_t idx = y * 8 + x;
-        //ASSERT(idx >= 0 && idx <= 63);
+        ASSERT(idx >= 0 && idx <= 63);
         return m_pixels[idx];
     }
 
     void set_pixel(size_t x, size_t y, u32 color)
     {
         size_t idx = y * 8 + x;
-        //ASSERT(idx >= 0 && idx <= 63);
+        ASSERT(idx >= 0 && idx <= 63);
         m_pixels[idx] = color;
     }
 
@@ -48,11 +50,15 @@ private:
     u32 m_pixels[64];
 };
 
-enum class PPUMode: u8 {
-    HorizontalBlanking = 0x0,
-    VerticalBlanking = 0x1,
+enum class PPUMode : u8 {
+    // Searching for objects
     AccessingOAM = 0x2,
+    // Drawing
     AccessingVRAM = 0x3,
+    // Time between scanlines
+    HorizontalBlanking = 0x0,
+    // Time between frames
+    VerticalBlanking = 0x1,
 };
 
 class PPU final : public IODevice {
@@ -63,6 +69,7 @@ public:
     {
         m_tilemap = Texture::from_size({ GB_WIN_WIDTH, GB_WIN_HEIGHT }, TextureUsage::Streaming);
         m_tileset = Texture::from_size({ TILESET_WIN_WIDTH, TILESET_WIN_HEIGHT }, TextureUsage::Streaming);
+        m_lcd_display = Texture::from_size({ LCD_WIDTH, LCD_HEIGHT }, TextureUsage::Streaming);
     }
 
     void update_by(u8 cycles);
@@ -73,13 +80,15 @@ public:
 
     Texture& tilemap() { return m_tilemap; }
     Texture& tileset() { return m_tileset; }
+    Texture& lcd_display() { return m_lcd_display; }
     u8 scx() { return m_bg_scroll_x; }
     u8 scy() { return m_bg_scroll_y; }
 
-    void clear(const Color& color);
     void render();
+    void clear_debug_textures();
+    void render_debug_textures();
     void fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap);
-    void fill_line(size_t y, const Tile8x8&tile, Bitmap& bitmap);
+    void fill_line(size_t y, const Tile8x8& tile, Bitmap& bitmap);
 
 private:
     Emulator& emulator() { return m_emulator; }
@@ -114,9 +123,11 @@ private:
 
     Bitmap m_bitmap;
     Bitmap m_tileset_bitmap;
+    Bitmap m_lcd_bitmap;
 
     Texture m_tilemap;
     Texture m_tileset;
+    Texture m_lcd_display;
 
     u32 m_palette[4] = {
         Color::TAN_ARGB,

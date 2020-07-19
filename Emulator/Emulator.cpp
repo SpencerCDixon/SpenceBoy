@@ -92,7 +92,6 @@ void Emulator::run()
         // Render
         //
         local_persist Color bg_clear { 255, 255, 255, 255 };
-        local_persist Color gb_clear { 125, 130, 255, 255 };
 
         // TODO: These really need to be moved into the PPU for rendering one line at a time
         local_persist u8 WINDOW_WIDTH = 160;
@@ -100,13 +99,13 @@ void Emulator::run()
 
         renderer().clear(bg_clear);
 
-        ppu().clear(gb_clear);
-        ppu().render();
+        ppu().clear_debug_textures();
+        ppu().render_debug_textures();
 
         renderer().draw_texture(m_gb_background, Point { 20, 20 });
         renderer().draw_texture(ppu().tilemap(), Point { 324, 20 });
         renderer().draw_texture(ppu().tileset(), Point { 324, 286 });
-        renderer().draw_partial_texture(ppu().tilemap(), { ppu().scx(), ppu().scy(), WINDOW_WIDTH, WINDOW_HEIGHT }, { 85, 67, WINDOW_WIDTH, WINDOW_HEIGHT });
+        renderer().draw_texture(ppu().lcd_display(), Point { 85, 67 });
 
         //
         // Render Debug

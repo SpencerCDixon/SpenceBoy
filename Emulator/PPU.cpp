@@ -59,6 +59,7 @@ PPU::PPU(Emulator& emulator)
     , m_vram(emulator.mmu().vram())
     , m_bitmap({ GB_WIN_WIDTH, GB_WIN_HEIGHT }, GB_WIN_WIDTH * BITS_PER_PIXEL)
     , m_tileset_bitmap({ TILESET_WIN_WIDTH, TILESET_WIN_HEIGHT }, TILESET_WIN_WIDTH * BITS_PER_PIXEL)
+    , m_lcd_bitmap({ LCD_WIDTH, LCD_HEIGHT }, LCD_WIDTH * BITS_PER_PIXEL)
 {
 }
 
@@ -67,28 +68,13 @@ bool PPU::lcd_display_enabled()
     return emulator().cpu().in_boot_rom() || m_lcd_control & 0x80;
 }
 
-void PPU::clear(const Color& color)
+void PPU::clear_debug_textures()
 {
-    u32 argb_color = color.to_argb();
-    u8* row = (u8*)m_bitmap.data();
-    for (int y = 0; y < m_bitmap.height(); ++y) {
-        u32* pixel = (u32*)row;
+    local_persist Color gb_clear { 125, 130, 255, 255 };
+    u32 argb_color = gb_clear.to_argb();
 
-        for (int x = 0; x < m_bitmap.width(); ++x)
-            *pixel++ = argb_color;
-
-        row += m_bitmap.pitch();
-    }
-
-    row = (u8*)m_tileset_bitmap.data();
-    for (int y = 0; y < m_tileset_bitmap.height(); ++y) {
-        u32* pixel = (u32*)row;
-
-        for (int x = 0; x < m_tileset_bitmap.width(); ++x)
-            *pixel++ = argb_color;
-
-        row += m_tileset_bitmap.pitch();
-    }
+    m_bitmap.set_all_pixels_to(argb_color);
+    m_tileset_bitmap.set_all_pixels_to(argb_color);
 }
 
 // TODO:
@@ -99,25 +85,16 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
     ASSERT(x < 32);
     ASSERT(y < 32);
 
-    auto offset = bitmap.pitch() * (y * 8); // y-offset
-    offset += sizeof(u32) * 8 * x;          // x-offset
-
-    u8* start = (u8*)bitmap.data();
-    start += offset;
-
     for (size_t yy = 0; yy < 8; yy++) {
-        u32* pixel = (u32*)start;
         for (size_t xx = 0; xx < 8; xx++) {
-            *pixel++ = tile.pixel(xx, yy);
+            bitmap.set_pixel_to(xx + (x * 8), yy + (y * 8), tile.pixel(xx, yy));
         }
-
-        start += bitmap.pitch();
     }
 }
 
-void PPU::fill_line(size_t, const Tile8x8&, Bitmap&)
-{
-}
+// void PPU::fill_line(size_t, const Tile8x8&, Bitmap&)
+// {
+// }
 
 // NOTE: There is some weird logic here to handle cycle overflows because the CPU is driving the PPU forward
 // but the cycles executed might not always line up perfectly with the number of cycles for switching PPU modes.
@@ -132,7 +109,7 @@ void PPU::update_by(u8 cycles)
     switch (mode()) {
     case PPUMode::AccessingOAM: {
         if (m_cycles_until_mode_transition <= 0) {
-            // TODO: Really we should be using the pixel FIFO to determine this 43 cycle count. Depending on sprites being rendered
+            // FIXME: Really we should be using the pixel FIFO to determine this 43 cycle count. Depending on sprites being rendered
             // the drawing mode (AccessVRAM) will  change.
             m_cycles_until_mode_transition = 43 + m_cycles_until_mode_transition;
             set_mode(PPUMode::AccessingVRAM);
@@ -187,6 +164,38 @@ void PPU::draw_scanline()
 #if DEBUG_PPU
     dbg() << "draw_scanline() current line: " << m_current_scanline << " cycles to transition: " << m_cycles_until_mode_transition;
 #endif
+
+    // FIXME: Take scx and scy into consideration. Regressing that behavior for now
+
+    // * Create tiles
+    // * Get tiles that are located on the current scanline
+    // * Fill pixels for the line of each tile
+
+    // FIXME: This is heavy handed, I can just fetch the tiles I need instead of
+    // all of them each scanline
+    // Tile8x8 tileset[TOTAL_TILESET_TILES];
+    // for (size_t i = 0; i < TOTAL_TILESET_TILES; ++i) {
+    // size_t idx = i * 16; // 16 bytes (8 x 8 x 2 bpp)
+    // auto* pointer = &vram()[idx];
+    // tileset[i].populate_from_palette(pointer, &m_palette[0]);
+    // }
+
+    // size_t map_start = bg_tilemap_display_select() - 0x8000;
+    // for (size_t i = 0; i < 5; ++i) {
+    // }
+
+    // Render example square for testing
+    auto color = Color { 128, 128, 128, 255 }.to_argb();
+    auto y = 1;
+    auto x = 2;
+
+    for (size_t yy = 0; yy < 8; yy++) {
+        for (size_t xx = 0; xx < 8; xx++) {
+            m_lcd_bitmap.set_pixel_to(xx + (x * 8), yy + (y * 8), color);
+        }
+    }
+
+    m_lcd_display.set_data(m_lcd_bitmap);
 }
 
 void PPU::set_mode(const PPUMode& mode)
@@ -204,6 +213,35 @@ void PPU::render()
         return;
     }
 
+    Tile8x8 tileset[TOTAL_TILESET_TILES];
+    for (size_t i = 0; i < TOTAL_TILESET_TILES; ++i) {
+        size_t idx = i * 16; // 16 bytes (8 x 8 x 2 bpp)
+        auto* pointer = &vram()[idx];
+        tileset[i].populate_from_palette(pointer, &m_palette[0]);
+    }
+
+    // A special chunk of memory starting at 0x9800 or 0x9c00 is used to map which tile index
+    // should be used to render. Each byte represents the index into the tile map.
+    size_t map_start = bg_tilemap_display_select() - 0x8000;
+    for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
+        size_t tile_idx = vram()[map_start + i];
+        size_t x = i % 32;
+        size_t y = i / 32;
+        fill_square(x, y, tileset[index_into_tileset(tile_idx)], m_bitmap);
+    }
+
+    for (size_t i = 0; i < TOTAL_TILESET_TILES; ++i) {
+        size_t x = i % 32;
+        size_t y = i / 32;
+        fill_square(x, y, tileset[i], m_tileset_bitmap);
+    }
+
+    m_tilemap.set_data(m_bitmap);
+    m_tileset.set_data(m_tileset_bitmap);
+}
+
+void PPU::render_debug_textures()
+{
     Tile8x8 tileset[TOTAL_TILESET_TILES];
     for (size_t i = 0; i < TOTAL_TILESET_TILES; ++i) {
         size_t idx = i * 16; // 16 bytes (8 x 8 x 2 bpp)

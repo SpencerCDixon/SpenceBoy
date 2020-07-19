@@ -9,8 +9,7 @@
 
 #include "Emulator/GUI/Rect.h"
 
-// TODO: pixel formats?
-
+// TODO: more robust pixel formats?
 constexpr u16 BITS_PER_PIXEL = sizeof(u32);
 
 class Bitmap {
@@ -35,6 +34,29 @@ public:
     int width() { return m_width; }
     int pitch() { return m_pitch; }
     int pitch() const { return m_pitch; }
+
+    void set_pixel_to(size_t x, size_t y, u32 color)
+    {
+        ASSERT(x < (size_t)width());
+        ASSERT(y < (size_t)height());
+        auto offset = (BITS_PER_PIXEL * x) + (pitch() * y);
+        u8* ptr = (u8*)m_data;
+        ptr += offset;
+        *((u32*)ptr) = color;
+    }
+
+    void set_all_pixels_to(u32 color)
+    {
+        u8* row = (u8*)data();
+        for (int y = 0; y < height(); ++y) {
+            u32* pixel = (u32*)row;
+
+            for (int x = 0; x < width(); ++x)
+                *pixel++ = color;
+
+            row += pitch();
+        }
+    }
 
 private:
     int m_height;
