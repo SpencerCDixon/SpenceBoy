@@ -108,7 +108,8 @@ private:
     // Scanline rendering
     PPUMode m_mode { PPUMode::AccessingOAM };
     u8 m_current_scanline { 0 };
-    f32 m_cycles_until_mode_transition { 20 };
+    s32 m_scanline_cycle_count { 0 };
+    s32 m_cycles_until_mode_transition { 20 };
 
     Bitmap m_bitmap;
     Bitmap m_tileset_bitmap;

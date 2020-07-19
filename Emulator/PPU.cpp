@@ -91,7 +91,6 @@ void PPU::clear(const Color& color)
 
 // TODO:
 // * layered rendering (background, sprites, window)
-// * draw_scanline() (helps with V/HBlank)
 
 void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
 {
@@ -104,10 +103,10 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
     u8* start = (u8*)bitmap.data();
     start += offset;
 
-    for (size_t y = 0; y < 8; y++) {
+    for (size_t yy = 0; yy < 8; yy++) {
         u32* pixel = (u32*)start;
-        for (size_t x = 0; x < 8; x++) {
-            *pixel++ = tile.pixel(x, y);
+        for (size_t xx = 0; xx < 8; xx++) {
+            *pixel++ = tile.pixel(xx, yy);
         }
 
         start += bitmap.pitch();
@@ -117,14 +116,15 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
 // TODO: Think of better name for this. update_ppu?
 void PPU::update_by(u8 cycles)
 {
-    m_cycles_until_mode_transition -= (f32)cycles;
+    m_cycles_until_mode_transition -= (s32)cycles;
+    m_scanline_cycle_count += cycles;
 
     switch (mode()) {
     case PPUMode::AccessingOAM: {
         if (m_cycles_until_mode_transition <= 0) {
-            // We need to carry the remainder to VRAM access because OAM access should always be
-            // exactly 80
-            m_cycles_until_mode_transition = 43;
+            // TODO: Really we should be using the pixel FIFO to determine this 43 cycle count. Depending on sprites being rendered
+            // the drawing mode (AccessVRAM) will  change.
+            m_cycles_until_mode_transition = 43 + m_cycles_until_mode_transition;
             set_mode(PPUMode::AccessingVRAM);
         }
         break;
@@ -133,7 +133,7 @@ void PPU::update_by(u8 cycles)
         if (m_cycles_until_mode_transition <= 0) {
             draw_scanline();
             m_current_scanline++;
-            m_cycles_until_mode_transition = 22 + m_cycles_until_mode_transition;
+            m_cycles_until_mode_transition = 114 - m_scanline_cycle_count;
             set_mode(PPUMode::HorizontalBlanking);
         }
         break;
@@ -142,23 +142,21 @@ void PPU::update_by(u8 cycles)
         if (m_cycles_until_mode_transition <= 0 && m_current_scanline < 154) {
             draw_scanline();
             m_current_scanline++;
-            m_cycles_until_mode_transition = 114;
+            m_cycles_until_mode_transition = 114 + m_cycles_until_mode_transition;
+            m_scanline_cycle_count = 0;
         }
-//        else if (m_cycles_until_mode_transition) {
-//            dbg() << "RESET FRAME";
-//            m_cycles_until_mode_transition = 20;
-//            set_mode(PPUMode::AccessingOAM);
-//        }
         break;
     }
     case PPUMode::HorizontalBlanking: {
         if (m_cycles_until_mode_transition <= 0) {
             // Enter VBlank for 10 lines
             if (m_current_scanline == 143) {
-                m_cycles_until_mode_transition = 114;
+                m_cycles_until_mode_transition = 114 + m_cycles_until_mode_transition;
+                m_scanline_cycle_count = 0;
                 set_mode(PPUMode::VerticalBlanking);
             } else {
-                m_cycles_until_mode_transition = 20;
+                m_scanline_cycle_count = { 0 };
+                m_cycles_until_mode_transition = 20 + m_cycles_until_mode_transition;
                 set_mode(PPUMode::AccessingOAM);
             }
         }
@@ -169,7 +167,6 @@ void PPU::update_by(u8 cycles)
 
 void PPU::draw_scanline()
 {
-    // TODO:
     dbg() << "draw_scanline() current line: " << m_current_scanline << " cycles to transition: " << m_cycles_until_mode_transition;
 }
 

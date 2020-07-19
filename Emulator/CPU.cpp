@@ -73,8 +73,8 @@ void CPU::main_loop()
         }
     }
 
-    dbg() << "Finished one frame!";
-    ::exit(1);
+//    dbg() << "Finished one frame!";
+//    ::exit(1);
 }
 
 void CPU::main_test_loop()
