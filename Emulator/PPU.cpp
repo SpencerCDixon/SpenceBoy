@@ -155,8 +155,7 @@ void PPU::update_by(u8 cycles)
             m_cycles_until_mode_transition = 114 + m_cycles_until_mode_transition;
             m_scanline_cycle_count = 0;
         } else if (m_current_scanline == 153) {
-            // RESET! Frame over
-            dbg() << "PPU FRAME OVER!";
+            // Reset, frame is done being rendered!
             draw_scanline();
             m_current_scanline = { 0 };
             m_scanline_cycle_count = { 0 };
@@ -197,23 +196,6 @@ void PPU::set_mode(const PPUMode& mode)
 #endif
     m_mode = mode;
 }
-
-// render() TODO:
-//
-// check that lcd is enabled
-//
-// Mode == AccessOAM
-//  -> switch to AccessVRAM
-// Mode == AccessVRAM
-//  -> draw_scanline()
-//  -> switch mode to HBlank
-// Mode == HBlank
-//  -> inc current line
-//  -> if >144 switch to AccessOAM
-// Mode == VBlank
-//  -> check if we're past 153, reset current line
-//  -> switch mode back to AOAM
-//
 
 void PPU::render()
 {

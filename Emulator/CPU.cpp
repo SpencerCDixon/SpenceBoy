@@ -52,11 +52,8 @@ void CPU::main_loop()
         if (in_breakpoint() && !m_debugger)
             attach_debugger(&emulator().debugger());
 
-        // Andreas: This feels a bit clunky. Is there a better way to do this?
-        // It also seems to take two 'continue' commands to properly leave the loop :-(
-        if (m_debugger) {
+        if (m_debugger)
             while (m_debugger->loop() == DebuggerResult::Continue) { }
-        }
 
         int prev_cycle_count = m_cycles_executed;
         execute_one_instruction();
@@ -74,9 +71,6 @@ void CPU::main_loop()
             break;
         }
     }
-
-//    dbg() << "Finished one frame!";
-//    ::exit(1);
 }
 
 void CPU::main_test_loop()
@@ -1144,4 +1138,3 @@ bool CPU::should_skip_boot_rom()
 {
     return emulator().settings().in_test_mode;
 }
-
