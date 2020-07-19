@@ -4,6 +4,31 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 7/19/2020**
+
+### What did I get done today?
+
+* Fix the CPU timing in order to sync up with PPU progress
+
+--- 
+
+**Date: 7/18/2020**
+
+### What did I get done today?
+
+* PPU Research
+* Fixed pandoc scripts for Linux
+
+---
+ 
+**Date: 7/16/2020**
+
+### What did I get done today?
+
+* Add human readable flags to make debugging easier. Update tests to use the new readable flags.
+
+---
+ 
 **Date: 7/15/2020**
 
 ### What did I get done today?

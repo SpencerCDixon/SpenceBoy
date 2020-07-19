@@ -65,7 +65,7 @@ public:
         m_tileset = Texture::from_size({ TILESET_WIN_WIDTH, TILESET_WIN_HEIGHT }, TextureUsage::Streaming);
     }
 
-    void progress_dot_counter(u8 cycles);
+    void update_by(u8 cycles);
 
     // IODevice
     u8 in(u16 address) override;
@@ -108,8 +108,7 @@ private:
     // Scanline rendering
     PPUMode m_mode { PPUMode::AccessingOAM };
     u8 m_current_scanline { 0 };
-    f32 m_dot_count { 0 };
-    f32 m_dots_until_transition { 80 };
+    f32 m_cycles_until_mode_transition { 20 };
 
     Bitmap m_bitmap;
     Bitmap m_tileset_bitmap;

@@ -114,64 +114,51 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
     }
 }
 
-void PPU::progress_dot_counter(u8 cycles)
+// TODO: Think of better name for this. update_ppu?
+void PPU::update_by(u8 cycles)
 {
-    static constexpr u32 CYCLES_PER_FRAME = 66000;
-    static constexpr u32 DOTS_PER_FRAME = 70224;
-    static constexpr f32 DOTS_PER_CYCLE = (f32)DOTS_PER_FRAME / (f32)CYCLES_PER_FRAME;
-
-    f32 dots = DOTS_PER_CYCLE * (f32)cycles;
-    m_dot_count += dots;
-    m_dots_until_transition -= dots;
-
-    dbg() << "dot count: " << m_dot_count << " until transition: " << m_dots_until_transition;
-
-    if (m_dot_count >= DOTS_PER_FRAME) {
-        m_dot_count = 0;
-        dbg() << "RENDERED FRAME OVER";
-        ::exit(1);
-        return;
-    }
-
-    // TODO: I need to carry the overflow in an intelligent way. HBlank and AccessVRAM can be variable but the others
-    // need to maintain an exact dot count.
+    m_cycles_until_mode_transition -= (f32)cycles;
 
     switch (mode()) {
     case PPUMode::AccessingOAM: {
-        if (m_dots_until_transition <= 0) {
-            m_dots_until_transition = 168;
+        if (m_cycles_until_mode_transition <= 0) {
+            // We need to carry the remainder to VRAM access because OAM access should always be
+            // exactly 80
+            m_cycles_until_mode_transition = 43;
             set_mode(PPUMode::AccessingVRAM);
         }
         break;
     }
     case PPUMode::AccessingVRAM: {
-        if (m_dots_until_transition <= 0) {
+        if (m_cycles_until_mode_transition <= 0) {
             draw_scanline();
             m_current_scanline++;
-            m_dots_until_transition = 208;
+            m_cycles_until_mode_transition = 22 + m_cycles_until_mode_transition;
             set_mode(PPUMode::HorizontalBlanking);
         }
         break;
     }
     case PPUMode::VerticalBlanking: {
-        if (m_dots_until_transition <= 0 && m_current_scanline < 153) {
+        if (m_cycles_until_mode_transition <= 0 && m_current_scanline < 154) {
             draw_scanline();
             m_current_scanline++;
-            m_dots_until_transition = 456;
-        } else if (m_dots_until_transition) {
-            dbg() << "RESET FRAME";
-            m_dots_until_transition = 80;
-            set_mode(PPUMode::AccessingOAM);
+            m_cycles_until_mode_transition = 114;
         }
+//        else if (m_cycles_until_mode_transition) {
+//            dbg() << "RESET FRAME";
+//            m_cycles_until_mode_transition = 20;
+//            set_mode(PPUMode::AccessingOAM);
+//        }
         break;
     }
     case PPUMode::HorizontalBlanking: {
-        if (m_dots_until_transition <= 0) {
+        if (m_cycles_until_mode_transition <= 0) {
+            // Enter VBlank for 10 lines
             if (m_current_scanline == 143) {
-                m_dots_until_transition = 456;
+                m_cycles_until_mode_transition = 114;
                 set_mode(PPUMode::VerticalBlanking);
             } else {
-                m_dots_until_transition = 80;
+                m_cycles_until_mode_transition = 20;
                 set_mode(PPUMode::AccessingOAM);
             }
         }
@@ -183,7 +170,7 @@ void PPU::progress_dot_counter(u8 cycles)
 void PPU::draw_scanline()
 {
     // TODO:
-    dbg() << "draw_scanline() current line: " << m_current_scanline;
+    dbg() << "draw_scanline() current line: " << m_current_scanline << " cycles to transition: " << m_cycles_until_mode_transition;
 }
 
 void PPU::set_mode(const PPUMode& mode)
@@ -346,16 +333,16 @@ const LogStream& operator<<(const LogStream& stream, const PPUMode& mode)
 {
     switch (mode) {
     case PPUMode::AccessingOAM:
-        stream << "AccessingOAM";
+        stream << YELLOW "AccessingOAM" RESET;
         break;
     case PPUMode::AccessingVRAM:
-        stream << "AccessingVRAM";
+        stream << GREEN "AccessingVRAM" RESET;
         break;
     case PPUMode::VerticalBlanking:
-        stream << "VerticalBlanking";
+        stream << BLUE "VerticalBlanking" RESET;
         break;
     case PPUMode::HorizontalBlanking:
-        stream << "HorizontalBlanking";
+        stream << RED "HorizontalBlanking" RESET;
         break;
     }
     return stream;

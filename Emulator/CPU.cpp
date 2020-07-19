@@ -13,10 +13,8 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-// FIXME: Look into correct clock speed info. For now, going to hard code 4 Megahertz
-// FIXME: Of course I need to device by the frame rate to calculate how many cycles to execute before
-// rendering. 4,000,000 / 60 = 66k cycles worth of work a frame.
-static constexpr u32 CYCLES_PER_SECOND = 66000;
+// 4.194304 MHz -> 4,194,304 / 60
+static constexpr u32 CYCLES_PER_SECOND = 69905;
 
 // Flags
 // clang-format off
@@ -60,8 +58,12 @@ void CPU::main_loop()
 
         int prev_cycle_count = m_cycles_executed;
         execute_one_instruction();
-        emulator().ppu().progress_dot_counter(m_cycles_executed - prev_cycle_count);
 
+        int cycles = m_cycles_executed - prev_cycle_count;
+
+        // TODO: Update Timers
+        emulator().ppu().update_by(cycles);
+        // TODO: Do Interrupts
         // if (has_interrupt_request)
         // handle_interrupt
 
@@ -70,6 +72,9 @@ void CPU::main_loop()
             break;
         }
     }
+
+    dbg() << "Finished one frame!";
+    ::exit(1);
 }
 
 void CPU::main_test_loop()
