@@ -79,6 +79,7 @@ public:
     void clear(const Color& color);
     void render();
     void fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap);
+    void fill_line(size_t y, const Tile8x8&tile, Bitmap& bitmap);
 
 private:
     Emulator& emulator() { return m_emulator; }

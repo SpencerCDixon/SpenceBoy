@@ -13,8 +13,10 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-// 4.194304 MHz -> 4,194,304 / 60
-static constexpr u32 CYCLES_PER_SECOND = 69905;
+// 4.194304 MHz -> 4,194,304 / 60 = 69905
+//static constexpr u32 CYCLES_PER_SECOND = 69905;
+// 70224 clocks = 17556 cycles = 59.7 fps
+static constexpr u32 CYCLES_PER_SECOND = 17556;
 
 // Flags
 // clang-format off

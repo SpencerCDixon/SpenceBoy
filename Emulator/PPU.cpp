@@ -27,6 +27,8 @@ constexpr static u16 R_SCY = 0xff42;
 constexpr static u16 R_SCX = 0xff43;
 constexpr static u16 R_BGP = 0xff47;
 
+#define DEBUG_PPU 0
+
 Tile8x8::Tile8x8()
 {
     memset(m_pixels, 0, sizeof(m_pixels));
@@ -113,9 +115,17 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
     }
 }
 
-// TODO: Think of better name for this. update_ppu?
+void PPU::fill_line(size_t, const Tile8x8&, Bitmap&)
+{
+}
+
+// NOTE: There is some weird logic here to handle cycle overflows because the CPU is driving the PPU forward
+// but the cycles executed might not always line up perfectly with the number of cycles for switching PPU modes.
+// We need to carry those overflowed cycles into the next mode. Eventually, we'll want to emulate the pixel FIFO
+// which will help in determining the amount of cycles we need to wait between Mode 3 (drawing) and Mode 0 (HBlank).
 void PPU::update_by(u8 cycles)
 {
+    // TODO: switch_mode() -> set any interrupts
     m_cycles_until_mode_transition -= (s32)cycles;
     m_scanline_cycle_count += cycles;
 
@@ -139,11 +149,19 @@ void PPU::update_by(u8 cycles)
         break;
     }
     case PPUMode::VerticalBlanking: {
-        if (m_cycles_until_mode_transition <= 0 && m_current_scanline < 154) {
+        if (m_cycles_until_mode_transition <= 0 && m_current_scanline < 153) {
             draw_scanline();
             m_current_scanline++;
             m_cycles_until_mode_transition = 114 + m_cycles_until_mode_transition;
             m_scanline_cycle_count = 0;
+        } else if (m_current_scanline == 153) {
+            // RESET! Frame over
+            dbg() << "PPU FRAME OVER!";
+            draw_scanline();
+            m_current_scanline = { 0 };
+            m_scanline_cycle_count = { 0 };
+            m_cycles_until_mode_transition = { 20 };
+            set_mode(PPUMode::AccessingOAM);
         }
         break;
     }
@@ -167,12 +185,16 @@ void PPU::update_by(u8 cycles)
 
 void PPU::draw_scanline()
 {
+#if DEBUG_PPU
     dbg() << "draw_scanline() current line: " << m_current_scanline << " cycles to transition: " << m_cycles_until_mode_transition;
+#endif
 }
 
 void PPU::set_mode(const PPUMode& mode)
 {
+#if DEBUG_PPU
     dbg() << "setting mode: " << mode;
+#endif
     m_mode = mode;
 }
 
@@ -192,8 +214,6 @@ void PPU::set_mode(const PPUMode& mode)
 //  -> check if we're past 153, reset current line
 //  -> switch mode back to AOAM
 //
-// switch_mode()
-//  -> this needs to set any appropriate interrupts when switching modes
 
 void PPU::render()
 {
