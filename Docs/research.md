@@ -221,3 +221,21 @@ push bc
 
 // SP = RAM END - 2;
 ```
+
+
+---
+
+## PPU
+
+* [Link to youtube video explaining the process](https://youtu.be/HyzD8pNlpwI?t=2424)
+* [Pixel being drawn](https://youtu.be/HyzD8pNlpwI?t=2694)
+* [OAM Sprite Visibility](https://youtu.be/HyzD8pNlpwI?t=2781)
+
+1. OAM search will always take a constant amount of time (20 clocks)
+2. Pixel transfer can take a variable amount of time depending on how many
+   sprites are on the screen and any `scx/y` offsets. This can be seen in the
+   picture below:
+
+![HBlank Timin](./assets/hblank-timing.png)
+
+3. The remaining clock cycles get devoted to HBlank

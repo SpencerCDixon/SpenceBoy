@@ -22,6 +22,10 @@ constexpr size_t IO_SIZE   = 128;
 
 class Emulator;
 
+// TODO: Accessing VRAM should really be going through the PPU. The PPU
+// has a switch to determine if OAM/VRAM are currently accessible. Reads when
+// not allowed will return back 0xff
+
 class MMU {
 public:
     MMU(Emulator& emulator)

@@ -93,6 +93,8 @@ void Emulator::run()
         //
         local_persist Color bg_clear { 255, 255, 255, 255 };
         local_persist Color gb_clear { 125, 130, 255, 255 };
+
+        // TODO: These really need to be moved into the PPU for rendering one line at a time
         local_persist u8 WINDOW_WIDTH = 160;
         local_persist u8 WINDOW_HEIGHT = 144;
 
