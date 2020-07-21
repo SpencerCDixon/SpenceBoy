@@ -173,27 +173,34 @@ void PPU::draw_scanline()
 
     // FIXME: This is heavy handed, I can just fetch the tiles I need instead of
     // all of them each scanline
-    // Tile8x8 tileset[TOTAL_TILESET_TILES];
-    // for (size_t i = 0; i < TOTAL_TILESET_TILES; ++i) {
-    // size_t idx = i * 16; // 16 bytes (8 x 8 x 2 bpp)
-    // auto* pointer = &vram()[idx];
-    // tileset[i].populate_from_palette(pointer, &m_palette[0]);
-    // }
+    Tile8x8 tileset[TOTAL_TILESET_TILES];
+    for (size_t i = 0; i < TOTAL_TILESET_TILES; ++i) {
+        size_t idx = i * 16; // 16 bytes (8 x 8 x 2 bpp)
+        auto* pointer = &vram()[idx];
+        tileset[i].populate_from_palette(pointer, &m_palette[0]);
+    }
 
-    // size_t map_start = bg_tilemap_display_select() - 0x8000;
-    // for (size_t i = 0; i < 5; ++i) {
-    // }
+    size_t map_start = bg_tilemap_display_select() - 0x8000;
+
+    for (size_t x = 0; x < LCD_WIDTH; ++x) {
+        auto x_idx = x % 8;
+        auto y_idx = m_current_scanline % 8;
+        size_t tile_idx = vram()[map_start + x];
+        // dbg() << "x=" << x << " x_idx=" << (int)x_idx << " y_idx=" << (int)y_idx << " tile_idx=" << (int)tile_idx;
+
+        auto tile = tileset[index_into_tileset(tile_idx)];
+        // dbg() << "scanline=" << m_current_scanline;
+
+        // We shouldn't be drawing when we're in VBlank
+        if (mode() != PPUMode::VerticalBlanking)
+            m_lcd_bitmap.set_pixel_to(x, m_current_scanline, tile.pixel(x_idx, y_idx));
+    }
 
     // Render example square for testing
-    auto color = Color { 128, 128, 128, 255 }.to_argb();
-    auto y = 1;
-    auto x = 2;
-
-    for (size_t yy = 0; yy < 8; yy++) {
-        for (size_t xx = 0; xx < 8; xx++) {
-            m_lcd_bitmap.set_pixel_to(xx + (x * 8), yy + (y * 8), color);
-        }
-    }
+    // for (size_t x = 0; x < LCD_WIDTH; ++x) {
+    // if (mode() != PPUMode::VerticalBlanking)
+    // m_lcd_bitmap.set_pixel_to(x, m_current_scanline, m_current_scanline % 2 == 0 ? 0xffff0000 : 0xffffffff);
+    // }
 
     m_lcd_display.set_data(m_lcd_bitmap);
 }

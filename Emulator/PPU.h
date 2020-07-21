@@ -88,7 +88,7 @@ public:
     void clear_debug_textures();
     void render_debug_textures();
     void fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap);
-    void fill_line(size_t y, const Tile8x8& tile, Bitmap& bitmap);
+    // void fill_line(size_t y, const Tile8x8& tile, Bitmap& bitmap);
 
 private:
     Emulator& emulator() { return m_emulator; }
