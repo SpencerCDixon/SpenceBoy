@@ -84,11 +84,9 @@ public:
     u8 scx() { return m_bg_scroll_x; }
     u8 scy() { return m_bg_scroll_y; }
 
-    void render();
     void clear_debug_textures();
     void render_debug_textures();
     void fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap);
-    // void fill_line(size_t y, const Tile8x8& tile, Bitmap& bitmap);
 
 private:
     Emulator& emulator() { return m_emulator; }
@@ -99,6 +97,8 @@ private:
 
     // Drawing
     void draw_scanline();
+    size_t index_into_tileset(size_t);
+    Tile8x8 tile_at_xy(size_t x, size_t y);
 
     // LCD Controls
     bool lcd_display_enabled();
@@ -108,8 +108,6 @@ private:
         return m_lcd_control & 0x08 ? 0x9c00 : 0x9800;
     }
     u16 window_tilemap_display_select() { return m_lcd_control & 0x40 ? 0x9c00 : 0x9800; }
-
-    size_t index_into_tileset(size_t);
 
 private:
     Emulator& m_emulator;

@@ -27,7 +27,7 @@ constexpr static u16 R_SCY = 0xff42;
 constexpr static u16 R_SCX = 0xff43;
 constexpr static u16 R_BGP = 0xff47;
 
-#define DEBUG_PPU 0
+// #define DEBUG_PPU
 
 Tile8x8::Tile8x8()
 {
@@ -92,10 +92,6 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
     }
 }
 
-// void PPU::fill_line(size_t, const Tile8x8&, Bitmap&)
-// {
-// }
-
 // NOTE: There is some weird logic here to handle cycle overflows because the CPU is driving the PPU forward
 // but the cycles executed might not always line up perfectly with the number of cycles for switching PPU modes.
 // We need to carry those overflowed cycles into the next mode. Eventually, we'll want to emulate the pixel FIFO
@@ -148,6 +144,7 @@ void PPU::update_by(u8 cycles)
                 m_cycles_until_mode_transition = 114 + m_cycles_until_mode_transition;
                 m_scanline_cycle_count = 0;
                 set_mode(PPUMode::VerticalBlanking);
+                m_lcd_display.set_data(m_lcd_bitmap);
             } else {
                 m_scanline_cycle_count = { 0 };
                 m_cycles_until_mode_transition = 20 + m_cycles_until_mode_transition;
@@ -165,44 +162,52 @@ void PPU::draw_scanline()
     dbg() << "draw_scanline() current line: " << m_current_scanline << " cycles to transition: " << m_cycles_until_mode_transition;
 #endif
 
-    // FIXME: Take scx and scy into consideration. Regressing that behavior for now
-
-    // * Create tiles
-    // * Get tiles that are located on the current scanline
-    // * Fill pixels for the line of each tile
-
-    // FIXME: This is heavy handed, I can just fetch the tiles I need instead of
-    // all of them each scanline
-    Tile8x8 tileset[TOTAL_TILESET_TILES];
-    for (size_t i = 0; i < TOTAL_TILESET_TILES; ++i) {
-        size_t idx = i * 16; // 16 bytes (8 x 8 x 2 bpp)
-        auto* pointer = &vram()[idx];
-        tileset[i].populate_from_palette(pointer, &m_palette[0]);
+    if (!lcd_display_enabled()) {
+        dbg() << "LCD/PPU are disabled, returning early";
+        return;
     }
-
-    size_t map_start = bg_tilemap_display_select() - 0x8000;
 
     for (size_t x = 0; x < LCD_WIDTH; ++x) {
         auto x_idx = x % 8;
         auto y_idx = m_current_scanline % 8;
-        size_t tile_idx = vram()[map_start + x];
-        // dbg() << "x=" << x << " x_idx=" << (int)x_idx << " y_idx=" << (int)y_idx << " tile_idx=" << (int)tile_idx;
-
-        auto tile = tileset[index_into_tileset(tile_idx)];
-        // dbg() << "scanline=" << m_current_scanline;
+        auto tile = tile_at_xy(x + scx(), (size_t)m_current_scanline + scy());
 
         // We shouldn't be drawing when we're in VBlank
         if (mode() != PPUMode::VerticalBlanking)
             m_lcd_bitmap.set_pixel_to(x, m_current_scanline, tile.pixel(x_idx, y_idx));
     }
+}
 
-    // Render example square for testing
-    // for (size_t x = 0; x < LCD_WIDTH; ++x) {
-    // if (mode() != PPUMode::VerticalBlanking)
-    // m_lcd_bitmap.set_pixel_to(x, m_current_scanline, m_current_scanline % 2 == 0 ? 0xffff0000 : 0xffffffff);
-    // }
+Tile8x8 PPU::tile_at_xy(size_t x, size_t y)
+{
+    Tile8x8 tile;
 
-    m_lcd_display.set_data(m_lcd_bitmap);
+    // First we need to convert an (x,y) point into an index into our 1-D grid
+    // of tiles. Tiles are 8x8 pixels and the grid is 32x32.
+    size_t grid_x = x / 8;
+    size_t grid_y = y / 8;
+    size_t grid_idx = 32 * grid_y + grid_x;
+
+    // A special chunk of memory starting at 0x9800 or 0x9c00 is used to map which tile _index_
+    // should be used to render. Each byte represents the index into the tile map.
+    size_t map_start = bg_tilemap_display_select() - 0x8000;
+    size_t tile_idx = vram()[map_start + grid_idx];
+
+    // We need to normalize that tile index into the tile set (our 384 available
+    // tiles) based on some LCD bits
+    tile_idx = index_into_tileset(tile_idx);
+
+    // Finally, we can fetch the tile bytes for the tile we would be rendering
+    // at this (x,y) position. Each tile is 8x8 and each pixel is represented by
+    // 2 bits.
+    size_t vram_idx = tile_idx * 16; // 16 bytes (8x8x2bpp)
+    auto* tile_ptr = &vram()[vram_idx];
+
+    // To render the correct colors we need to use the tile data with the
+    // currently selected palette. FIXME: Dynamic palettes.
+    tile.populate_from_palette(tile_ptr, &m_palette[0]);
+
+    return tile;
 }
 
 void PPU::set_mode(const PPUMode& mode)
@@ -211,40 +216,6 @@ void PPU::set_mode(const PPUMode& mode)
     dbg() << "setting mode: " << mode;
 #endif
     m_mode = mode;
-}
-
-void PPU::render()
-{
-    if (!lcd_display_enabled()) {
-        dbg() << "LCD/PPU are disabled, returning early";
-        return;
-    }
-
-    Tile8x8 tileset[TOTAL_TILESET_TILES];
-    for (size_t i = 0; i < TOTAL_TILESET_TILES; ++i) {
-        size_t idx = i * 16; // 16 bytes (8 x 8 x 2 bpp)
-        auto* pointer = &vram()[idx];
-        tileset[i].populate_from_palette(pointer, &m_palette[0]);
-    }
-
-    // A special chunk of memory starting at 0x9800 or 0x9c00 is used to map which tile index
-    // should be used to render. Each byte represents the index into the tile map.
-    size_t map_start = bg_tilemap_display_select() - 0x8000;
-    for (size_t i = 0; i < TOTAL_BG_TILES; ++i) {
-        size_t tile_idx = vram()[map_start + i];
-        size_t x = i % 32;
-        size_t y = i / 32;
-        fill_square(x, y, tileset[index_into_tileset(tile_idx)], m_bitmap);
-    }
-
-    for (size_t i = 0; i < TOTAL_TILESET_TILES; ++i) {
-        size_t x = i % 32;
-        size_t y = i / 32;
-        fill_square(x, y, tileset[i], m_tileset_bitmap);
-    }
-
-    m_tilemap.set_data(m_bitmap);
-    m_tileset.set_data(m_tileset_bitmap);
 }
 
 void PPU::render_debug_textures()
