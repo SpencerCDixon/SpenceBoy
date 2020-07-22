@@ -4,6 +4,23 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 7/22/2020**
+
+### What did I get done today?
+
+* draw_scanline() rendering properly! 
+
+---
+ 
+**Date: 7/21/2020**
+
+### What did I get done today?
+
+* Work on the math to get draw_scanline() to work properly
+* Fix perf regression from new drawing code that was decreasing frame rate by half
+
+---
+ 
 **Date: 7/19/2020**
 
 ### What did I get done today?
