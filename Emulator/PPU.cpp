@@ -133,6 +133,7 @@ void PPU::update_by(u8 cycles)
             m_current_scanline = { 0 };
             m_scanline_cycle_count = { 0 };
             m_cycles_until_mode_transition = { 20 };
+            emulator().cpu().set_interrupt_flag(RESET_INTERRUPT);
             set_mode(PPUMode::AccessingOAM);
         }
         break;
@@ -144,6 +145,7 @@ void PPU::update_by(u8 cycles)
                 m_cycles_until_mode_transition = 114 + m_cycles_until_mode_transition;
                 m_scanline_cycle_count = 0;
                 set_mode(PPUMode::VerticalBlanking);
+                emulator().cpu().set_interrupt_flag(VBLANK_INTERRUPT);
                 m_lcd_display.set_data(m_lcd_bitmap);
             } else {
                 m_scanline_cycle_count = { 0 };

@@ -20,6 +20,9 @@
 class Emulator;
 class Debugger;
 
+static constexpr u8 RESET_INTERRUPT = 0x0;
+static constexpr u8 VBLANK_INTERRUPT = 0x1;
+
 struct Registers {
     u8 a { 0 };
     u8 f { 0 };

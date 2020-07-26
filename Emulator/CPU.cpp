@@ -669,7 +669,7 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
     case PrefixOpCode::BIT_0_HL_ADDR: {
         u8 value = read(get_hl());
         check_bit(0, &value);
-        dbg() << "zero flag: " << get_zero_flag();
+//        dbg() << "zero flag: " << get_zero_flag();
         write(get_hl(), value);
         break;
     }
@@ -753,12 +753,11 @@ void CPU::write(u16 address, u8 data)
 
 u8 CPU::in(u16 address)
 {
-    dbg() << "CPU::in(" << to_hex(address) << ") PC: " << m_registers.program_counter;
+//    dbg() << "CPU::in(" << to_hex(address) << ") PC: " << m_registers.program_counter;
 
-    // HAAAACK: This is temporary so I can continue getting the boot rom loading. In the correct implementation
-    // we should be setting bit 0 of ff0f when the LCD controller enters into the V-Blank period.
-    if (m_registers.program_counter == 191) {
-        return 1;
+    if (address == 0xff0f) {
+        // READ the interrupt flag
+        return m_interrupt_flag;
     }
 
     return 0;
@@ -766,12 +765,17 @@ u8 CPU::in(u16 address)
 
 void CPU::out(u16 address, u8 value)
 {
-    dbg() << "CPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
+//    dbg() << "CPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
 
     // End of boot rom sequence
     if (address == 0xff50 && value == 1) {
         m_in_boot_rom = false;
         m_registers.program_counter = 0x100;
+        ::exit(1);
+    }
+
+    if (address == 0xff0f) {
+        m_interrupt_flag = value;
     }
 }
 

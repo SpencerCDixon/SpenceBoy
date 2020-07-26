@@ -4,6 +4,14 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 7/25/2020**
+
+### What did I get done today?
+
+* Look into adding VBlank interrupt support in order to get the boot ROM timing working properly.
+
+---
+ 
 **Date: 7/22/2020**
 
 ### What did I get done today?
