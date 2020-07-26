@@ -9,6 +9,7 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 ### What did I get done today?
 
 * Look into adding VBlank interrupt support in order to get the boot ROM timing working properly.
+* Add ability to render debug frame when inside the debugger
 
 ---
  

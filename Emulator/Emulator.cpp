@@ -128,3 +128,34 @@ void Emulator::run()
         frame_timer.wait_until_elapsed_ms(16.666);
     }
 }
+
+void Emulator::render_debug_frame()
+{
+    local_persist Color bg_clear { 255, 255, 255, 255 };
+
+    // TODO: These really need to be moved into the PPU for rendering one line at a time
+    local_persist u8 WINDOW_WIDTH = 160;
+    local_persist u8 WINDOW_HEIGHT = 144;
+
+    renderer().clear(bg_clear);
+
+    ppu().clear_debug_textures();
+    ppu().render_debug_textures();
+
+    renderer().draw_texture(m_gb_background, Point { 20, 20 });
+    renderer().draw_texture(ppu().tilemap(), Point { 324, 20 });
+    renderer().draw_texture(ppu().tileset(), Point { 324, 286 });
+    renderer().draw_texture(ppu().lcd_display(), Point { 85, 67 });
+
+    // BG Tilemap Debug Wireframe:
+    auto window_frame_color = Color { 0, 0, 0, 255 };
+    auto base_x = 324 + ppu().scx();
+    auto base_y = 20 + ppu().scy();
+    auto thickness = 1;
+    renderer().draw_rect({ base_x, base_y, WINDOW_WIDTH, thickness }, window_frame_color);
+    renderer().draw_rect({ base_x, base_y + WINDOW_HEIGHT, WINDOW_WIDTH, thickness }, window_frame_color);
+    renderer().draw_rect({ base_x, base_y, thickness, WINDOW_HEIGHT }, window_frame_color);
+    renderer().draw_rect({ base_x + WINDOW_WIDTH, base_y, thickness, WINDOW_HEIGHT }, window_frame_color);
+
+    renderer().present();
+}

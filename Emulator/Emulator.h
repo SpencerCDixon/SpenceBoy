@@ -52,6 +52,8 @@ public:
     RuntimeSettings& settings() { return m_settings; }
     Debugger& debugger() { return m_debugger; }
 
+    void render_debug_frame();
+
 private:
     RuntimeSettings m_settings;
     MMU m_mmu;

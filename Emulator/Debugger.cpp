@@ -35,6 +35,7 @@ void Debugger::enter()
     dbg() << "  c  | continue - continue execution without stepping until a breakpoint";
     dbg() << "  v  | vram     - dump contents of VRAM";
     dbg() << "  w  | wram     - dump contents of WRAM";
+    dbg() << "  r             - render a frame";
     dbg() << "  bp | <num>    - add breakpoint at program counter num\n\n";
 }
 
@@ -63,6 +64,9 @@ DebuggerResult Debugger::handle_command(String command)
 
     if (primary_command == "q" || primary_command == "quit" || primary_command == "exit")
         ::exit(0);
+
+    if (primary_command == "r")
+        emulator().render_debug_frame();
 
     if (primary_command == "s" || primary_command == "step") {
         auto op_code = emulator().cpu().execute_one_instruction();
