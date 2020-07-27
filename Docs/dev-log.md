@@ -4,6 +4,15 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 7/27/2020**
+
+### What did I get done today?
+
+* Found original reverse engineered boot rom to see if I have better luck with that
+* Add some more CPU op code support 
+
+---
+ 
 **Date: 7/25/2020**
 
 ### What did I get done today?
