@@ -145,6 +145,9 @@ OpCode CPU::execute_one_instruction()
     case OpCode::LD_C_A:
         m_registers.c = m_registers.a;
         break;
+    case OpCode::LD_H_A:
+        m_registers.h = m_registers.a;
+        break;
     case OpCode::LD_A_d8:
         m_registers.a = fetch_and_inc_u8();
         break;
