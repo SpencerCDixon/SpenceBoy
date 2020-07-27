@@ -142,6 +142,9 @@ OpCode CPU::execute_one_instruction()
     case OpCode::LD_D_A:
         m_registers.d = m_registers.a;
         break;
+    case OpCode::LD_C_A:
+        m_registers.c = m_registers.a;
+        break;
     case OpCode::LD_A_d8:
         m_registers.a = fetch_and_inc_u8();
         break;
@@ -669,7 +672,7 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
     case PrefixOpCode::BIT_0_HL_ADDR: {
         u8 value = read(get_hl());
         check_bit(0, &value);
-//        dbg() << "zero flag: " << get_zero_flag();
+        //        dbg() << "zero flag: " << get_zero_flag();
         write(get_hl(), value);
         break;
     }
@@ -753,7 +756,7 @@ void CPU::write(u16 address, u8 data)
 
 u8 CPU::in(u16 address)
 {
-//    dbg() << "CPU::in(" << to_hex(address) << ") PC: " << m_registers.program_counter;
+    //    dbg() << "CPU::in(" << to_hex(address) << ") PC: " << m_registers.program_counter;
 
     if (address == 0xff0f) {
         // READ the interrupt flag
@@ -765,7 +768,7 @@ u8 CPU::in(u16 address)
 
 void CPU::out(u16 address, u8 value)
 {
-//    dbg() << "CPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
+    //    dbg() << "CPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
 
     // End of boot rom sequence
     if (address == 0xff50 && value == 1) {
