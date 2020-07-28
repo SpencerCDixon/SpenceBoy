@@ -139,6 +139,9 @@ OpCode CPU::execute_one_instruction()
     case OpCode::LD_A_E:
         m_registers.a = m_registers.e;
         break;
+    case OpCode::LD_A_H:
+        m_registers.a = m_registers.h;
+        break;
     case OpCode::LD_D_A:
         m_registers.d = m_registers.a;
         break;
@@ -388,13 +391,24 @@ OpCode CPU::execute_one_instruction()
     case OpCode::CP_L:
         cp_a(&m_registers.l);
         break;
+    case OpCode::CP_HL_ADDR: {
+        u8 value = read(get_hl());
+        cp_a(&value);
+        break;
+    }
     case OpCode::CP_d8: {
         u8 value = fetch_and_inc_u8();
         cp_a(&value);
         break;
     }
+    // FIXME: We need to be setting flags properly on subtracts!
     case OpCode::SUB_d8:
         m_registers.a -= fetch_and_inc_u8();
+        set_zero_flag(m_registers.a == 0);
+        break;
+    case OpCode::SUB_B:
+        m_registers.a -= m_registers.b;
+        set_zero_flag(m_registers.a == 0);
         break;
     case OpCode::LD_HL_d16:
         m_registers.l = fetch_and_inc_u8();

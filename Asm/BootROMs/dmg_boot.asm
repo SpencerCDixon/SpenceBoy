@@ -31,9 +31,11 @@ Start:
 ; A nibble represents a 4-pixels line, 2 bytes represent a 4x4 tile, scaled to 8x8.
 ; Tiles are ordered left to right, top to bottom.
     ld de, $104 ; Logo start
+
+		; This must be the cause of the issue, we're loading into 0x9000 instead of 0x8010 for some reason!
     ld hl, $8010 ; This is where we load the tiles in VRAM
 
-.loadLogoLoop
+.loadLogoLoop ; PC = 38
     ld a, [de] ; Read 2 rows
     ld b, a
     call DoubleBitsAndWriteRow

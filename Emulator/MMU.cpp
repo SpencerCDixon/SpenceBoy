@@ -56,17 +56,16 @@ void MMU::load_rom(const char* rom_path)
     m_rom = (u8*)malloc((size_t)file.size_in_bytes());
     file.read_into((char*)m_rom);
 
-//    printf("[\n");
-//    for (int i = 0; i < 256; ++i) {
-//
-//        if (i % 20 == 0)
-//            printf("\n");
-//
-//        printf("%d, ", m_rom[i]);
-//    }
-//    printf("]\n");
-//    ASSERT_NOT_REACHED();
-
+    //    printf("[\n");
+    //    for (int i = 0; i < 256; ++i) {
+    //
+    //        if (i % 20 == 0)
+    //            printf("\n");
+    //
+    //        printf("%d, ", m_rom[i]);
+    //    }
+    //    printf("]\n");
+    //    ASSERT_NOT_REACHED();
 }
 
 u8 MMU::read(u16 address)
