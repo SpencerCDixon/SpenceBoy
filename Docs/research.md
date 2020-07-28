@@ -15,6 +15,7 @@
 * [SDL Tutorials](https://lazyfoo.net/tutorials/SDL/index.php#Color%20Modulation)
 * [Visual representation of the background tiles](https://www.huderlem.com/demos/gameboy2bpp.html)
 * [Gameboy Spec](http://www.devrs.com/gb/files/gbspec.txt)
+* [Decoding gameboy op codes](https://gb-archive.github.io/salvage/decoding_gbz80_opcodes/Decoding%20Gamboy%20Z80%20Opcodes.html)
 
 
 ## GBC - Game Boy Color (GBz80)
