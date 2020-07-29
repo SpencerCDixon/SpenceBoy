@@ -4,6 +4,14 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 7/29/2020**
+
+### What did I get done today?
+
+* Generalize LD_dest_src op codes in order to remove a lot of lines of code
+
+---
+ 
 **Date: 7/28/2020**
 
 ### What did I get done today?

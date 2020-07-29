@@ -98,6 +98,13 @@ OpCode CPU::execute_one_instruction()
     // Check if we should handle interrupts?
 
     OpCode op_code = static_cast<OpCode>(fetch_and_inc_u8());
+    m_cycles_executed += cycles_for_opcode(op_code);
+
+    if ((u8)op_code >= 0x40 && (u8)op_code < 0x80 && op_code != OpCode::HALT) {
+        handle_load_op_code(op_code);
+        log_test_state(op_code);
+        return op_code;
+    }
 
     switch (op_code) {
     case OpCode::NOP:
@@ -127,30 +134,6 @@ OpCode CPU::execute_one_instruction()
     case OpCode::CPL:
         m_registers.a = ~m_registers.a;
         break;
-    case OpCode::LD_A_B:
-        m_registers.a = m_registers.b;
-        break;
-    case OpCode::LD_A_C:
-        m_registers.a = m_registers.c;
-        break;
-    case OpCode::LD_A_D:
-        m_registers.a = m_registers.d;
-        break;
-    case OpCode::LD_A_E:
-        m_registers.a = m_registers.e;
-        break;
-    case OpCode::LD_A_H:
-        m_registers.a = m_registers.h;
-        break;
-    case OpCode::LD_D_A:
-        m_registers.d = m_registers.a;
-        break;
-    case OpCode::LD_C_A:
-        m_registers.c = m_registers.a;
-        break;
-    case OpCode::LD_H_A:
-        m_registers.h = m_registers.a;
-        break;
     case OpCode::LD_A_d8:
         m_registers.a = fetch_and_inc_u8();
         break;
@@ -165,39 +148,6 @@ OpCode CPU::execute_one_instruction()
         break;
     case OpCode::LD_E_d8:
         m_registers.e = fetch_and_inc_u8();
-        break;
-    case OpCode::LD_B_A:
-        m_registers.b = m_registers.a;
-        break;
-    case OpCode::LD_B_B:
-        m_registers.b = m_registers.b;
-        break;
-    case OpCode::LD_B_C:
-        m_registers.b = m_registers.c;
-        break;
-    case OpCode::LD_B_D:
-        m_registers.b = m_registers.d;
-        break;
-    case OpCode::LD_D_B:
-        m_registers.d = m_registers.b;
-        break;
-    case OpCode::LD_D_C:
-        m_registers.d = m_registers.c;
-        break;
-    case OpCode::LD_D_D:
-        m_registers.d = m_registers.d;
-        break;
-    case OpCode::LD_E_A:
-        m_registers.e = m_registers.a;
-        break;
-    case OpCode::LD_H_B:
-        m_registers.h = m_registers.b;
-        break;
-    case OpCode::LD_H_C:
-        m_registers.h = m_registers.c;
-        break;
-    case OpCode::LD_H_D:
-        m_registers.h = m_registers.d;
         break;
     case OpCode::LD_H_d8:
         m_registers.h = fetch_and_inc_u8();
@@ -218,9 +168,6 @@ OpCode CPU::execute_one_instruction()
     case OpCode::LD_A_HL_ADDR_INC:
         m_registers.a = read(get_hl());
         inc_hl();
-        break;
-    case OpCode::LD_A_HL_ADDR:
-        m_registers.a = read(get_hl());
         break;
     case OpCode::LD_A_DE_ADDR:
         m_registers.a = read(get_de());
@@ -615,15 +562,43 @@ OpCode CPU::execute_one_instruction()
         break;
     }
 
-    if (emulator().settings().verbose_logging || emulator().settings().in_test_mode) {
-        dbg() << to_string(op_code) << "   " << *this;
-        if (m_halted)
-            dbg() << to_snapshot(test_state());
-    }
-
-    m_cycles_executed += cycles_for_opcode(op_code);
+    log_test_state(op_code);
 
     return op_code;
+}
+
+void CPU::handle_load_op_code(const OpCode& op_code)
+{
+    u8 code = static_cast<u8>(op_code);
+    ASSERT(code >= 0x40 && code < 0x80);
+
+    // LD_dest_src
+    u8 src = code & 0x7;         // 00000SSS
+    u8 dest = (code >> 3) & 0x7; // 00DDD000
+
+    // FIXME: Could be created once instead of every handle_op call
+    u8* load_table[8] = {
+        &m_registers.b,
+        &m_registers.c,
+        &m_registers.d,
+        &m_registers.e,
+        &m_registers.h,
+        &m_registers.l,
+        nullptr, // address of HL, need to manually read/write
+        &m_registers.a,
+    };
+
+    // Andreas: is there a better way to handle this when some values need a
+    // read/write indirection step?
+    if (src == 6 && dest == 6) {
+        write(get_hl(), read(get_hl()));
+    } else if (src == 6) {
+        *load_table[dest] = read(get_hl());
+    } else if (dest == 6) {
+        write(get_hl(), *load_table[src]);
+    } else {
+        *load_table[dest] = *load_table[src];
+    }
 }
 
 void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
@@ -1161,4 +1136,13 @@ bool CPU::in_breakpoint()
 bool CPU::should_skip_boot_rom()
 {
     return emulator().settings().in_test_mode;
+}
+
+void CPU::log_test_state(const OpCode& op_code)
+{
+    if (emulator().settings().verbose_logging || emulator().settings().in_test_mode) {
+        dbg() << to_string(op_code) << "   " << *this;
+        if (m_halted)
+            dbg() << to_snapshot(test_state());
+    }
 }

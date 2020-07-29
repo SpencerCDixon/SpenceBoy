@@ -80,6 +80,8 @@ public:
 
 private:
     void handle_prefix_op_code(const PrefixOpCode& op_code);
+    void handle_load_op_code(const OpCode& code);
+    void log_test_state(const OpCode& op_code);
 
     // Memory Access
     u8 read(u16 address);
