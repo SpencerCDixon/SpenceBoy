@@ -4,6 +4,18 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 8/1/2020**
+
+* Fixed RL/RLA op codes so now the nintendo logo looks correct when scrolling down in boot rom
+
+---
+ 
+**Date: 7/31/2020**
+
+* Debugging RL/RLA op codes to get the DoubleBit function working properly
+
+---
+ 
 **Date: 7/29/2020**
 
 ### What did I get done today?
