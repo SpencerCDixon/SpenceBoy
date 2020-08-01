@@ -101,7 +101,7 @@ private:
     void and_with_a(u8 value);
     void or_with_a(u8 value);
     void swap_reg(u8* reg_ptr);
-    void rotate_left(u8* reg_ptr);
+    void rotate_left_through_carry(u8* reg_ptr);
     void reset_bit(u8 bit_to_reset, u8* value_ptr);
     void check_bit(u8 bit_to_check, u8* value_ptr);
 
