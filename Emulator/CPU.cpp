@@ -896,7 +896,7 @@ void CPU::rotate_left_through_carry(u8* reg_ptr)
     bool will_carry = (*reg_ptr & 0x80) == 0x80;
     *reg_ptr <<= 1;
 
-    if (will_carry)
+    if (m_registers.f & FLAG_CARRY)
         *reg_ptr += 1;
 
     set_zero_flag(*reg_ptr == 0);
