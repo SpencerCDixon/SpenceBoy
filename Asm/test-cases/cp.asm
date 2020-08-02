@@ -34,6 +34,7 @@ Start:
 	ld l, $a0
 	cp a, l
 
+	; jp Start
 	nop
 	halt
 

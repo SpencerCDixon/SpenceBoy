@@ -1,4 +1,4 @@
-SECTION "BootCode", ROM0[$0]
+SECTION "BootCode", ROM0[$0] 
 Start:
 	LD SP,$fffe		; $0000  Setup Stack
 
@@ -100,7 +100,7 @@ Addr_0080:
 Addr_0086:
 	LD A,[$FF00+$42]	; $0086
 	SUB B			; $0088
-	LD [$FF00+$42],A	; $0089  scroll logo up if B=1
+	LD [$FF00+$42],A	; $0089  scroll logo up if B=1  ; I really want a conditional brekapoint here if a is equal to 0
 	DEC D			; $008b  
 	JR NZ, Addr_0060	; $008c
 

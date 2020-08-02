@@ -28,7 +28,7 @@ constexpr static u16 R_SCY = 0xff42;
 constexpr static u16 R_SCX = 0xff43;
 constexpr static u16 R_BGP = 0xff47;
 
-// #define DEBUG_PPU
+#define DEBUG_PPU 0
 
 Tile8x8::Tile8x8()
 {
@@ -277,7 +277,7 @@ size_t PPU::index_into_tileset(size_t original_index)
 
 u8 PPU::in(u16 address)
 {
-    dbg() << "PPU::in() " << to_hex(address);
+    // dbg() << "PPU::in() " << to_hex(address);
 
     if (address == R_SCX) {
         dbg() << "  handled!";
@@ -293,7 +293,10 @@ u8 PPU::in(u16 address)
         return m_lcd_control;
 
     if (address == R_LCDC_Y_COORD) {
-        // dbg() << "Y_COORD: " << m_current_scanline;
+        if (m_current_scanline == 144)
+            dbg() << "WOULD RENDER AT: Y_COORD: " << m_current_scanline;
+        // return 144;
+
         return m_current_scanline;
     }
 
@@ -307,7 +310,7 @@ void PPU::out(u16 address, u8 value)
     //    PPU::out(0xff42, 0x0)
     //    PPU::out(0xff43, 0x0)
     //    PPU::out(0xff26, 0x0)
-    dbg() << "PPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
+    dbg() << "PPU::out(" << to_hex(address) << ", " << to_hex(value) << ") " << to_hex(emulator().cpu().test_state().registers.program_counter);
 
     switch (address) {
     case R_SCX:

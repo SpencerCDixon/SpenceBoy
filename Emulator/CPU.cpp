@@ -1013,6 +1013,7 @@ String to_trace_line(const CPUTestState& test_state)
         "D: %03u [0x%02x] E: %03u [0x%02x]  "
         "H: %03u [0x%02x] L: %03u [0x%02x] ---"
         " WRAM: 0x%016" PRIx64 " | VRAM: 0x%016" PRIx64 " |",
+        // test_state.registers.program_counter,
         test_state.registers.a,
         test_state.registers.a,
         test_state.registers.f,
