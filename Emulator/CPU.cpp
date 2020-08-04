@@ -17,6 +17,7 @@
 //static constexpr u32 CYCLES_PER_SECOND = 69905;
 // 70224 clocks = 17556 cycles = 59.7 fps
 static constexpr u32 CYCLES_PER_SECOND = 17556;
+// TODO: should be cycles per frame not cycles per secohnd
 
 // Flags
 // clang-format off
@@ -100,6 +101,7 @@ OpCode CPU::execute_one_instruction()
     OpCode op_code = static_cast<OpCode>(fetch_and_inc_u8());
     m_cycles_executed += cycles_for_opcode(op_code);
 
+    // TODO: Potentially extract hl src/dst and don't go through this flow for those potentially.
     if ((u8)op_code >= 0x40 && (u8)op_code < 0x80 && op_code != OpCode::HALT) {
         handle_load_op_code(op_code);
         log_test_state(op_code);

@@ -53,6 +53,7 @@ void MMU::load_rom(const char* rom_path)
     ASSERT(file.size_in_bytes() == MAX_ROM_SIZE);
 #endif
 
+    // TODO: look into this being wrong potentially?
     m_rom = (u8*)malloc((size_t)file.size_in_bytes());
     file.read_into((char*)m_rom);
 

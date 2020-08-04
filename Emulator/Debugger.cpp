@@ -56,6 +56,7 @@ String Debugger::prompt_for_input()
     return result;
 }
 
+// TODO: Potentially add hard coded conditional breakpoints for now until time for proper parser.
 DebuggerResult Debugger::handle_command(String command)
 {
     emulator().render_debug_frame();

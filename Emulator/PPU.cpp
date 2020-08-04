@@ -171,13 +171,15 @@ void PPU::draw_scanline()
     }
 
     for (size_t x = 0; x < LCD_WIDTH; ++x) {
-        auto x_idx = x % 8;
-        auto y_idx = m_current_scanline % 8;
         auto tile = tile_at_xy(x + scx(), (size_t)m_current_scanline + scy());
 
         // We shouldn't be drawing when we're in VBlank
-        if (mode() != PPUMode::VerticalBlanking)
+        if (mode() != PPUMode::VerticalBlanking) {
+            // TODO: renmae theses so I understand they're tile_local x/y coords
+            auto x_idx = x % 8;
+            auto y_idx = m_current_scanline % 8;
             m_lcd_bitmap.set_pixel_to(x, m_current_scanline, tile.pixel(x_idx, y_idx));
+        }
     }
 }
 
