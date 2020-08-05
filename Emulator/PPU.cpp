@@ -295,8 +295,8 @@ u8 PPU::in(u16 address)
         return m_lcd_control;
 
     if (address == R_LCDC_Y_COORD) {
-        if (m_current_scanline == 144)
-            dbg() << "WOULD RENDER AT: Y_COORD: " << m_current_scanline;
+//        if (m_current_scanline == 144)
+//            dbg() << "WOULD RENDER AT: Y_COORD: " << m_current_scanline;
         // return 144;
 
         return m_current_scanline;

@@ -763,13 +763,12 @@ u8 CPU::in(u16 address)
 
 void CPU::out(u16 address, u8 value)
 {
-    //    dbg() << "CPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
+//    dbg() << "CPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
 
     // End of boot rom sequence
     if (address == 0xff50 && value == 1) {
         m_in_boot_rom = false;
         m_registers.program_counter = 0x100;
-        ::exit(1);
     }
 
     if (address == 0xff0f) {

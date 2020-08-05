@@ -71,6 +71,12 @@ void MMU::load_rom(const char* rom_path)
 
 u8 MMU::read(u16 address)
 {
+    // When in the boot ROM, the DMG will check the nintendo logo bytes to confirm they're equal
+    // inside the bios as they are in the loaded ROM the user wants to play. When in boot rom, we need
+    // to proxy these reads to the bios. FIXME: the end range is wrong here but it gets it working
+    if (emulator().cpu().in_boot_rom() && address >= 0xa8 && address <= 0xe8)
+        return m_bios[address];
+
     if (address >= WRAM_START && address <= WRAM_END) {
         u16 idx = address - WRAM_START;
         ASSERT(idx >= 0);
