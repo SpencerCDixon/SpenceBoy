@@ -15,7 +15,7 @@ ninja
 # ./gameboy --rom $SCRIPTPATH/../Asm/ROMs/serenity.gb --asset-dir $SCRIPTPATH/../Assets 
 
 # Example running in debug mode which will hit breakpoints and do step debugging
-./gameboy --rom $SCRIPTPATH/../Asm/ROMs/joypad.gb --asset-dir $SCRIPTPATH/../Assets 
+./gameboy --rom $SCRIPTPATH/../Asm/ROMs/joypad.gb --asset-dir $SCRIPTPATH/../Assets #--verbose
 
 # Example running a test case in debug mode
 # ./gameboy --rom $SCRIPTPATH/../Tests/data/dec-zero.gb --asset-dir $SCRIPTPATH/../Assets --test

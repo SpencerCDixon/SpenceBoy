@@ -4,6 +4,15 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 8/5/2020**
+
+### What did I get done today?
+
+* Research PPU timings to figure out why my logo scrolls in so slow
+* Temporary fix to get PPU timings to work properly :-)
+
+---
+ 
 **Date: 8/4/2020**
 
 ### What did I get done today?

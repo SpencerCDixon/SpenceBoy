@@ -93,12 +93,26 @@ void PPU::fill_square(size_t x, size_t y, const Tile8x8& tile, Bitmap& bitmap)
     }
 }
 
+// Cycles for different modes:
+
+//const ACCESS_OAM_CYCLES: isize = 21;
+//const ACCESS_VRAM_CYCLES: isize = 43;
+//const HBLANK_CYCLES: isize = 50;
+//const VBLANK_LINE_CYCLES: isize = 114;
+
+// Starts off with cycle count for OAM access:
+//      mode: Mode::AccessOam,
+//      cycles: ACCESS_OAM_CYCLES,
+
 // NOTE: There is some weird logic here to handle cycle overflows because the CPU is driving the PPU forward
 // but the cycles executed might not always line up perfectly with the number of cycles for switching PPU modes.
 // We need to carry those overflowed cycles into the next mode. Eventually, we'll want to emulate the pixel FIFO
 // which will help in determining the amount of cycles we need to wait between Mode 3 (drawing) and Mode 0 (HBlank).
 void PPU::update_by(u8 cycles)
 {
+    // This is a bit hacky but works for now. The CPU is executing 70k machine cycles but we care about PPU dots for all of the
+    // values in here so we normalize for machine cycles.
+    cycles = cycles / 4;
     // TODO: switch_mode() -> set any interrupts
     m_cycles_until_mode_transition -= (s32)cycles;
     m_scanline_cycle_count += cycles;

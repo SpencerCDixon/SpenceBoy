@@ -16,8 +16,7 @@
 // 4.194304 MHz -> 4,194,304 / 60 = 69905
 //static constexpr u32 CYCLES_PER_SECOND = 69905;
 // 70224 clocks = 17556 cycles = 59.7 fps
-static constexpr u32 CYCLES_PER_SECOND = 17556;
-// TODO: should be cycles per frame not cycles per secohnd
+static constexpr u32 CYCLES_PER_FRAME = 70224;
 
 // Flags
 // clang-format off
@@ -67,7 +66,7 @@ void CPU::main_loop()
         // if (has_interrupt_request)
         // handle_interrupt
 
-        if (m_cycles_executed >= CYCLES_PER_SECOND) {
+        if (m_cycles_executed >= CYCLES_PER_FRAME) {
             m_cycles_executed = 0;
             break;
         }
@@ -78,7 +77,7 @@ void CPU::main_test_loop()
 {
     // Test cases should all be able to execute in less than 20 seconds. If we've been executing
     // for more than 20 seconds there is probably a bug in our CPU/Test ASM that needs to be addressed.
-    u64 max_test_cycles = CYCLES_PER_SECOND * 20;
+    u64 max_test_cycles = CYCLES_PER_FRAME * 20;
 
     dbg() << "Trace:\n------\n";
     for (;;) {
