@@ -4,6 +4,14 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 8/7/2020**
+
+### What did I get done today?
+
+* Fixed weird modulo error making the background rendering appear off
+
+---
+ 
 **Date: 8/5/2020**
 
 ### What did I get done today?

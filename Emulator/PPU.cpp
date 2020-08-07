@@ -191,10 +191,14 @@ void PPU::draw_scanline()
         if (mode() != PPUMode::VerticalBlanking) {
             // TODO: renmae theses so I understand they're tile_local x/y coords
             auto x_idx = x % 8;
-            auto y_idx = m_current_scanline % 8;
+            auto y_idx = (m_current_scanline + scy()) % 8;
+
             m_lcd_bitmap.set_pixel_to(x, m_current_scanline, tile.pixel(x_idx, y_idx));
         }
     }
+
+    // TODO: draw window
+    // TODO: draw sprites
 }
 
 Tile8x8 PPU::tile_at_xy(size_t x, size_t y)
@@ -309,8 +313,8 @@ u8 PPU::in(u16 address)
         return m_lcd_control;
 
     if (address == R_LCDC_Y_COORD) {
-//        if (m_current_scanline == 144)
-//            dbg() << "WOULD RENDER AT: Y_COORD: " << m_current_scanline;
+        //        if (m_current_scanline == 144)
+        //            dbg() << "WOULD RENDER AT: Y_COORD: " << m_current_scanline;
         // return 144;
 
         return m_current_scanline;
