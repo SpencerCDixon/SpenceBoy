@@ -5,9 +5,9 @@
 #pragma once
 
 #include "Emulator/GUI/Bitmap.h"
+#include <SD/Color.h>
 #include <SD/String.h>
 #include <SD/Utility.h>
-#include <SD/Color.h>
 
 enum class TextureUsage {
     Static,

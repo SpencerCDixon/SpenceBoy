@@ -9,6 +9,7 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 ### What did I get done today?
 
 * Fixed weird modulo error making the background rendering appear off
+* Adds basic font rendering so I can display some useful metadata in main GUI
 
 ---
  

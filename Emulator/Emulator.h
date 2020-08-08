@@ -32,8 +32,9 @@ public:
         mmu().init_devices();
 
         if (!settings.in_test_mode) {
-            SDLRenderer::the().init();
-            auto path = m_settings.assets_dir + "/SpenceBoy.png";
+            auto path = m_settings.assets_dir + "/early-gameboy.ttf";
+            SDLRenderer::the().init(path);
+            path = m_settings.assets_dir + "/SpenceBoy.png";
             m_gb_background = Texture::from_image(path);
             ppu().init_textures();
         }

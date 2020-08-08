@@ -4,6 +4,7 @@
 
 #include "SDLRenderer.h"
 #include "Emulator/PPU.h"
+#include <SD/Assertions.h>
 #include <SD/LogStream.h>
 
 constexpr u16 EMULATOR_WINDOW_HEIGHT = 500;
@@ -22,9 +23,17 @@ SDLRenderer::SDLRenderer()
 
 SDLRenderer::~SDLRenderer()
 {
+    if (m_font) {
+        TTF_CloseFont(m_font);
+        m_font = nullptr;
+    }
+
+    TTF_Quit();
+    IMG_Quit();
+    SDL_Quit();
 }
 
-void SDLRenderer::init()
+void SDLRenderer::init(const String& font_path)
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         error("unable to initialize SDL video subsystem");
@@ -35,10 +44,19 @@ void SDLRenderer::init()
         error("creating window and renderer");
     }
 
+    // Image initialization
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize PNG loading: %s", SDL_GetError());
         error("initializing png loading");
     }
+
+    // Font initialization
+    if (TTF_Init() == -1) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize TTF: %s", TTF_GetError());
+        error("initializing font loading");
+    }
+
+    m_font = TTF_OpenFont(font_path.characters(), 12);
 
     // TODO: Add API for setting title which can be used by ROMParser
     SDL_SetWindowTitle(m_window, "SpenceBoy");
@@ -93,4 +111,25 @@ void SDLRenderer::draw_partial_texture(const Texture& tex, const Rect& src, cons
     SDL_Rect src_rect = src;
     SDL_Rect dest_rect = dest;
     SDL_RenderCopy(m_renderer, static_cast<SDL_Texture*>(tex.data()), &src_rect, &dest_rect);
+}
+
+// todo since width/height are derived maybe this should take a point
+void SDLRenderer::draw_text(const String& text, const Point& dest)
+{
+    if (m_last_text)
+        SDL_DestroyTexture(m_last_text);
+
+    ASSERT(m_font);
+    SDL_Color text_color = { 125, 125, 125, 255 };
+    SDL_Surface* text_surface = TTF_RenderText_Solid(m_font, text.characters(), text_color);
+
+    ASSERT(text_surface);
+    m_last_text = SDL_CreateTextureFromSurface(m_renderer, text_surface);
+
+    ASSERT(m_last_text);
+    SDL_Rect rect = { dest.x, dest.y, text_surface->w, text_surface->h };
+
+    SDL_FreeSurface(text_surface);
+
+    SDL_RenderCopy(m_renderer, m_last_text, NULL, &rect);
 }

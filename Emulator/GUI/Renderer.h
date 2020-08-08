@@ -4,9 +4,9 @@
 
 #pragma once
 
+#include <SD/Color.h>
 #include <SD/String.h>
 #include <SD/Types.h>
-#include <SD/Color.h>
 
 #include "Emulator/GUI/Bitmap.h"
 #include "Emulator/GUI/Rect.h"
@@ -19,14 +19,14 @@
 class Renderer {
 public:
     virtual ~Renderer() {};
-    virtual void init() = 0;
+    virtual void init(const String& font_path) = 0;
     virtual void clear(const Color&) = 0;
     virtual void present() = 0;
 
+    virtual void draw_text(const String&, const Point&) = 0;
     virtual void draw_rect(const Rect& rect, const Color& color) = 0;
     virtual void draw_texture(const Texture& tex, const Rect& rect) = 0;
     virtual void draw_texture(const Texture& tex, const Point& point) = 0;
     virtual void draw_texture_rotated(const Texture& tex, const Point& point, f64 angle) = 0;
     virtual void draw_partial_texture(const Texture& tex, const Rect& src, const Rect& dest) = 0;
-private:
 };

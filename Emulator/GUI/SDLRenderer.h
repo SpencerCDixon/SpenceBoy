@@ -14,10 +14,11 @@ public:
 
     SDLRenderer();
     virtual ~SDLRenderer();
-    virtual void init() override;
+    virtual void init(const String& font_path) override;
     virtual void clear(const Color&) override;
     virtual void present() override;
 
+    void draw_text(const String&, const Point&) override;
     void draw_rect(const Rect& rect, const Color& color) override;
     void draw_texture(const Texture& tex, const Rect& rect) override;
     void draw_texture(const Texture& tex, const Point& point) override;
@@ -33,7 +34,8 @@ public:
 private:
     SDL_Window* m_window { nullptr };
     SDL_Renderer* m_renderer { nullptr };
+    TTF_Font* m_font { nullptr };
 
-    // 256x256 screen
-    SDL_Texture* m_gb_screen { nullptr };
+    SDL_Texture* m_gb_screen { nullptr }; // 256x256 screen
+    SDL_Texture* m_last_text { nullptr }; // font rendering
 };

@@ -112,6 +112,8 @@ void Emulator::run()
         //
         if (show_input_debug) {
             input_debug.render();
+            auto pc = "PC: " + to_hex(cpu().program_counter());
+            renderer().draw_text(pc, Point { 328, 385 });
         }
 
         // BG Tilemap Debug Wireframe:

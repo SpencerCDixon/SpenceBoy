@@ -61,6 +61,8 @@ public:
     bool in_boot_rom() { return m_in_boot_rom; }
     void set_interrupt_flag(u8);
 
+    u16 program_counter() { return m_registers.program_counter; }
+
     //
     // IODevice
     //
