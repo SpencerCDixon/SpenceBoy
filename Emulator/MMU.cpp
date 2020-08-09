@@ -17,29 +17,25 @@ void MMU::init_devices()
     // I/O u16 address into an index into our array of devices and such.
     constexpr u16 ppu_start = 0xff40 - IO_START;
     constexpr u16 ppu_end = 0xff4b - IO_START;
-    //    constexpr u16 sound_start = 0xff10 - IO_START;
-    //    constexpr u16 sound_end = 0xff3f - IO_START;
-
     constexpr u16 interrupt_flag = IF_LOCATION - IO_START;
     constexpr u16 interrupt_enable = IE_LOCATION - IO_START;
     constexpr u16 sound_start = 0xff10 - IO_START;
     constexpr u16 sound_end = 0xff3f - IO_START;
-
     constexpr u16 boot_rom_lock = 0xff50 - IO_START;
+
+    auto is_for_cpu = [](u16 addr) -> bool {
+        return addr == interrupt_enable || addr == interrupt_flag || addr == boot_rom_lock;
+    };
 
     for (size_t i = 0; i < IO_SIZE; ++i) {
         if (i == 0) {
             m_io_devices[i] = &emulator().joypad();
-        } else if (i == boot_rom_lock) {
+        } else if (is_for_cpu(static_cast<u16>(i))) {
             m_io_devices[i] = &emulator().cpu();
         } else if (i >= ppu_start && i < ppu_end) {
             m_io_devices[i] = &emulator().ppu();
         } else if (i >= sound_start && i < sound_end) {
             m_io_devices[i] = &emulator().sound();
-        } else if (i == interrupt_flag) {
-            m_io_devices[i] = &emulator().cpu();
-        } else if (i == interrupt_enable) {
-            m_io_devices[i] = &emulator().cpu();
         } else {
             m_io_devices[i] = &DummyIODevice::the();
         }
