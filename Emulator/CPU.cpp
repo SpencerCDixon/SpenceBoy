@@ -488,10 +488,10 @@ OpCode CPU::execute_one_instruction()
         xor_value_with_a(fetch_and_inc_u8());
         break;
     case OpCode::DI:
-        m_interrupts_enabled = false;
+        m_interrupt_master_enable_flag = false;
         break;
     case OpCode::EI:
-        m_interrupts_enabled = true;
+        m_interrupt_master_enable_flag = true;
         break;
     case OpCode::PUSH_AF:
         push(&m_registers.a, &m_registers.f);
@@ -704,6 +704,16 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
     }
 }
 
+void CPU::handle_interrupts()
+{
+    // TODO:
+    // * reset IME to be off
+    // * IME can only be turned on from another EI or RETI
+    // * look into all set_flag_x calls and ensure I'm handling reset properly
+    if (m_interrupt_enable != InterruptFlags::None && m_interrupt_flag != InterruptFlags::None)
+        dbg() << "would probably execute an interrupt now";
+}
+
 //
 // Memory Access
 //
@@ -752,9 +762,9 @@ u8 CPU::in(u16 address)
 {
     //    dbg() << "CPU::in(" << to_hex(address) << ") PC: " << m_registers.program_counter;
 
-    if (address == 0xff0f) {
+    if (address == IF_LOCATION) {
         // READ the interrupt flag
-        return m_interrupt_flag;
+        return static_cast<u8>(m_interrupt_flag);
     }
 
     return 0;
@@ -770,8 +780,14 @@ void CPU::out(u16 address, u8 value)
         m_registers.program_counter = 0x100;
     }
 
-    if (address == 0xff0f) {
-        m_interrupt_flag = value;
+    // Write to the interrupt flag signaling that we'd like an interrupt to occur
+    if (address == IF_LOCATION) {
+        m_interrupt_flag = static_cast<InterruptFlags>(value);
+    }
+
+    // FIXME: Look into this to confirm this can actually be written from code.
+    if (address == IE_LOCATION) {
+        m_interrupt_enable = static_cast<InterruptFlags>(value);
     }
 }
 
@@ -963,7 +979,7 @@ bool CPU::get_zero_flag()
     return m_registers.f & FLAG_ZERO;
 }
 
-void CPU::set_interrupt_flag(u8 flag)
+void CPU::set_interrupt_flag(InterruptFlags flag)
 {
     m_interrupt_flag = flag;
 }

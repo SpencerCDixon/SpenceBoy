@@ -138,5 +138,3 @@ Start:
 ; Stop
 	nop
 	halt
-
-

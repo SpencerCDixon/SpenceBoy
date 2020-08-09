@@ -8,6 +8,7 @@
 #include "Joypad.h"
 #include "MMU.h"
 #include "OpCode.h"
+#include "InterruptFlags.h"
 
 #include <SD/Bytes.h>
 #include <SD/LogStream.h>
@@ -59,7 +60,7 @@ public:
     Emulator& emulator() { return m_emulator; }
     //    bool interrupts_enabled() { return m_interrupts_enabled; }
     bool in_boot_rom() { return m_in_boot_rom; }
-    void set_interrupt_flag(u8);
+    void set_interrupt_flag(InterruptFlags);
 
     u16 program_counter() { return m_registers.program_counter; }
 
@@ -83,6 +84,7 @@ public:
 private:
     void handle_prefix_op_code(const PrefixOpCode& op_code);
     void handle_load_op_code(const OpCode& code);
+    void handle_interrupts();
     void log_test_state(const OpCode& op_code);
 
     // Memory Access
@@ -212,9 +214,12 @@ private:
 
     u64 m_cycles_executed { 0 };
     bool m_halted { false };
-    bool m_interrupts_enabled { false };
     bool m_in_boot_rom { true };
-    u8 m_interrupt_flag { 0 };
+
+    // Interrupts
+    bool m_interrupt_master_enable_flag { false };
+    InterruptFlags m_interrupt_enable { InterruptFlags::None };
+    InterruptFlags m_interrupt_flag { InterruptFlags::None };
 
     // Debugging
     Debugger* m_debugger { nullptr };

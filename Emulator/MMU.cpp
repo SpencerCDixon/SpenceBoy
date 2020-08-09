@@ -20,7 +20,8 @@ void MMU::init_devices()
     //    constexpr u16 sound_start = 0xff10 - IO_START;
     //    constexpr u16 sound_end = 0xff3f - IO_START;
 
-    constexpr u16 interrupt_flag = 0xff0f - IO_START;
+    constexpr u16 interrupt_flag = IF_LOCATION - IO_START;
+    constexpr u16 interrupt_enable = IE_LOCATION - IO_START;
     constexpr u16 sound_start = 0xff10 - IO_START;
     constexpr u16 sound_end = 0xff3f - IO_START;
 
@@ -36,6 +37,8 @@ void MMU::init_devices()
         } else if (i >= sound_start && i < sound_end) {
             m_io_devices[i] = &emulator().sound();
         } else if (i == interrupt_flag) {
+            m_io_devices[i] = &emulator().cpu();
+        } else if (i == interrupt_enable) {
             m_io_devices[i] = &emulator().cpu();
         } else {
             m_io_devices[i] = &DummyIODevice::the();

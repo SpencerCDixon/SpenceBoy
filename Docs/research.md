@@ -240,3 +240,17 @@ push bc
 ![HBlank Timin](./assets/hblank-timing.png)
 
 3. The remaining clock cycles get devoted to HBlank
+
+---
+
+## Interrupts
+
+`IME` - interrupt master enable flag (write only)
+
+The IME can only be accessed with the following op codes:
+
+```
+EI
+DI
+RETI
+```
