@@ -81,7 +81,10 @@ void CPU::main_test_loop()
 
     dbg() << "Trace:\n------\n";
     for (;;) {
+        int prev_cycle_count = m_cycles_executed;
         execute_one_instruction();
+        int cycles = m_cycles_executed - prev_cycle_count;
+        emulator().ppu().update_by(cycles);
 
         if (m_halted)
             ::exit(0);
@@ -96,6 +99,7 @@ void CPU::main_test_loop()
 OpCode CPU::execute_one_instruction()
 {
     // Check if we should handle interrupts?
+    handle_interrupts();
 
     OpCode op_code = static_cast<OpCode>(fetch_and_inc_u8());
     m_cycles_executed += cycles_for_opcode(op_code);
@@ -540,6 +544,10 @@ OpCode CPU::execute_one_instruction()
     case OpCode::RET:
         pop_return();
         break;
+    case OpCode::RETI:
+        m_interrupt_master_enable_flag = true;
+        pop_return();
+        break;
     case OpCode::TEST_COMPLETE:
     case OpCode::HALT:
         // hex_dump("WRAM", emulator().mmu().wram(), 100, WRAM_START);
@@ -706,12 +714,21 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
 
 void CPU::handle_interrupts()
 {
+    if (!m_interrupt_master_enable_flag)
+        return;
+
+    if ((int)(m_interrupt_enable & InterruptFlags::VBlank) > 0 && (int)(m_interrupt_flag & InterruptFlags::VBlank) > 0)
+        dbg() << "VBLANK INTERRUPT!";
+
     // TODO:
     // * reset IME to be off
     // * IME can only be turned on from another EI or RETI
     // * look into all set_flag_x calls and ensure I'm handling reset properly
-    if (m_interrupt_enable != InterruptFlags::None && m_interrupt_flag != InterruptFlags::None)
-        dbg() << "would probably execute an interrupt now";
+
+    // Calling an interrupt:
+    // * get the correct interrupt vector based on which interrupt was requested
+    // * push the current program counter
+    // * set the program counter to the new interrupt
 }
 
 //
