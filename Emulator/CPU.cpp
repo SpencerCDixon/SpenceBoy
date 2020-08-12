@@ -10,8 +10,8 @@
 #include <SD/Assertions.h>
 #include <SD/File.h>
 
-#include <inttypes.h>
-#include <stdio.h>
+#include <cinttypes>
+#include <cstdio>
 
 // 4.194304 MHz -> 4,194,304 / 60 = 69905
 //static constexpr u32 CYCLES_PER_SECOND = 69905;
