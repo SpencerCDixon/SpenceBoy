@@ -98,7 +98,6 @@ void CPU::main_test_loop()
 
 OpCode CPU::execute_one_instruction()
 {
-    // Check if we should handle interrupts?
     handle_interrupts();
 
     OpCode op_code = static_cast<OpCode>(fetch_and_inc_u8());
@@ -717,13 +716,13 @@ void CPU::handle_interrupts()
     if (!m_interrupt_master_enable_flag)
         return;
 
-    if ((int)(m_interrupt_enable & InterruptFlags::VBlank) > 0 && (int)(m_interrupt_flag & InterruptFlags::VBlank) > 0)
-        dbg() << "VBLANK INTERRUPT!";
-
-    // TODO:
-    // * reset IME to be off
-    // * IME can only be turned on from another EI or RETI
-    // * look into all set_flag_x calls and ensure I'm handling reset properly
+    // Hard coded VBlank, need to do all the rest too
+    if ((int)(m_interrupt_enable & InterruptFlags::VBlank) > 0 && (int)(m_interrupt_flag & InterruptFlags::VBlank) > 0) {
+        m_interrupt_master_enable_flag = false;
+        m_interrupt_flag = InterruptFlags::None;
+        push(m_registers.program_counter);
+        m_registers.program_counter = 0x40;
+    }
 
     // Calling an interrupt:
     // * get the correct interrupt vector based on which interrupt was requested

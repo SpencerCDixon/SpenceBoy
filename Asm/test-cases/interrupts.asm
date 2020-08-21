@@ -32,12 +32,11 @@ ENDR
 
 SECTION "TestCode", ROM0
 
-; Example of a way we can jump to handlers when interrupt is enabled
-DecrementCounter:
-  dec b
-  reti
-
 Start:
+	; Turn LCD display on
+	ld hl, $ff40
+	ld [hl], $81
+
   nop
   di   ; Disable interrupts
 
@@ -47,16 +46,26 @@ Start:
 
   ld sp, $FFFF ; Initialize stack pointer
 
-  ; We only want to handl interrupts for vblanks which should happen once a second
+  ; We only want to handle interrupts for vblanks which should happen once a second
   ld a, IEF_VBLANK
   ld [rIE], a
+	xor a
 
   ei
 
 VBlankWaitLoop:
   cp b
   jp nz, VBlankWaitLoop
+	jp End
 
+; Example of a way we can jump to handlers when interrupt is enabled
+DecrementCounter:
+  dec b
+	; ld a, $10
+	; xor a
+  reti
+
+End:
 	nop
 	halt
 

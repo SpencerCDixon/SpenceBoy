@@ -18,5 +18,5 @@ ninja
 # ./gameboy --rom $SCRIPTPATH/../Asm/ROMs/serenity.gb --asset-dir $SCRIPTPATH/../Assets #--verbose
 
 # Example running a test case in debug mode
-./gameboy --rom $SCRIPTPATH/../Tests/data/interrupts.gb --asset-dir $SCRIPTPATH/../Assets # --test
+./gameboy --rom $SCRIPTPATH/../Tests/data/interrupts.gb --asset-dir $SCRIPTPATH/../Assets --verbose # --test
 popd
