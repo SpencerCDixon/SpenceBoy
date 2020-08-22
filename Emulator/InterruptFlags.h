@@ -16,6 +16,8 @@ enum class InterruptFlags : u8 {
 };
 
 u16 jump_vector_for(InterruptFlags);
+bool is_on(InterruptFlags value, InterruptFlags to_test);
+InterruptFlags unset(InterruptFlags value, InterruptFlags to_turn_off);
 
 constexpr enum InterruptFlags operator|(const enum InterruptFlags selfValue, const enum InterruptFlags inValue)
 {

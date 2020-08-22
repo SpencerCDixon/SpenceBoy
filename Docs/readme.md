@@ -57,11 +57,12 @@ $ ./Scripts/run.sh
 - [ ] Add a GUI window that displays outlines of all the moving surfaces (without content, i.e a "wireframe" view) so you can see how things move around separately from the main emulator screen.
 - [x] [Proper boot up sequence](http://localhost:8080/pandocs/#power-up-sequence)
 - [ ] Load one of the older ROMs into your emulator (something like Tetris, Tennis or Super Mario Land) and see if you can get it to render the title screen.
-- [ ] Interrupts
+- [x] Interrupts
 - [ ] All unprefixed raw op codes
 - [ ] All prefixed `cb` opcodes 
 - [ ] Render title properly
 - [ ] Be able to set window title based on title in ROM
+- [ ] Proper 'halt' which can unhalt if an interrupt occurs and continues to execute instructions
 
 ## Testing Infra
 

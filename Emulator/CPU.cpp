@@ -716,18 +716,22 @@ void CPU::handle_interrupts()
     if (!m_interrupt_master_enable_flag)
         return;
 
-    // Hard coded VBlank, need to do all the rest too
-    if ((int)(m_interrupt_enable & InterruptFlags::VBlank) > 0 && (int)(m_interrupt_flag & InterruptFlags::VBlank) > 0) {
-        m_interrupt_master_enable_flag = false;
-        m_interrupt_flag = InterruptFlags::None;
-        push(m_registers.program_counter);
-        m_registers.program_counter = jump_vector_for(InterruptFlags::VBlank);
-    }
+    // Bit 0: VBlank
+    // Bit 1: LCD Stat
+    // Bit 2: Timer
+    // Bit 3: Serial
+    // Bit 4: Joypad
+    for (int i = 0; i < 5; i++) {
+        auto flag_to_test = static_cast<InterruptFlags>(1 << i);
 
-    // Calling an interrupt:
-    // * get the correct interrupt vector based on which interrupt was requested
-    // * push the current program counter
-    // * set the program counter to the new interrupt
+        if (is_on(m_interrupt_enable, flag_to_test) && is_on(m_interrupt_flag, flag_to_test)) {
+            m_interrupt_master_enable_flag = false;
+            m_interrupt_flag = unset(m_interrupt_flag, flag_to_test);
+            push(m_registers.program_counter);
+            m_registers.program_counter = jump_vector_for(InterruptFlags::VBlank);
+            break;
+        }
+    }
 }
 
 //
