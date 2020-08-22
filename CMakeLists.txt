@@ -46,7 +46,9 @@ add_executable(gameboy
         SD/String.cpp
         SD/Timer.h
         SD/Vector.h
-        Emulator/InterruptFlags.h)
+        Emulator/InterruptFlags.h
+        Emulator/InterruptFlags.cpp
+        )
 target_include_directories(gameboy PUBLIC ".")
 
 #---------

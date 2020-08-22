@@ -721,7 +721,7 @@ void CPU::handle_interrupts()
         m_interrupt_master_enable_flag = false;
         m_interrupt_flag = InterruptFlags::None;
         push(m_registers.program_counter);
-        m_registers.program_counter = 0x40;
+        m_registers.program_counter = jump_vector_for(InterruptFlags::VBlank);
     }
 
     // Calling an interrupt:

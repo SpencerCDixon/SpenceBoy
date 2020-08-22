@@ -15,6 +15,8 @@ enum class InterruptFlags : u8 {
     Joypad = 1 << 4,
 };
 
+u16 jump_vector_for(InterruptFlags);
+
 constexpr enum InterruptFlags operator|(const enum InterruptFlags selfValue, const enum InterruptFlags inValue)
 {
     return (enum InterruptFlags)(u8(selfValue) | u8(inValue));
