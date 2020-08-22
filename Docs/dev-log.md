@@ -4,6 +4,18 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 8/22/2020**
+
+### What did I get done today?
+
+* More interrupt handling
+
+---
+
+**VACATION! (Much needed)**
+
+---
+ 
 **Date: 8/11/2020**
 
 ### What did I get done today?
