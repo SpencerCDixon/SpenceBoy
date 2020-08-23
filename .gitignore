@@ -35,5 +35,6 @@ Asm/Tools/mgbdis
 Games
 
 .vimrc
+.nvimrc
 .ycm_extra_conf.py
 TODO.md
