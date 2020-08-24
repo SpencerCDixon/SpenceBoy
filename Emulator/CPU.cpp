@@ -524,6 +524,27 @@ OpCode CPU::execute_one_instruction()
         push(m_registers.program_counter + 2);
         m_registers.program_counter = fetch_and_inc_u16();
         break;
+    case OpCode::RST_00H:
+        rst(0);
+        break;
+    case OpCode::RST_08H:
+        rst(0x8);
+        break;
+    case OpCode::RST_10H:
+        rst(0x1);
+        break;
+    case OpCode::RST_18H:
+        rst(0x18);
+        break;
+    case OpCode::RST_20H:
+        rst(0x20);
+        break;
+    case OpCode::RST_28H:
+        rst(0x28);
+        break;
+    case OpCode::RST_38H:
+        rst(0x38);
+        break;
     case OpCode::RET_C:
         if (get_carry_flag())
             pop_return();
@@ -847,6 +868,12 @@ void CPU::pop_return()
     u8 b2 = read(get_sp());
     inc_sp();
     m_registers.program_counter = to_le_16_bit(b1, b2);
+}
+
+void CPU::rst(u16 jump_to_address)
+{
+    push(m_registers.program_counter);
+    m_registers.program_counter = jump_to_address;
 }
 
 //

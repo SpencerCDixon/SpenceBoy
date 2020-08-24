@@ -94,6 +94,7 @@ private:
     void push(u16 addr);
     void pop(u8* reg_one, u8* reg_two);
     void pop_return();
+    void rst(u16 jump_to_address);
 
     // Arithmetic
     void cp_a(u8* value_ptr);
