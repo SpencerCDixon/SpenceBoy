@@ -195,6 +195,14 @@ private:
         m_registers.a += value;
         set_zero_flag(m_registers.a == 0);
     }
+    void add_hl(u16 value)
+    {
+        u16 current = get_hl();
+        set_subtract_flag(false);
+        set_carry_flag(will_carry(current, value));
+        set_hl(current + value);
+        // TODO: half-carry
+    }
 
     //
     // Fetch

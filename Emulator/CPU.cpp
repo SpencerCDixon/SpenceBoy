@@ -280,6 +280,18 @@ OpCode CPU::execute_one_instruction()
         // TODO: half-carry
         break;
     }
+    case OpCode::ADD_HL_DE:
+        add_hl(get_de());
+        break;
+    case OpCode::ADD_HL_BC:
+        add_hl(get_bc());
+        break;
+    case OpCode::ADD_HL_HL:
+        add_hl(get_hl());
+        break;
+    case OpCode::ADD_HL_SP:
+        add_hl(m_registers.stack_ptr);
+        break;
     case OpCode::JP_NZ_a16: {
         u16 new_address = fetch_and_inc_u16();
         if (!get_zero_flag())
