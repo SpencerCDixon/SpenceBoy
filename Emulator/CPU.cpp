@@ -247,6 +247,9 @@ OpCode CPU::execute_one_instruction()
     case OpCode::DEC_DE:
         dec_de();
         break;
+    case OpCode::DEC_HL_ADDR:
+        dec_addr(get_hl());
+        break;
     case OpCode::ADD_A_d8:
         add_a(fetch_and_inc_u8());
         break;

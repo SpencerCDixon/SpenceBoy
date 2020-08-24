@@ -56,7 +56,7 @@ $ ./Scripts/run.sh
 - [x] Add a GUI window that displays the contents of tile memory rendered as a tile map. This will give you fast visual clues later if/when something goes wrong in emulation.
 - [x] Add a GUI window that displays outlines of all the moving surfaces (without content, i.e a "wireframe" view) so you can see how things move around separately from the main emulator screen.
 - [x] [Proper boot up sequence](http://localhost:8080/pandocs/#power-up-sequence)
-- [ ] Load one of the older ROMs into your emulator (something like Tetris, Tennis or Super Mario Land) and see if you can get it to render the title screen.
+- [x] Load one of the older ROMs into your emulator (something like Tetris, Tennis or Super Mario Land) and see if you can get it to render the title screen.
 - [x] Interrupts
 - [ ] Sprite OAM procedure
 - [ ] All unprefixed raw op codes
@@ -145,7 +145,7 @@ $ ./Scripts/run.sh
 - [x] DEC_E (0x1D)
 - [x] DEC_H (0x25)
 - [x] DEC_HL (0x2B)
-- [ ] DEC_HL_ADDR (0x35)
+- [x] DEC_HL_ADDR (0x35)
 - [x] DEC_L (0x2D)
 - [x] DEC_SP (0x3B)
 - [x] DI (0xF3)

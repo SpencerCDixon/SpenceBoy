@@ -5,10 +5,10 @@
 #pragma once
 
 #include "IODevice.h"
+#include "InterruptFlags.h"
 #include "Joypad.h"
 #include "MMU.h"
 #include "OpCode.h"
-#include "InterruptFlags.h"
 
 #include <SD/Bytes.h>
 #include <SD/LogStream.h>
@@ -170,6 +170,15 @@ private:
     {
         u16 bc = get_bc();
         set_bc(--bc);
+    }
+    void dec_addr(u16 address)
+    {
+        u8 value = read(address);
+        set_subtract_flag(true);
+        set_half_carry_flag(will_half_carry(value, 1));
+        --value;
+        set_zero_flag(value == 0);
+        write(address, value);
     }
     void inc_sp() { m_registers.stack_ptr++; }
     void dec_sp() { m_registers.stack_ptr--; }
