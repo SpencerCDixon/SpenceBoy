@@ -334,6 +334,9 @@ OpCode CPU::execute_one_instruction()
             m_registers.program_counter += offset;
         break;
     }
+    case OpCode::JP_HL:
+        m_registers.program_counter = get_hl();
+        break;
     case OpCode::CP_A:
         cp_a(&m_registers.a);
         break;
@@ -553,6 +556,9 @@ OpCode CPU::execute_one_instruction()
         break;
     case OpCode::RST_28H:
         rst(0x28);
+        break;
+    case OpCode::RST_30H:
+        rst(0x30);
         break;
     case OpCode::RST_38H:
         rst(0x38);

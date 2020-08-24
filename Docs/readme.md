@@ -54,10 +54,11 @@ $ ./Scripts/run.sh
 - [x] Write a program that scrolls the background layer using the SCX and SCY registers.
 - [ ] Write a program that puts a sprite on screen and animates its movement
 - [x] Add a GUI window that displays the contents of tile memory rendered as a tile map. This will give you fast visual clues later if/when something goes wrong in emulation.
-- [ ] Add a GUI window that displays outlines of all the moving surfaces (without content, i.e a "wireframe" view) so you can see how things move around separately from the main emulator screen.
+- [x] Add a GUI window that displays outlines of all the moving surfaces (without content, i.e a "wireframe" view) so you can see how things move around separately from the main emulator screen.
 - [x] [Proper boot up sequence](http://localhost:8080/pandocs/#power-up-sequence)
 - [ ] Load one of the older ROMs into your emulator (something like Tetris, Tennis or Super Mario Land) and see if you can get it to render the title screen.
 - [x] Interrupts
+- [ ] Sprite OAM procedure
 - [ ] All unprefixed raw op codes
 - [ ] All prefixed `cb` opcodes 
 - [ ] Render title properly
@@ -104,10 +105,10 @@ $ ./Scripts/run.sh
 - [x] ADD_A_HL_ADDR (0x86)
 - [x] ADD_A_L (0x85)
 - [x] ADD_A_d8 (0xC6)
-- [ ] ADD_HL_BC (0x09)
-- [ ] ADD_HL_DE (0x19)
-- [ ] ADD_HL_HL (0x29)
-- [ ] ADD_HL_SP (0x39)
+- [x] ADD_HL_BC (0x09)
+- [x] ADD_HL_DE (0x19)
+- [x] ADD_HL_HL (0x29)
+- [x] ADD_HL_SP (0x39)
 - [ ] ADD_SP_r8 (0xE8)
 - [x] AND_A (0xA7)
 - [x] AND_B (0xA0)
@@ -303,14 +304,14 @@ $ ./Scripts/run.sh
 - [ ] RLCA (0x07)
 - [ ] RRA (0x1F)
 - [ ] RRCA (0x0F)
-- [ ] RST_00H (0xC7)
-- [ ] RST_08H (0xCF)
-- [ ] RST_10H (0xD7)
-- [ ] RST_18H (0xDF)
-- [ ] RST_20H (0xE7)
-- [ ] RST_28H (0xEF)
-- [ ] RST_30H (0xF7)
-- [ ] RST_38H (0xFF)
+- [x] RST_00H (0xC7)
+- [x] RST_08H (0xCF)
+- [x] RST_10H (0xD7)
+- [x] RST_18H (0xDF)
+- [x] RST_20H (0xE7)
+- [x] RST_28H (0xEF)
+- [x] RST_30H (0xF7)
+- [x] RST_38H (0xFF)
 - [ ] SBC_A_A (0x9F)
 - [ ] SBC_A_B (0x98)
 - [ ] SBC_A_C (0x99)
