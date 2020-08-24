@@ -4,6 +4,15 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 8/24/2020**
+
+### What did I get done today?
+
+* Add support for rst op codes
+* Add support for add_hl op code
+
+---
+ 
 **Date: 8/22/2020**
 
 ### What did I get done today?
