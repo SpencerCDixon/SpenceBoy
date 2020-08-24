@@ -170,6 +170,9 @@ OpCode CPU::execute_one_instruction()
         write(address, m_registers.a);
         break;
     }
+    case OpCode::LD_A_a16_ADDR:
+        m_registers.a = read(fetch_and_inc_u16());
+        break;
     case OpCode::LD_A_HL_ADDR_INC:
         m_registers.a = read(get_hl());
         inc_hl();
