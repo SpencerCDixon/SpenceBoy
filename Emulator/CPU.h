@@ -53,6 +53,7 @@ public:
     explicit CPU(Emulator& emulator);
     ~CPU();
 
+    void boot();
     void main_loop();
     void main_test_loop();
     OpCode execute_one_instruction();

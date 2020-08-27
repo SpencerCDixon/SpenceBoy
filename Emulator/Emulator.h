@@ -24,20 +24,29 @@ public:
         : m_settings(settings)
         , m_mmu(*this)
         , m_joypad({})
-        , m_cpu(*this)
+        , m_cpu(nullptr)
         , m_ppu(*this)
         , m_sound_card({})
         , m_debugger(*this)
     {
         mmu().init_devices();
 
+        // NOTE: Booting up the CPU has some circular references (Interrupt Flags) so we need to break
+        // this into a two-part process.
+        m_cpu = new CPU(*this);
+        m_cpu->boot();
+
         if (!settings.in_test_mode) {
-            auto path = m_settings.assets_dir + "/early-gameboy.ttf";
-            SDLRenderer::the().init(path);
-            path = m_settings.assets_dir + "/SpenceBoy.png";
-            m_gb_background = Texture::from_image(path);
+            auto font_path = m_settings.assets_dir + "/early-gameboy.ttf";
+            SDLRenderer::the().init(font_path);
+            auto bg_path = m_settings.assets_dir + "/SpenceBoy.png";
+            m_gb_background = Texture::from_image(bg_path);
             ppu().init_textures();
         }
+    }
+    ~Emulator()
+    {
+        delete m_cpu;
     }
 
     void load_rom(const char* path);
@@ -46,7 +55,7 @@ public:
     MMU& mmu() { return m_mmu; }
     Joypad& joypad() { return m_joypad; }
     PPU& ppu() { return m_ppu; }
-    CPU& cpu() { return m_cpu; }
+    CPU& cpu() { return *m_cpu; }
     SoundCard& sound() { return m_sound_card; }
     Renderer& renderer() { return SDLRenderer::the(); }
     String& assets_dir() { return m_settings.assets_dir; }
@@ -59,7 +68,7 @@ private:
     RuntimeSettings m_settings;
     MMU m_mmu;
     Joypad m_joypad;
-    CPU m_cpu;
+    CPU* m_cpu;
     PPU m_ppu;
     SoundCard m_sound_card;
     Debugger m_debugger;

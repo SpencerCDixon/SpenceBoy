@@ -10,6 +10,7 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 * Improve the testing snapshots to include PC
 * Start registers at correct value after completing boot rom
+* Split CPU creation into two steps so I can properly initialize all IO devices
 
 ---
  

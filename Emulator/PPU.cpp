@@ -327,12 +327,7 @@ u8 PPU::in(u16 address)
 
 void PPU::out(u16 address, u8 value)
 {
-    // TODO:
-    //    PPU::out() 0xff40 - LCDC Status Interrupt
-    //    PPU::out(0xff42, 0x0)
-    //    PPU::out(0xff43, 0x0)
-    //    PPU::out(0xff26, 0x0)
-    dbg() << "PPU::out(" << to_hex(address) << ", " << to_hex(value) << ") " << to_hex(emulator().cpu().test_state().registers.program_counter);
+    dbg() << "PPU::out(" << to_hex(address) << ", " << to_hex(value) << ") ";
 
     switch (address) {
     case R_SCX:
