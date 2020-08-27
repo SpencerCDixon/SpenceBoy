@@ -86,6 +86,7 @@ private:
     void handle_load_op_code(const OpCode& code);
     void handle_interrupts();
     void log_test_state(const OpCode& op_code);
+    void exit_boot_rom();
 
     // Memory Access
     u8 read(u16 address);

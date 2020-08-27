@@ -30,10 +30,8 @@ CPU::CPU(Emulator& emulator)
     : m_emulator(emulator)
     , m_registers({ 0 })
 {
-    m_registers.stack_ptr = 0xfffe;
-
     if (should_skip_boot_rom()) {
-        m_registers.program_counter = 0x100;
+        exit_boot_rom();
     } else {
         m_registers.program_counter = 0x00;
     }
@@ -779,6 +777,21 @@ void CPU::handle_interrupts()
     }
 }
 
+void CPU::exit_boot_rom()
+{
+    m_in_boot_rom = false;
+    m_registers.program_counter = 0x100;
+    m_registers.stack_ptr = 0xfffe;
+    m_registers.a = 0x01;
+    m_registers.f = 0xb0;
+    m_registers.b = 0x00;
+    m_registers.c = 0x13;
+    m_registers.d = 0x00;
+    m_registers.e = 0xd8;
+    m_registers.h = 0x01;
+    m_registers.l = 0x4d;
+}
+
 //
 // Memory Access
 //
@@ -837,12 +850,12 @@ u8 CPU::in(u16 address)
 
 void CPU::out(u16 address, u8 value)
 {
-    //    dbg() << "CPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
+    if (emulator().settings().verbose_logging)
+        dbg() << "CPU::out(" << to_hex(address) << ", " << to_hex(value) << ")";
 
     // End of boot rom sequence
     if (address == 0xff50 && value == 1) {
-        m_in_boot_rom = false;
-        m_registers.program_counter = 0x100;
+        return exit_boot_rom();
     }
 
     // Write to the interrupt flag signaling that we'd like an interrupt to occur
@@ -1095,12 +1108,12 @@ String to_trace_line(const CPUTestState& test_state)
     snprintf(
         buffer,
         buf_size,
-        "A: %03u [0x%02x] F: %03u [0x%02x] %s "
-        "B: %03u [0x%02x] C: %03u [0x%02x]  "
-        "D: %03u [0x%02x] E: %03u [0x%02x]  "
-        "H: %03u [0x%02x] L: %03u [0x%02x] ---"
-        " WRAM: 0x%016" PRIx64 " | VRAM: 0x%016" PRIx64 " |",
-        // test_state.registers.program_counter,
+        "PC [0x%04x] A: %03u [0x%02x] F: %03u [0x%02x] %s "
+        "B: %03u [0x%02x] C: %03u [0x%02x] "
+        "D: %03u [0x%02x] E: %03u [0x%02x] "
+        "H: %03u [0x%02x] L: %03u [0x%02x] "
+        " WRAM: 0x%08" PRIx64 " | VRAM: 0x%08" PRIx64 " |",
+        test_state.registers.program_counter,
         test_state.registers.a,
         test_state.registers.a,
         test_state.registers.f,

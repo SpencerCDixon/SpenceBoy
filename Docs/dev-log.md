@@ -4,6 +4,15 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 8/26/2020**
+
+### What did I get done today?
+
+* Improve the testing snapshots to include PC
+* Start registers at correct value after completing boot rom
+
+---
+ 
 **Date: 8/24/2020**
 
 ### What did I get done today?
