@@ -1,6 +1,6 @@
-# SpenceBoy - A GameBoy Color Emulator
+# SpenceBoy - A GameBoy Emulator
 
-This project is a GameBoy Color emulator. The primary objective is for
+This project is a GameBoy emulator. The primary objective is for
 educational purposes. No external dependencies are allowed other than `SDL2` and
 the `C` standard library.
 
@@ -15,27 +15,6 @@ $ ./Scripts/run.sh
 ```
 
 # Roadmap
-
-## General 
-
-- [x] Set up a separate library to store standard lib functionality
-- [x] Set up a basic CMake test 
-- [ ] Add ROM conformation tests to ensure I'm as compliant as possible
-- [x] Remove CMake Tests for my own harness which does diffs on traces of different .gb files 
-
-## Standard Lib
-
-- [ ] Hash Map
-- [ ] Result
-- [ ] Shared Pointer
-- [ ] Unique Pointer
-- [x] Vector
-- [x] Assertions
-- [x] Basic Logging
-- [x] Color
-- [x] File I/O
-- [x] Option
-- [x] String
 
 ## Emulator
 
@@ -64,12 +43,6 @@ $ ./Scripts/run.sh
 - [ ] Render title properly
 - [ ] Be able to set window title based on title in ROM
 - [ ] Proper 'halt' which can unhalt if an interrupt occurs and continues to execute instructions
-
-## Testing Infra
-
-- [ ] Add flags at end of execution to snapshots
-- [ ] Add some sort of ASM assertion that writes to unused memory and can be shown in console
-- [x] Properly capture prefix opcodes in test snapshots
 
 ## Game Targets
 
