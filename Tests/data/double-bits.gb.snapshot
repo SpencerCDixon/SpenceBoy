@@ -1,165 +1,3 @@
-setting dummy device id: 1
-setting dummy device id: 2
-setting dummy device id: 3
-setting dummy device id: 4
-setting dummy device id: 5
-setting dummy device id: 6
-setting dummy device id: 7
-setting dummy device id: 8
-setting dummy device id: 9
-setting dummy device id: 10
-setting dummy device id: 11
-setting dummy device id: 12
-setting dummy device id: 13
-setting dummy device id: 14
-setting dummy device id: 63
-setting dummy device id: 75
-setting dummy device id: 76
-setting dummy device id: 77
-setting dummy device id: 78
-setting dummy device id: 79
-setting dummy device id: 81
-setting dummy device id: 82
-setting dummy device id: 83
-setting dummy device id: 84
-setting dummy device id: 85
-setting dummy device id: 86
-setting dummy device id: 87
-setting dummy device id: 88
-setting dummy device id: 89
-setting dummy device id: 90
-setting dummy device id: 91
-setting dummy device id: 92
-setting dummy device id: 93
-setting dummy device id: 94
-setting dummy device id: 95
-setting dummy device id: 96
-setting dummy device id: 97
-setting dummy device id: 98
-setting dummy device id: 99
-setting dummy device id: 100
-setting dummy device id: 101
-setting dummy device id: 102
-setting dummy device id: 103
-setting dummy device id: 104
-setting dummy device id: 105
-setting dummy device id: 106
-setting dummy device id: 107
-setting dummy device id: 108
-setting dummy device id: 109
-setting dummy device id: 110
-setting dummy device id: 111
-setting dummy device id: 112
-setting dummy device id: 113
-setting dummy device id: 114
-setting dummy device id: 115
-setting dummy device id: 116
-setting dummy device id: 117
-setting dummy device id: 118
-setting dummy device id: 119
-setting dummy device id: 120
-setting dummy device id: 121
-setting dummy device id: 122
-setting dummy device id: 123
-setting dummy device id: 124
-setting dummy device id: 125
-setting dummy device id: 126
-setting dummy device id: 127
-writing to: 0xff05
-idx: 5
-DummyIODevice::write(address: 65285 [0xff05], value: 0 [0x0])
-writing to: 0xff06
-idx: 6
-DummyIODevice::write(address: 65286 [0xff06], value: 0 [0x0])
-writing to: 0xff07
-idx: 7
-DummyIODevice::write(address: 65287 [0xff07], value: 0 [0x0])
-writing to: 0xff10
-idx: 16
-SoundCard::out(0xff10, 0x80)
-writing to: 0xff11
-idx: 17
-SoundCard::out(0xff11, 0xbf)
-writing to: 0xff12
-idx: 18
-SoundCard::out(0xff12, 0xf3)
-writing to: 0xff14
-idx: 20
-SoundCard::out(0xff14, 0xbf)
-writing to: 0xff16
-idx: 22
-SoundCard::out(0xff16, 0x3f)
-writing to: 0xff17
-idx: 23
-SoundCard::out(0xff17, 0x0)
-writing to: 0xff19
-idx: 25
-SoundCard::out(0xff19, 0xbf)
-writing to: 0xff1a
-idx: 26
-SoundCard::out(0xff1a, 0x7f)
-writing to: 0xff1b
-idx: 27
-SoundCard::out(0xff1b, 0xff)
-writing to: 0xff1c
-idx: 28
-SoundCard::out(0xff1c, 0x9f)
-writing to: 0xff1e
-idx: 30
-SoundCard::out(0xff1e, 0xbf)
-writing to: 0xff20
-idx: 32
-SoundCard::out(0xff20, 0xff)
-writing to: 0xff21
-idx: 33
-SoundCard::out(0xff21, 0x0)
-writing to: 0xff22
-idx: 34
-SoundCard::out(0xff22, 0x0)
-writing to: 0xff23
-idx: 35
-SoundCard::out(0xff23, 0xbf)
-writing to: 0xff24
-idx: 36
-SoundCard::out(0xff24, 0x77)
-writing to: 0xff25
-idx: 37
-SoundCard::out(0xff25, 0xf3)
-writing to: 0xff26
-idx: 38
-SoundCard::out(0xff26, 0xf1)
-writing to: 0xff40
-idx: 64
-PPU::out(0xff40, 0x91) 
-  lcd control written
-writing to: 0xff42
-idx: 66
-PPU::out(0xff42, 0x0) 
-  scy written
-writing to: 0xff43
-idx: 67
-PPU::out(0xff43, 0x0) 
-  scx written
-writing to: 0xff45
-idx: 69
-PPU::out(0xff45, 0x0) 
-writing to: 0xff47
-idx: 71
-PPU::out(0xff47, 0xfc) 
-  background palette would be set
-writing to: 0xff48
-idx: 72
-PPU::out(0xff48, 0xff) 
-writing to: 0xff49
-idx: 73
-PPU::out(0xff49, 0xff) 
-writing to: 0xff4a
-idx: 74
-PPU::out(0xff4a, 0x0) 
-writing to: 0xff4b
-idx: 75
-DummyIODevice::write(address: 65355 [0xff4b], value: 0 [0x0])
-writing to: 0xffff
 Trace:
 ------
 
@@ -172,8 +10,6 @@ Trace:
         LD_A_DE_ADDR   PC [0x000d] A: 206 [0xce] F: 176 [0xb0] Z-HC B: 000 [0x00] C: 000 [0x00] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
               LD_C_A   PC [0x000e] A: 206 [0xce] F: 176 [0xb0] Z-HC B: 000 [0x00] C: 206 [0xce] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
              LD_B_d8   PC [0x0010] A: 206 [0xce] F: 176 [0xb0] Z-HC B: 004 [0x04] C: 206 [0xce] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
-writing to: 0xfffd
-writing to: 0xfffc
              PUSH_BC   PC [0x0011] A: 206 [0xce] F: 176 [0xb0] Z-HC B: 004 [0x04] C: 206 [0xce] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
                 RL_C   PC [0x0013] A: 206 [0xce] F: 016 [0x10] ---C B: 004 [0x04] C: 157 [0x9d] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
               PREFIX   PC [0x0013] A: 206 [0xce] F: 016 [0x10] ---C B: 004 [0x04] C: 157 [0x9d] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
@@ -184,8 +20,6 @@ writing to: 0xfffc
                  RLA   PC [0x0018] A: 059 [0x3b] F: 016 [0x10] ---C B: 004 [0x04] C: 157 [0x9d] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
                DEC_B   PC [0x0019] A: 059 [0x3b] F: 080 [0x50] -N-C B: 003 [0x03] C: 157 [0x9d] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
             JR_NZ_r8   PC [0x0010] A: 059 [0x3b] F: 080 [0x50] -N-C B: 003 [0x03] C: 157 [0x9d] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
-writing to: 0xfffd
-writing to: 0xfffc
              PUSH_BC   PC [0x0011] A: 059 [0x3b] F: 080 [0x50] -N-C B: 003 [0x03] C: 157 [0x9d] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
                 RL_C   PC [0x0013] A: 059 [0x3b] F: 016 [0x10] ---C B: 003 [0x03] C: 059 [0x3b] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
               PREFIX   PC [0x0013] A: 059 [0x3b] F: 016 [0x10] ---C B: 003 [0x03] C: 059 [0x3b] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
@@ -196,8 +30,7 @@ writing to: 0xfffc
                  RLA   PC [0x0018] A: 239 [0xef] F: 000 [0x00] ---- B: 003 [0x03] C: 058 [0x3a] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
                DEC_B   PC [0x0019] A: 239 [0xef] F: 064 [0x40] -N-- B: 002 [0x02] C: 058 [0x3a] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
             JR_NZ_r8   PC [0x0010] A: 239 [0xef] F: 064 [0x40] -N-- B: 002 [0x02] C: 058 [0x3a] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
-writing to: 0xfffd
-writing to: 0xfffc
+LCD/PPU are disabled, returning early
              PUSH_BC   PC [0x0011] A: 239 [0xef] F: 064 [0x40] -N-- B: 002 [0x02] C: 058 [0x3a] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
                 RL_C   PC [0x0013] A: 239 [0xef] F: 000 [0x00] ---- B: 002 [0x02] C: 116 [0x74] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
               PREFIX   PC [0x0013] A: 239 [0xef] F: 000 [0x00] ---- B: 002 [0x02] C: 116 [0x74] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
@@ -208,8 +41,6 @@ writing to: 0xfffc
                  RLA   PC [0x0018] A: 188 [0xbc] F: 016 [0x10] ---C B: 002 [0x02] C: 117 [0x75] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
                DEC_B   PC [0x0019] A: 188 [0xbc] F: 080 [0x50] -N-C B: 001 [0x01] C: 117 [0x75] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
             JR_NZ_r8   PC [0x0010] A: 188 [0xbc] F: 080 [0x50] -N-C B: 001 [0x01] C: 117 [0x75] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
-writing to: 0xfffd
-writing to: 0xfffc
              PUSH_BC   PC [0x0011] A: 188 [0xbc] F: 080 [0x50] -N-C B: 001 [0x01] C: 117 [0x75] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
                 RL_C   PC [0x0013] A: 188 [0xbc] F: 000 [0x00] ---- B: 001 [0x01] C: 235 [0xeb] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
               PREFIX   PC [0x0013] A: 188 [0xbc] F: 000 [0x00] ---- B: 001 [0x01] C: 235 [0xeb] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
@@ -220,10 +51,8 @@ writing to: 0xfffc
                  RLA   PC [0x0018] A: 240 [0xf0] F: 000 [0x00] ---- B: 001 [0x01] C: 235 [0xeb] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
                DEC_B   PC [0x0019] A: 240 [0xf0] F: 192 [0xc0] ZN-- B: 000 [0x00] C: 235 [0xeb] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
             JR_NZ_r8   PC [0x001b] A: 240 [0xf0] F: 192 [0xc0] ZN-- B: 000 [0x00] C: 235 [0xeb] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 016 [0x10]  WRAM: 0x00000000 | VRAM: 0x00000000 |
-writing to: 0x8010
     LD_HL_ADDR_INC_A   PC [0x001c] A: 240 [0xf0] F: 192 [0xc0] ZN-- B: 000 [0x00] C: 235 [0xeb] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 017 [0x11]  WRAM: 0x00000000 | VRAM: 0x000000f0 |
               INC_HL   PC [0x001d] A: 240 [0xf0] F: 192 [0xc0] ZN-- B: 000 [0x00] C: 235 [0xeb] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 018 [0x12]  WRAM: 0x00000000 | VRAM: 0x000000f0 |
-writing to: 0x8012
     LD_HL_ADDR_INC_A   PC [0x001e] A: 240 [0xf0] F: 192 [0xc0] ZN-- B: 000 [0x00] C: 235 [0xeb] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 019 [0x13]  WRAM: 0x00000000 | VRAM: 0x000001e0 |
               INC_HL   PC [0x001f] A: 240 [0xf0] F: 192 [0xc0] ZN-- B: 000 [0x00] C: 235 [0xeb] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 020 [0x14]  WRAM: 0x00000000 | VRAM: 0x000001e0 |
                  NOP   PC [0x0020] A: 240 [0xf0] F: 192 [0xc0] ZN-- B: 000 [0x00] C: 235 [0xeb] D: 001 [0x01] E: 004 [0x04] H: 128 [0x80] L: 020 [0x14]  WRAM: 0x00000000 | VRAM: 0x000001e0 |

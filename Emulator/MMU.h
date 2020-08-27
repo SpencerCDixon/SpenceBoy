@@ -14,7 +14,7 @@
 // clang-format off
 constexpr u16 MAX_ROM_SIZE = KB * 32;
 constexpr size_t WRAM_SIZE = KB * 8;
-constexpr size_t VRAM_SIZE = KB * 8; // TODO: CGB is 16k but regular GB is 8k
+constexpr size_t VRAM_SIZE = KB * 8;
 constexpr size_t ERAM_SIZE = KB * 8;
 constexpr size_t HRAM_SIZE = 126;
 constexpr size_t IO_SIZE   = 0x80; // FF80 - FF00
