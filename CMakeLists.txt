@@ -51,6 +51,9 @@ add_executable(gameboy
         )
 target_include_directories(gameboy PUBLIC ".")
 
+add_executable(wavplayer WAVPlayer/main.cpp WAVPlayer/RuntimeSettings.h SD/String.cpp SD/LogStream.cpp WAVPlayer/WAVPlayer.cpp WAVPlayer/WAVPlayer.h)
+target_include_directories(wavplayer PUBLIC ".")
+
 #---------
 # Testing
 #---------
