@@ -5,11 +5,12 @@
 #pragma once
 
 #include "RuntimeSettings.h"
+#include "WAVFile.h"
 
 class WAVPlayer {
 public:
     WAVPlayer(RuntimeSettings settings);
-    void play();
+    void play(const WAVFile& file);
 private:
     RuntimeSettings m_settings;
 };

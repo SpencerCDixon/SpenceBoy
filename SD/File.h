@@ -34,6 +34,11 @@ public:
         return result;
     }
 
+    bool exists()
+    {
+        return size_in_bytes() > 0;
+    }
+
     u64 size_in_bytes()
     {
         struct stat st;

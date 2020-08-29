@@ -51,7 +51,22 @@ add_executable(gameboy
         )
 target_include_directories(gameboy PUBLIC ".")
 
-add_executable(wavplayer WAVPlayer/main.cpp WAVPlayer/RuntimeSettings.h SD/String.cpp SD/LogStream.cpp WAVPlayer/WAVPlayer.cpp WAVPlayer/WAVPlayer.h)
+add_executable(wavplayer
+        SD/File.cpp
+        SD/File.h
+        SD/LogStream.cpp
+        SD/LogStream.h
+        SD/Option.h
+        SD/String.cpp
+        SD/Vector.h
+        WAVPlayer/InternalSDL.h
+        WAVPlayer/RuntimeSettings.h
+        WAVPlayer/WAVFile.cpp
+        WAVPlayer/WAVFile.h
+        WAVPlayer/WAVPlayer.cpp
+        WAVPlayer/WAVPlayer.h
+        WAVPlayer/main.cpp
+        )
 target_include_directories(wavplayer PUBLIC ".")
 
 #---------
@@ -96,5 +111,6 @@ if (NOT APPLE)
     include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
     target_link_libraries(gameboy ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2TTF_LIBRARY})
     target_link_libraries(joypad_test ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2TTF_LIBRARY})
+    target_link_libraries(wavplayer ${SDL2_LIBRARIES})
 endif()
 
