@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     }
 
     String path("/home/spence/code/games/SpenceBoy/Assets/sound/collect.wav");
-    WAVFile::create(path);
+//    WAVFile::create(path);
 //    if (file.is_none()) {
 //        dbg() << "unable to create WAVFile from: " << audio_file;
 //        ::exit(1);

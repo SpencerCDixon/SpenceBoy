@@ -5,7 +5,6 @@
 #include <SD/LogStream.h>
 #include <SD/Types.h>
 #include <stdio.h>
-#include <math.h>
 
 #include "InternalSDL.h"
 #include "WAVPlayer.h"
@@ -66,13 +65,23 @@ void audio_callback(void* userdata, u8* stream, int len)
 void WAVPlayer::play_complex(const char* file)
 {
     SDL_AudioSpec wavSpec;
+    SDL_memset(&wavSpec, 0, sizeof(wavSpec));
     Uint8* wavStart;
     Uint32 wavLength;
 
-    if(SDL_LoadWAV(file, &wavSpec, &wavStart, &wavLength) == NULL)
-    {
-        dbg() << "Error: file could not be loaded as an audio file.";
-    }
+    WAVFile* wav = WAVFile::create(file);
+    if (!wav)
+        return;
+    wavStart = wav->audio_data_start();
+    wavLength = wav->audio_data_length();
+
+    wavSpec.freq = wav->frequency();
+    wavSpec.format = wav->format();
+    wavSpec.channels = wav->num_channels();
+    wavSpec.samples = wav->sample_count();
+    wavSpec.size = wav->audio_data_length();
+
+    dbg() << "freq: " << wavSpec.freq << " channels: " << wavSpec.channels << " samples " << wavSpec.samples << " size " << wavSpec.size;
 
     AudioData audio;
     audio.position = wavStart;
@@ -98,7 +107,7 @@ void WAVPlayer::play_complex(const char* file)
     }
 
     SDL_CloseAudioDevice(audioDevice);
-    SDL_FreeWAV(wavStart);
+    delete wav;
 }
 
 void WAVPlayer::print_devices()

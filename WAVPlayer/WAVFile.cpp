@@ -4,36 +4,12 @@
 #include "WAVFile.h"
 #include <SD/Assertions.h>
 #include <SD/File.h>
-#include <SD/LogStream.h>
 
 // Spec: http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html
 // RIFF = Resource Interchange File Format
 
-struct WaveHeader {
-    u32 riff_id;
-    u32 size;
-    u32 wave_id;
-};
-
-struct WaveFmtTag {
-    u16 w_format_tag;
-    u16 num_channels;
-    u32 samples_per_second;
-    u32 average_bytes_per_second;
-    u16 block_align;
-    u16 bits_per_sample;
-    u16 cb_size;
-    u16 valid_bits_per_sample;
-    u32 dw_channel_mask;
-    u8 sub_format[16];
-};
-
-struct WaveChunk {
-    u32 id;
-    u32 size;
-};
-
 #define RIFF_CODE(a, b, c, d) (((u32)(a) << 0) | ((u32)(b) << 8) | ((u32)(c) << 16) | ((u32)(d) << 24))
+
 constexpr u32 WAVE_PCM = 1;
 
 enum {
@@ -57,9 +33,9 @@ inline RiffIterator parse_chunk_at(void* cursor, void* end_cursor)
 }
 inline RiffIterator next_chunk(RiffIterator iterator)
 {
-    WaveChunk* current_chunk = (WaveChunk*)iterator.cursor;
-    u32 size = (current_chunk->size + 1) & ~1; // If odd, can have 1 byte of padding
-    iterator.cursor += sizeof(WaveChunk) + size;
+    WAVChunk* current_chunk = (WAVChunk*)iterator.cursor;
+    u32 size = (current_chunk->size + 1) & ~1; // If odd, can have 1 byte of padding. Always round up to power of 2.
+    iterator.cursor += sizeof(WAVChunk) + size;
     return iterator;
 }
 inline bool is_valid(RiffIterator iterator)
@@ -68,28 +44,33 @@ inline bool is_valid(RiffIterator iterator)
 }
 inline void* get_chunk_data(RiffIterator iterator)
 {
-    void* result = iterator.cursor + sizeof(WaveChunk);
+    void* result = iterator.cursor + sizeof(WAVChunk);
     return result;
 }
 inline u32 get_chunk_type(RiffIterator iterator)
 {
-    WaveChunk* current_chunk = (WaveChunk*)iterator.cursor;
+    WAVChunk* current_chunk = (WAVChunk*)iterator.cursor;
     return current_chunk->id;
 }
+inline u32 get_chunk_size(RiffIterator iterator)
+{
+    WAVChunk* current_chunk = (WAVChunk*)iterator.cursor;
+    return current_chunk->size;
+}
 
-Option<WAVFile> WAVFile::create(const String& path)
+WAVFile* WAVFile::create(const String& path)
 {
     dbg() << "opening WAV file at: " << path;
     auto file = File::open(path);
 
     if (!file.exists())
-        return {};
+        return nullptr;
 
     dbg() << "wav file is size: " << file.size_in_bytes() << " bytes";
     char* contents = (char*)malloc(file.size_in_bytes());
     file.read_into(contents);
 
-    WaveHeader* header = (WaveHeader*)contents;
+    WAVHeader* header = (WAVHeader*)contents;
     // FIXME: return None
     ASSERT(header->riff_id == WAVE_Chunk_ID_RIFF);
     ASSERT(header->wave_id == WAVE_Chunk_ID_WAVE);
@@ -97,7 +78,9 @@ Option<WAVFile> WAVFile::create(const String& path)
     dbg() << "looks like a legit wav file!";
     dbg() << "  wav data size is: " << header->size;
 
-    void *audio_data = nullptr;
+    WAVFmtTag* fmt = nullptr;
+    WAVAudioData metadata;
+
     for (
         RiffIterator iter = parse_chunk_at(header + 1, (u8*)header + 1 + header->size - 4);
         is_valid(iter);
@@ -105,7 +88,7 @@ Option<WAVFile> WAVFile::create(const String& path)
         switch (get_chunk_type(iter)) {
         case WAVE_Chunk_ID_fmt: {
             dbg() << "fmt chunk";
-            WaveFmtTag *fmt = (WaveFmtTag*)get_chunk_data(iter);
+            fmt = (WAVFmtTag*)get_chunk_data(iter);
             dbg() << "  format tag: " << fmt->w_format_tag;
             dbg() << "  samples per sec: " << fmt->samples_per_second;
             dbg() << "  channels: " << fmt->num_channels;
@@ -115,26 +98,42 @@ Option<WAVFile> WAVFile::create(const String& path)
             ASSERT(fmt->w_format_tag == WAVE_PCM);
             ASSERT(fmt->samples_per_second == 44100);
             ASSERT(fmt->num_channels == 1);
-
             break;
         }
         case WAVE_Chunk_ID_data: {
             dbg() << "data chunk";
-            audio_data = get_chunk_data(iter);
+            metadata.audio_data = get_chunk_data(iter);
+            metadata.audio_data_size = get_chunk_size(iter);
             break;
         }
         }
         dbg() << "iteration of chunk";
     }
-    free(contents);
 
-    if (!audio_data)
-        return {};
+    // Unable to parse properly
+    if (!metadata.is_valid() || !fmt) {
+        free(contents);
+        return nullptr;
+    }
 
-    return Option<WAVFile>(WAVFile(path));
+    // Strictly enforce 1 channel for now, keep things simple.
+    auto channel_count = fmt->num_channels;
+    if (channel_count == 1) {
+        // easy case, return samples[0] = data and len = audio_data_size
+    } else if (channel_count == 2) {
+        ASSERT_NOT_REACHED();
+    } else {
+        ASSERT_NOT_REACHED();
+    }
+
+    WAVFile* wav = new WAVFile(path, metadata, fmt, contents);
+    return wav;
 }
 
-WAVFile::WAVFile(String path)
+WAVFile::WAVFile(String path, WAVAudioData data, WAVFmtTag* fmt, char* contents)
     : m_path(path)
+    , m_metadata(data)
+    , m_fmt(fmt)
+    , m_contents(contents)
 {
 }
