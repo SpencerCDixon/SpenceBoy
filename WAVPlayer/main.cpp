@@ -28,14 +28,15 @@ int main(int argc, char* argv[])
     }
 
     String path("/home/spence/code/games/SpenceBoy/Assets/sound/collect.wav");
-    auto file = WAVFile::create(path);
-    if (file.is_none()) {
-        dbg() << "unable to create WAVFile from: " << audio_file;
-        ::exit(1);
-    }
-
+    WAVFile::create(path);
+//    if (file.is_none()) {
+//        dbg() << "unable to create WAVFile from: " << audio_file;
+//        ::exit(1);
+//    }
+//
     WAVPlayer player(settings);
-    player.play(file.value());
+//    player.print_devices();
+    player.play_complex(path.characters());
 
     return 0;
 }

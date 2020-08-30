@@ -4,6 +4,22 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 8/29/2020**
+
+### What did I get done today?
+
+* Implemented basic WAV file parsing
+
+---
+ 
+**Date: 8/28/2020**
+
+### What did I get done today?
+
+* Resarched WAV file format
+
+---
+ 
 **Date: 8/26/2020**
 
 ### What did I get done today?
