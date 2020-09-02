@@ -25,7 +25,7 @@ void Emulator::run()
     InputDebugWindow input_debug(*this);
 
     while (!quit) {
-        auto frame_timer = Timer("frame");
+        auto frame_timer = DebugTimer("frame");
 
         //
         // Input

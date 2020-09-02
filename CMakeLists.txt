@@ -36,6 +36,8 @@ add_executable(gameboy
         Emulator/RuntimeSettings.h
         Emulator/SoundCard.cpp
         Emulator/SoundCard.h
+        Emulator/Timer.cpp
+        Emulator/Timer.h
         Emulator/main.cpp
         SD/Bytes.h
         SD/File.cpp

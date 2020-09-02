@@ -17,6 +17,7 @@
 #include "PPU.h"
 #include "RuntimeSettings.h"
 #include "SoundCard.h"
+#include "Timer.h"
 
 class Emulator {
 public:
@@ -27,6 +28,7 @@ public:
         , m_cpu(*this)
         , m_ppu(*this)
         , m_sound_card({})
+        , m_timer(*this)
         , m_debugger(*this)
     {
         // NOTE: order matters here. Devices need to be initialized before CPU can boot.
@@ -49,6 +51,7 @@ public:
     Joypad& joypad() { return m_joypad; }
     PPU& ppu() { return m_ppu; }
     CPU& cpu() { return m_cpu; }
+    Timer& timer() { return m_timer; }
     SoundCard& sound() { return m_sound_card; }
     Renderer& renderer() { return SDLRenderer::the(); }
     String& assets_dir() { return m_settings.assets_dir; }
@@ -64,6 +67,7 @@ private:
     CPU m_cpu;
     PPU m_ppu;
     SoundCard m_sound_card;
+    Timer m_timer;
     Debugger m_debugger;
 
     // Maybe this belongs elsewhere. But where?

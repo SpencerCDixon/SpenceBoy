@@ -10,15 +10,15 @@
 #include <time.h>
 #include <unistd.h>
 
-class Timer {
+class DebugTimer {
 public:
-    Timer(String name)
+    DebugTimer(String name)
         : m_name(name)
     {
         m_start_time = now();
     }
 
-    ~Timer()
+    ~DebugTimer()
     {
         f64 time_taken = (now() - m_start_time) / 1000000;
         dbg() << m_name << " took: " << (u32)time_taken << "ms";

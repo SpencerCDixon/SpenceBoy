@@ -62,8 +62,12 @@ void CPU::main_loop()
 
         int cycles = m_cycles_executed - prev_cycle_count;
 
-        // TODO: Update Timers
         emulator().ppu().update_by(cycles);
+        emulator().timer().update_by(cycles);
+        if (emulator().timer().has_interrupt()) {
+            handle_interrupts();
+            emulator().timer().reset_interrupt();
+        }
         // TODO: Do Interrupts
         // if (has_interrupt_request)
         // handle_interrupt
@@ -775,7 +779,7 @@ void CPU::handle_interrupts()
             m_interrupt_master_enable_flag = false;
             m_interrupt_flag = unset(m_interrupt_flag, flag_to_test);
             push(m_registers.program_counter);
-            m_registers.program_counter = jump_vector_for(InterruptFlags::VBlank);
+            m_registers.program_counter = jump_vector_for(flag_to_test);
             break;
         }
     }

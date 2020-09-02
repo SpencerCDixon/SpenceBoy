@@ -4,6 +4,14 @@ A place to store my daily progress in building a GameBoy Color Emulator.
 
 ---
  
+**Date: 9/1/2020**
+
+### What did I get done today?
+
+* Initial most likely buggy implementation of hardware Timer 
+
+---
+ 
 **Date: 8/30/2020**
 
 ### What did I get done today?
