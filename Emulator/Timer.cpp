@@ -3,6 +3,7 @@
 //
 
 #include <SD/Assertions.h>
+#include <SD/Bytes.h>
 #include <SD/LogStream.h>
 
 #include "Emulator.h"
@@ -33,6 +34,7 @@ void Timer::out(u16 address, u8 value)
 {
     if (address == 0xFF07) {
         // trying to change the timer frequency and maybe need to update
+        dbg() << "setting tac to: " << to_hex(value);
         u8 old_freq = get_clock_freq();
         m_tac = value;
         u8 new_freq = get_clock_freq();
@@ -56,7 +58,7 @@ void Timer::update_by(u8 cycles)
             set_clock_freq();
             if (m_tima == 255) { // about to overflow
                 m_tima = m_tma;  // reset to our timer modulo
-                dbg() << "would be setting timer interrupt";
+                dbg() << "setting timer interrupt";
                 emulator().cpu().set_interrupt_flag(InterruptFlags::Timer);
             } else {
                 m_tima++;
@@ -72,16 +74,6 @@ void Timer::update_divider_reg(u8 cycles)
         m_divider_counter -= 255; // handle any overflow
         m_div++;
     }
-}
-
-bool Timer::has_interrupt()
-{
-    return m_has_pending_interrupt;
-}
-
-void Timer::reset_interrupt()
-{
-    m_has_pending_interrupt = false;
 }
 
 void Timer::set_clock_freq()
@@ -105,11 +97,12 @@ void Timer::set_clock_freq()
 
 u8 Timer::get_clock_freq()
 {
+    // clear all bitis but the bottom two
     return m_tac & 0x3;
 }
 
 bool Timer::is_clock_enabled()
 {
     // enabled when bit 2 of the timer controller is turned on
-    return m_tac & 0x3;
+    return m_tac & 0x4;
 }

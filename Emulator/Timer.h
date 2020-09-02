@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <SD/Types.h>
 #include "IODevice.h"
+#include <SD/Types.h>
 
 // Timer: http://imrannazar.com/GameBoy-Emulation-in-JavaScript:-Timers
 //
@@ -32,8 +32,6 @@ public:
 
 public:
     void update_by(u8 cycles);
-    bool has_interrupt();
-    void reset_interrupt();
 
 private:
     Emulator& emulator() { return m_emulator; }
@@ -51,7 +49,5 @@ private:
     u8 m_tac { 0 };  // timer controller
 
     s32 m_timer_counter { 1024 }; // Defaults to 4096
-    s32 m_divider_counter { 0 }; // Defaults to 0, counts up at freq of 16382
-
-    bool m_has_pending_interrupt { false };
+    s32 m_divider_counter { 0 };  // Defaults to 0, counts up at freq of 16382
 };

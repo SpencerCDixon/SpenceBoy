@@ -64,10 +64,6 @@ void CPU::main_loop()
 
         emulator().ppu().update_by(cycles);
         emulator().timer().update_by(cycles);
-        if (emulator().timer().has_interrupt()) {
-            handle_interrupts();
-            emulator().timer().reset_interrupt();
-        }
         // TODO: Do Interrupts
         // if (has_interrupt_request)
         // handle_interrupt
@@ -79,6 +75,8 @@ void CPU::main_loop()
     }
 }
 
+// TODO: This separation between test and main loop has lead to some issues.
+// This really needs to be unified and rethought.
 void CPU::main_test_loop()
 {
     // Test cases should all be able to execute in less than 20 seconds. If we've been executing
@@ -91,6 +89,7 @@ void CPU::main_test_loop()
         execute_one_instruction();
         int cycles = m_cycles_executed - prev_cycle_count;
         emulator().ppu().update_by(cycles);
+        emulator().timer().update_by(cycles);
 
         if (m_halted)
             ::exit(0);
