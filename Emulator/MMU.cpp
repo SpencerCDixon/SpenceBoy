@@ -38,7 +38,7 @@ void MMU::init_devices()
             m_io_devices[i] = &emulator().ppu();
         } else if (i >= sound_start && i < sound_end) {
             m_io_devices[i] = &emulator().sound();
-        } else if (i >= timer_start && i < timer_end) {
+        } else if (i >= timer_start && i <= timer_end) {
             m_io_devices[i] = &emulator().timer();
         } else {
             m_io_devices[i] = &DummyIODevice::the();
