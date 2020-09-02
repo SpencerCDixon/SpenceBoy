@@ -5,9 +5,9 @@
 #include <SD/Assertions.h>
 #include <SD/LogStream.h>
 
-#include "Timer.h"
 #include "Emulator.h"
 #include "InterruptFlags.h"
+#include "Timer.h"
 
 Timer::Timer(Emulator& emulator)
     : m_emulator(emulator)
@@ -52,7 +52,6 @@ void Timer::update_by(u8 cycles)
     if (is_clock_enabled()) {
         m_timer_counter -= cycles;
 
-        // Timer has been triggered
         if (m_timer_counter <= 0) {
             set_clock_freq();
             if (m_tima == 255) { // about to overflow
@@ -112,5 +111,5 @@ u8 Timer::get_clock_freq()
 bool Timer::is_clock_enabled()
 {
     // enabled when bit 2 of the timer controller is turned on
-    return m_tac & 0x2;
+    return m_tac & 0x3;
 }
