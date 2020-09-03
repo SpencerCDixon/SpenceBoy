@@ -7,8 +7,9 @@
 #include <SD/Assertions.h>
 #include <SD/Bytes.h>
 
-Joypad::Joypad()
-    : m_mode(JoypadReadMode::None)
+Joypad::Joypad(Emulator& emulator)
+    : m_emulator(emulator)
+    , m_mode(JoypadReadMode::None)
 {
     for (int i = 0; i < static_cast<int>(Key::_Count); ++i)
         m_keys[i] = false;
@@ -49,7 +50,7 @@ u8 Joypad::in(u16)
     } else {
         dbg() << "Program was trying to read Joypad data but didn't have the IODevice "
               << "in a proper state to be able to get useful data back (0x10 or 0x20)";
-//        ASSERT_NOT_REACHED();
+        //        ASSERT_NOT_REACHED();
     }
 
     return result;
@@ -73,6 +74,7 @@ void Joypad::out(u16, u8 value)
 void Joypad::set_key_state(const Key& key, bool is_down)
 {
     m_keys[static_cast<int>(key)] = is_down;
+    emulator().cpu().set_interrupt_flag(InterruptFlags::Joypad);
 }
 
 const LogStream& operator<<(const LogStream& stream, const Joypad& input)
@@ -116,10 +118,10 @@ void InputDebugWindow::render()
     m_emulator.renderer().draw_texture(m_b_tex, Point { 205, 330 });
 
     m_arrow_tex.color(emulator().joypad().is_up_down() ? DOWN_COLOR : UP_COLOR);
-    m_emulator.renderer().draw_texture_rotated(m_arrow_tex, Point { 76, 303 }, 0);   // up
+    m_emulator.renderer().draw_texture_rotated(m_arrow_tex, Point { 76, 303 }, 0); // up
 
     m_arrow_tex.color(emulator().joypad().is_right_down() ? DOWN_COLOR : UP_COLOR);
-    m_emulator.renderer().draw_texture_rotated(m_arrow_tex, Point { 97, 324 }, 90);  // right
+    m_emulator.renderer().draw_texture_rotated(m_arrow_tex, Point { 97, 324 }, 90); // right
 
     m_arrow_tex.color(emulator().joypad().is_down_down() ? DOWN_COLOR : UP_COLOR);
     m_emulator.renderer().draw_texture_rotated(m_arrow_tex, Point { 76, 345 }, 180); // down

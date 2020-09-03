@@ -63,11 +63,12 @@ constexpr u8 KEY_START_MASK   = (1 << 3);
 // clang-format on
 
 class InputDebugWindow;
+class Emulator;
 
 class Joypad final : public IODevice {
 public:
     friend InputDebugWindow;
-    Joypad();
+    Joypad(Emulator& emulator);
 
     // IODevice Impl
     u8 in(u16 address) override;
@@ -77,6 +78,7 @@ public:
     void set_key_state(const Key& key, bool is_down);
 
 private:
+    Emulator& emulator() { return m_emulator; }
     void set_mode(JoypadReadMode mode) { m_mode = mode; }
 
     bool is_right_down() const { return m_keys[static_cast<int>(Key::Right)]; }
@@ -89,6 +91,7 @@ private:
     bool is_select_down() const { return m_keys[static_cast<int>(Key::Select)]; }
 
 private:
+    Emulator& m_emulator;
     JoypadReadMode m_mode;
     bool m_keys[static_cast<int>(Key::_Count)];
 };

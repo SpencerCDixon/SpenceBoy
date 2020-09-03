@@ -24,7 +24,7 @@ public:
     Emulator(RuntimeSettings settings)
         : m_settings(settings)
         , m_mmu(*this)
-        , m_joypad({})
+        , m_joypad(*this)
         , m_cpu(*this)
         , m_ppu(*this)
         , m_sound_card({})
