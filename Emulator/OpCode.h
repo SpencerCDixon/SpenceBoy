@@ -283,6 +283,7 @@
     __ENUMERATE(0x82, RES_0_D, 8)        \
     __ENUMERATE(0x46, BIT_0_HL_ADDR, 16) \
     __ENUMERATE(0x7C, BIT_7_H, 8)        \
+    __ENUMERATE(0x45, BIT_0_L, 8)        \
     __ENUMERATE(0x6C, BIT_5_H, 8)        \
     __ENUMERATE(0x2f, SRA_A, 8)          \
     __ENUMERATE(0x28, SRA_B, 8)          \
@@ -293,6 +294,7 @@
     __ENUMERATE(0x23, SLA_E, 8)          \
     __ENUMERATE(0x24, SLA_H, 8)          \
     __ENUMERATE(0x25, SLA_L, 8)          \
+    __ENUMERATE(0x3d, SRL_L, 8)          \
     __ENUMERATE(0x37, SWAP_A, 8)
 
 enum class OpCode : u8 {

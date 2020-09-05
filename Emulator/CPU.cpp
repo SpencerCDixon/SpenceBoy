@@ -381,11 +381,18 @@ OpCode CPU::execute_one_instruction()
     }
     // FIXME: We need to be setting flags properly on subtracts!
     case OpCode::SUB_d8:
+        set_subtract_flag(true);
         m_registers.a -= fetch_and_inc_u8();
         set_zero_flag(m_registers.a == 0);
         break;
     case OpCode::SUB_B:
+        set_subtract_flag(true);
         m_registers.a -= m_registers.b;
+        set_zero_flag(m_registers.a == 0);
+        break;
+    case OpCode::SUB_HL_ADDR:
+        set_subtract_flag(true);
+        m_registers.a -= read(get_hl());
         set_zero_flag(m_registers.a == 0);
         break;
     case OpCode::LD_HL_d16:
@@ -684,6 +691,16 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
     case PrefixOpCode::RL_L:
         rotate_left_through_carry(&m_registers.l);
         break;
+    case PrefixOpCode::SRL_L: { // TODO: Generalize for other prefixed op codes
+        u8 carry = m_registers.l & 0x01;
+        u8 new_value = m_registers.l >> 1;
+        set_zero_flag(new_value == 0);
+        set_subtract_flag(false);
+        set_half_carry_flag(false);
+        set_carry_flag(carry != 0);
+        m_registers.l = new_value;
+        break;
+    }
     case PrefixOpCode::SLA_A:
         shift_left(&m_registers.a);
         break;
@@ -720,6 +737,9 @@ void CPU::handle_prefix_op_code(const PrefixOpCode& op_code)
     case PrefixOpCode::BIT_5_H:
         check_bit(5, &m_registers.h);
         break;
+    case PrefixOpCode::BIT_0_L:
+        check_bit(0, &m_registers.l);
+        break;;
     case PrefixOpCode::BIT_0_HL_ADDR: {
         u8 value = read(get_hl());
         check_bit(0, &value);
